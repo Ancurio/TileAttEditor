@@ -37,12 +37,6 @@ gint main
 
 	gtk_init(&argc, &argv);
 
-//	tileset_create_from_file(global_data, g_strdup("isometric_grass_and_water.png"), 64, 64);
-
-//	create_attr_buffer_dummy_function(global_data);
-
-///	tileset_area_redraw_cache(global_data);
-
 	if (argc > 1)
 	{
 		gchar filepath[1024];
@@ -59,8 +53,6 @@ gint main
 
 	ui_main_window_create(global_data);
 
-//	cairo_surface_write_to_png(global_data->tileset->cached_composition, "cached_composition.png");
-
 	//struct Tileset *t = global_data->tileset;
 	//g_message("Conclusion: %d : %d : %d : %d : %d : %d : %d : %s : %d : %d : %d",
 		//t->width, t->height, t->disp_width, t->disp_height, t->tile_width, t->tile_height, t->tile_count, t->image_file, t->cairo_surface, t->cairo_scaled_surface, t->cached_composition);
@@ -69,9 +61,9 @@ gint main
 //	if (argc > 1)
 //		{ file_open(argv[1]) }
 
-g_message("here?");
+
 	gtk_widget_show(global_data->main_window->window);
-g_message("or here?");
+
 	gtk_main();
 
 	settings_write
