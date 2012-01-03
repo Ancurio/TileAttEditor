@@ -1,5 +1,4 @@
 
-#include <stdlib.h>
 #include <glib.h>
 #include <cairo.h>
 
@@ -28,7 +27,7 @@ struct TileAttribute** tile_attr_create
 {
 	struct TileAttribute **tile_attr;
 	tile_attr =
-		malloc(sizeof(struct TileAttribute*) * ATTRIBUTE_COUNT+1);
+		g_malloc(sizeof(struct TileAttribute*) * ATTRIBUTE_COUNT+1);
 
 	tile_attr[0] = attr_passability_create();
 	tile_attr[1] = attr_dummility_create();

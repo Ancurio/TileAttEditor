@@ -1,8 +1,8 @@
 
-#include <stdlib.h>
 #include <gtk/gtk.h>
 
 #include "tileatteditor.h"
+#include "tileset-area"
 #include "callback.h"
 #include "dialog.h"
 #include "util.h"
@@ -80,8 +80,8 @@ static void cb_button_cancel_clicked
 {
 	CAST_GLOBAL_DATA
 	gtk_widget_destroy(global_data->settings_dialog->window);
-	free(global_data->settings_dialog->checkb_attributes);
-	free(global_data->settings_dialog);
+	g_free(global_data->settings_dialog->checkb_attributes);
+	g_free(global_data->settings_dialog);
 	global_data->settings_dialog = 0;
 }
 
@@ -113,7 +113,7 @@ static void cb_button_apply_clicked
 static void cb_resize_required
 ( GtkWidget *button, gpointer data )
 {
-	CAST_SETTINGS_DIALOG data;
+	CAST_SETTINGS_DIALOG
 	settings_dialog->resize_required = TRUE;
 	settings_dialog->redraw_required = TRUE;
 	gtk_widget_set_sensitive(settings_dialog->applyb, TRUE);
@@ -140,7 +140,7 @@ void settings_dialog_run
 {
 	struct Settings *settings = global_data->settings;
 	struct SettingsDialog *settings_dialog =
-		malloc( sizeof( *settings_dialog ) );
+		g_malloc( sizeof( *settings_dialog ) );
 
 	settings_dialog->resize_required = FALSE;
 	settings_dialog->redraw_required = FALSE;
@@ -241,7 +241,7 @@ void settings_dialog_run
 	vbox = gtk_vbox_new(FALSE, 2);
 
 	settings_dialog->checkb_attributes =
-		malloc( sizeof( GtkWidget* ) * ATTRIBUTE_COUNT);
+		g_malloc( sizeof( GtkWidget* ) * ATTRIBUTE_COUNT);
 
 	struct TileAttribute **attr; gint i = 0;
 	for (attr=global_data->tile_attributes;

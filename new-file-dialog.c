@@ -1,9 +1,10 @@
 
-#include <stdlib.h>
 #include <gtk/gtk.h>
 
 #include "tileatteditor.h"
+#include "tileset-area.h"
 #include "dialog.h"
+#include "file.h"
 #include "util.h"
 
 struct NewFileDialog
@@ -18,18 +19,18 @@ struct NewFileDialog
 static void cb_button_cancel_clicked
 ( GtkWidget *button, gpointer data )
 {
-	CAST_GLOBAL_DATA data;
+	CAST_GLOBAL_DATA
 	struct NewFileDialog *dialog =
 		global_data->new_file_dialog;
 
 	gtk_widget_destroy(dialog->window);
-	free(dialog);
+	g_free(dialog);
 }
 
 static void cb_button_ok_clicked
 ( GtkWidget *button, gpointer data )
 {
-	CAST_GLOBAL_DATA data;
+	CAST_GLOBAL_DATA
 	struct NewFileDialog *dialog =
 		global_data->new_file_dialog;
 
@@ -143,17 +144,13 @@ static void cb_button_ok_clicked
 
 	}
 
-//	if (global_data->tileset) /* this responsibility is handled by cb_filemenu_close call */
-//		{ tileset_destroy(global_data); }
+	/* TODO: add function call here that closes file without updating tileset area */
 
 	global_data->settings->preferred_tile_width = tile_w;
 	global_data->settings->preferred_tile_height = tile_h;
 
-//	tileset_create_from_file
-//		(global_data, filename, tile_w, tile_h);
-
 	gtk_widget_destroy(dialog->window);
-	free(dialog);
+	g_free(dialog);
 
 	file_parse(global_data,
 	           file_create(filename, tile_w, tile_h),
@@ -175,7 +172,7 @@ void new_file_dialog_run
 ( struct GlobalData *global_data )
 {
 	struct NewFileDialog *dialog =
-		malloc( sizeof( *dialog ) );
+		g_malloc( sizeof( *dialog ) );
 
 	GtkWidget *file_dialog =
 		gtk_file_chooser_dialog_new

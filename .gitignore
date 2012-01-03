@@ -19,3 +19,5 @@ gui
 *.txt
 *.conf
 gui.c
+path.c
+

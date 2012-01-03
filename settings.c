@@ -88,26 +88,6 @@
 	g_free(VALUE_TO_KEY_TEMP_HEAP_STRING);
 
 
-
-//static void settings_set_default_values
-//( struct GlobalData *global_data )
-//{
-	//struct Settings *settings =
-		//g_malloc( sizeof( struct Settings ) );
-
-	//settings->active_attr_id = 0;
-	//settings->tileset_scale_ratio = 1.9;
-	//settings->attribute_alpha = 0.9;
-	//settings->smooth_zoom = FALSE;
-	//settings->bg_color = color_new(0.04, 0.65, 0.72, 1);
-	//settings->grid_color = color_new(0, 0, 0, 0.6);
-	//settings->preferred_tile_width = 32;
-	//settings->preferred_tile_height = 32;
-
-	//global_data->settings = settings;
-
-//}
-
 static gchar* settings_chomp_identifier
 ( gchar *identifier )
 {

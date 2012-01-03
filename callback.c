@@ -2,6 +2,7 @@
 #include <gtk/gtk.h>
 
 #include "tileatteditor.h"
+#include "tileset-area.h"
 #include "callback.h"
 #include "dialog.h"
 #include "file.h"
@@ -119,10 +120,6 @@ void cb_filemenu_save
 ( GtkAction *action, gpointer data )
 {
 	CAST_GLOBAL_DATA
-	/** [hackery]  **/
-	GtkAllocation alloc;
-
-	/** [/hackery] **/
 
 	if (!global_data->open_file) {g_message("no filebuffer. aborting..."); return; }
 

@@ -1,5 +1,4 @@
 
-#include <stdlib.h>
 #include <gtk/gtk.h>
 
 #include "tileatteditor.h"
@@ -228,7 +227,7 @@ void ui_main_window_create
 			G_CALLBACK (destroy), NULL);
 
 	struct MainWindow *main_window =
-		malloc( sizeof( struct MainWindow ) );
+		g_malloc( sizeof( struct MainWindow ) );
 	main_window->window = window;
 	main_window->tileset_area = tileset_area;
 	main_window->tileset_viewport =

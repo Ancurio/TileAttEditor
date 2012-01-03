@@ -9,25 +9,11 @@
 #include "file.h"
 
 
-//void create_attr_buffer_dummy_function
-//( struct GlobalData *global_data )
-//{
-	//struct TileAttribute **attributes =
-		//global_data->tile_attributes;
-	//gint i;
-	//for (i=0;attributes[i];i++)
-	//{
-		//attributes[i]->value_buffer =
-			//tile_attr_create_value_buffer
-			//(global_data->tileset->tile_count);
-	//}
-//}
-
 struct GlobalData* global_data_create
 ( )
 {
 	struct GlobalData *global_data =
-		malloc( sizeof( *global_data ) );
+		g_malloc( sizeof( *global_data ) );
 	global_data->hovered_tile = -1;
 	global_data->hover_context_id = 0;
 	global_data->hover_message_id = 0;
@@ -35,6 +21,8 @@ struct GlobalData* global_data_create
 	global_data->settings_dialog = 0;
 	global_data->new_file_dialog = 0;
 	global_data->open_file_path = NULL;
+
+	return global_data;
 }
 
 gint main
@@ -88,4 +76,5 @@ g_message("or here?");
 
 	settings_write
 		(global_data->settings, global_data->tile_attributes);
+	return 0;
 }

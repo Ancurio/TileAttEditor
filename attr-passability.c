@@ -1,5 +1,4 @@
 
-#include <stdlib.h>
 #include <stdio.h>
 #include <cairo.h>
 
@@ -46,7 +45,7 @@ struct TileAttribute* attr_passability_create
 ()
 {
 	struct TileAttribute *attr =
-		malloc(sizeof(struct TileAttribute));
+		g_malloc(sizeof(struct TileAttribute));
 
 	attr->name = "Passability";
 	attr->default_value = 0;

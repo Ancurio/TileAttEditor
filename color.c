@@ -1,5 +1,4 @@
 
-#include <stdlib.h>
 #include <gtk/gtk.h>
 #include <cairo.h>
 
@@ -9,7 +8,7 @@ struct Color* color_new
 ( gdouble r, gdouble g, gdouble b, gdouble a )
 {
 	struct Color *color =
-		malloc( sizeof( struct Color ) );
+		g_malloc( sizeof( struct Color ) );
 	color->r = r; color->g = g; color->b = b; color->a = a;
 
 	return color;

@@ -1,5 +1,4 @@
 
-#include <stdlib.h>
 #include <gtk/gtk.h>
 #include <cairo.h>
 
@@ -48,7 +47,7 @@ struct TileAttribute* attr_dummility_create
 ()
 {
 	struct TileAttribute *attr =
-		malloc(sizeof(struct TileAttribute));
+		g_malloc(sizeof(struct TileAttribute));
 
 	attr->name = "DummilityYo";
 	attr->default_value = 0;

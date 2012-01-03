@@ -4,6 +4,7 @@
 #include <cairo.h>
 
 #include "tileatteditor.h"
+#include "tileset-area.h"
 #include "file.h"
 
 #define DELIMITER '/'
@@ -146,7 +147,7 @@ static gchar* make_absolute_path
 	gchar *absolute_path =
 		g_malloc(sizeof(gchar)*(base_cp_count+rel_path_cp_count));
 
-	gint base_rd_end = i;
+//	gint base_rd_end = i;
 
 	for (i=0; i<base_cp_count; i++)
 		{ absolute_path[i] = base[i]; }
@@ -280,10 +281,10 @@ struct File* file_create
 
 	gchar buffer[8];
 
-	xmlAttr *attr_width = xmlSetProp(root_node, "tilewidth",
+	xmlSetProp(root_node, (xmlChar*)"tilewidth",
 	g_ascii_dtostr(buffer, 8, (gdouble)tile_width));
 
-	xmlAttr *attr_height = xmlSetProp(root_node, "tileheight",
+	xmlSetProp(root_node, (xmlChar*)"tileheight",
 	g_ascii_dtostr(buffer, 8, (gdouble)tile_height));
 
 	xmlNode *image_node = xmlNewNode(NULL, "image");
@@ -505,7 +506,6 @@ gboolean file_close
 
 	tileset_destroy(global_data);
 
-	gint i;
 	struct TileAttribute **tile_attr;
 	for (tile_attr = global_data->tile_attributes;
 	     *tile_attr; tile_attr++)

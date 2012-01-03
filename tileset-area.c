@@ -1,5 +1,4 @@
 
-#include <stdlib.h>
 #include <glib.h>
 #include <cairo.h>
 
@@ -91,8 +90,8 @@ gboolean tileset_create_from_file
 
 	struct Tileset *tileset = global_data->tileset;
 
-	gdouble scale_ratio =
-		global_data->settings->tileset_scale_ratio;
+//	gdouble scale_ratio =
+//		global_data->settings->tileset_scale_ratio;
 
 	if (tileset->cairo_surface)
 		{ cairo_surface_destroy(tileset->cairo_surface); }
