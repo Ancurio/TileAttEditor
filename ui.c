@@ -248,7 +248,10 @@ void ui_main_window_create
 	gtk_widget_show(workspace_box);
 	gtk_widget_show(statusbar);
 	if (global_data->tileset)
-		{ gtk_widget_show(tileset_area); }
+	{
+		gtk_widget_show(tileset_area);
+		tileset_area_update_viewport(global_data);
+	}
 
 	menubar_box = ui_menubar_create(window, global_data);
 	gtk_widget_show_all(menubar_box);
@@ -274,6 +277,7 @@ void ui_main_window_create
 	{
 		activate_other_attribute(global_data);
 	}
+
 }
 
 

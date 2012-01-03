@@ -110,8 +110,11 @@ gboolean tileset_create_from_file
 	global_data->tileset = tileset;
 	tileset_update_scale(global_data);
 
-	gtk_widget_show
-		(global_data->main_window->tileset_area);
+	if (global_data->main_window)
+	{
+		gtk_widget_show
+			(global_data->main_window->tileset_area);
+	}
 
 	return TRUE;
 
