@@ -102,6 +102,7 @@ void cb_filemenu_open
 
 		global_data->open_file_path = filename;
 		global_data->buffer_changed = FALSE;
+		tileset_area_update_viewport(global_data);
 		tileset_area_redraw_cache(global_data);
 		gtk_widget_queue_draw
 			(global_data->main_window->tileset_area);
@@ -118,6 +119,10 @@ void cb_filemenu_save
 ( GtkAction *action, gpointer data )
 {
 	CAST_GLOBAL_DATA
+	/** [hackery]  **/
+	GtkAllocation alloc;
+
+	/** [/hackery] **/
 
 	if (!global_data->open_file) {g_message("no filebuffer. aborting..."); return; }
 
@@ -172,6 +177,8 @@ void cb_filemenu_close
 		g_free(global_data->open_file_path);
 		global_data->open_file_path = NULL;
 	}
+
+	tileset_area_update_viewport(global_data);
 	gtk_widget_queue_draw
 		(global_data->main_window->tileset_area);
 }
@@ -223,6 +230,8 @@ void cb_editmenu_flip
 			 attr_button_box_set_expand(global_data, FALSE);
 			 global_data->settings->workspace_flipped = FALSE;
 	}
+
+	tileset_area_update_viewport(global_data);
 
 }
 
@@ -475,9 +484,5 @@ gboolean cb_tileset_area_leave_notify
 
 	return FALSE;
 }
-
-
-
-
 
 

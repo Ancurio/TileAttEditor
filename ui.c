@@ -7,7 +7,6 @@
 #include "ui-menubar.xml"
 
 
-
 static GtkActionEntry action_entries[] =
 {
 	{ "FileMenu", NULL, "_File" },
@@ -91,21 +90,17 @@ static GtkWidget* ui_menubar_create
 /* returns the drawing area in a hbox
  * in a vbox in a scrollable window */
 static GtkWidget* ui_tilesetarea_create
-( GtkWidget **_tilesetarea, struct GlobalData *global_data )
+( GtkWidget **_tileset_area, GtkWidget **_tileset_viewport,
+  gpointer global_data )
 {
-	struct Tileset *tileset = global_data->tileset;
-	GtkWidget *tileset_area, *hbox, *vbox, *scrollarea;
+	GtkWidget *tileset_area, *hbox, *vbox,
+	          *viewport, *scrollarea;
 
 	tileset_area = gtk_drawing_area_new();
-	if (tileset)
-	{
-		gtk_widget_set_size_request(tileset_area,
-			tileset->disp_width, tileset->disp_height);
-	}
-	else
-	{
-		gtk_widget_set_size_request(tileset_area, 128, 256);
-	}
+
+	gtk_widget_set_size_request
+		(tileset_area, T_AREA_MIN_WIDTH, T_AREA_MIN_HEIGHT);
+
 	gtk_widget_add_events(tileset_area,
 		GDK_BUTTON_PRESS_MASK | GDK_POINTER_MOTION_MASK |
 		GDK_LEAVE_NOTIFY_MASK | GDK_POINTER_MOTION_HINT_MASK);
@@ -136,13 +131,17 @@ static GtkWidget* ui_tilesetarea_create
 	gtk_scrolled_window_add_with_viewport
 		(GTK_SCROLLED_WINDOW(scrollarea), vbox);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollarea),
-		GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-	gtk_viewport_set_shadow_type
-		(GTK_VIEWPORT(gtk_container_get_children
-			(GTK_CONTAINER(scrollarea))->data),
-		 GTK_SHADOW_NONE);
+		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-	*_tilesetarea = tileset_area;
+	viewport =
+		gtk_container_get_children(GTK_CONTAINER(scrollarea))->data;
+	gtk_viewport_set_shadow_type
+		(GTK_VIEWPORT(viewport), GTK_SHADOW_NONE);
+	gtk_widget_set_size_request
+		(scrollarea, T_AREA_MIN_WIDTH+0x20, T_AREA_MIN_HEIGHT+0x20);
+
+	*_tileset_area = tileset_area;
+	*_tileset_viewport = viewport;
 	return scrollarea;
 }
 
@@ -188,9 +187,10 @@ void ui_main_window_create
 	GtkWidget *workspace_box = gtk_hbox_new(FALSE, 8);
 	GtkWidget *separator = gtk_vseparator_new();
 	GtkWidget *tileset_frame = gtk_frame_new("Tileset");
-	GtkWidget *tileset_area;
+	GtkWidget *tileset_area, *tileset_viewport;
 	GtkWidget *tilesetarea_box =
-		ui_tilesetarea_create(&tileset_area, global_data);
+		ui_tilesetarea_create
+			(&tileset_area, &tileset_viewport, global_data);
 	GtkWidget *attribute_box =
 		ui_attribute_buttons_create(global_data);
 	GtkWidget *statusbar = gtk_statusbar_new();
@@ -231,6 +231,7 @@ void ui_main_window_create
 		malloc( sizeof( struct MainWindow ) );
 	main_window->window = window;
 	main_window->tileset_area = tileset_area;
+	main_window->tileset_viewport =
 	main_window->statusbar = statusbar;
 	main_window->workspace_box = workspace_box;
 	main_window->attr_button_box = attribute_box;
@@ -251,7 +252,8 @@ void ui_main_window_create
 	gtk_box_pack_start(GTK_BOX(mainbox), statusbar, FALSE, FALSE, 0);
 
 	gtk_widget_show(mainbox);
-
+//GtkAllocation alloc; gtk_widget_get_allocation(statusbar, &alloc);
+//g_message("statusbar alloc: %d | %d", alloc.width, alloc.height);
 	global_data->active_attribute =
 		global_data->tile_attributes
 			[global_data->settings->active_attr_id];

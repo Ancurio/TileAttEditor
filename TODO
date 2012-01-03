@@ -1,5 +1,6 @@
 TODO:
 
+	- when tileset image cannot be found, allow user to search for it
 	- have the config file be written to some fixed location
 	- make KEY_TO_VALUE macros function like (require ';')
 	- write prototypes for static functions

@@ -52,7 +52,10 @@ static void apply_settings
 	}
 
 	if (dialog->resize_required)
-		{ tileset_update_scale(global_data); }
+	{
+		tileset_update_scale(global_data);
+		tileset_area_update_viewport(global_data);
+	}
 
 	if (active_attr_disabled)
 	{

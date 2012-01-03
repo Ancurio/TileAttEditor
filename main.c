@@ -31,6 +31,7 @@ struct GlobalData* global_data_create
 	global_data->hovered_tile = -1;
 	global_data->hover_context_id = 0;
 	global_data->hover_message_id = 0;
+	global_data->tileset = 0;
 	global_data->settings_dialog = 0;
 	global_data->new_file_dialog = 0;
 	global_data->open_file_path = NULL;
@@ -80,9 +81,9 @@ gint main
 //	if (argc > 1)
 //		{ file_open(argv[1]) }
 
-
+g_message("here?");
 	gtk_widget_show(global_data->main_window->window);
-
+g_message("or here?");
 	gtk_main();
 
 	settings_write

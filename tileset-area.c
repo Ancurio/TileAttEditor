@@ -5,6 +5,9 @@
 
 #include "tileatteditor.h"
 
+#define VIEWPORT_CORRECTION_H 0xC8
+#define VIEWPORT_CORRECTION_V 0x20
+
 static cairo_surface_t *scale_surface
 ( cairo_surface_t *old_surface, gdouble scale_x, gdouble scale_y, gboolean smooth )
 {
@@ -134,6 +137,35 @@ void tileset_destroy
 
 	g_free(tileset);
 	global_data->tileset = NULL;
+}
+
+void tileset_area_update_viewport
+( struct GlobalData *global_data )
+{
+	if (!global_data->main_window) { return; }
+
+	GtkWidget *viewport =
+		global_data->main_window->tileset_viewport;
+
+	if (!global_data->tileset)
+	{
+		return;
+	}
+
+	if (global_data->settings->workspace_flipped)
+	{
+		gtk_widget_set_size_request
+			(viewport,
+			 global_data->tileset->disp_width
+			 +VIEWPORT_CORRECTION_V, 0x20);
+	}
+	else
+	{
+		gtk_widget_set_size_request
+			(viewport,
+			 global_data->tileset->disp_width
+			 +VIEWPORT_CORRECTION_H, 0x20);
+	}
 }
 
 void tileset_area_redraw_cache
