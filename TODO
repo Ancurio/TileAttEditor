@@ -1,0 +1,28 @@
+TODO:
+
+	- have the config file be written to some fixed location
+	- make KEY_TO_VALUE macros function like (require ';')
+	- write prototypes for static functions
+	- replace malloc with g_malloc, remove "stdlib.h" includes
+	- outsource parts of "Tileset" to "TilesetArea"
+	- make viewport of tileset-area adjust its size to differen zooms/files
+	- save window size to settings and restore on next startup
+	- fine tune gcc include dirs for each .c file (to speed up compilation)
+	- make KEY_TO_VALUE macros own variables on heap
+	- disconnect tilesetarea callbacks when no file is opened
+	- write detailed error messages for file opening
+	- make statusbar respond to filemenu actions
+	- have documents dropped into the tileset area be opened
+	- have window title indicate open file path/name
+	- closing of app should prompt "save changes" dialog
+	- tileset area expose event should always use CAIRO_OP_SOURCE
+	- add const to gchar* parameters where neccessary
+	- make tileset area prettier when no file buffer is opened
+	- have the last opened file be saved in config, and reopen on restart
+	- make many parts of the app independent of GlobalData header
+	  (make them return data instead of attaching it to gdata themselves)
+	- files should only be closed at the very last moment:
+	  write function to take over checking files from file_parse
+	
+	- Add some humble license to the top of every source file =)
+	
