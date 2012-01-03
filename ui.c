@@ -174,12 +174,28 @@ static GtkWidget* ui_attribute_buttons_create
 	return attr_box;
 }
 
-static void destroy( GtkWidget *widget,
-                     gpointer   data )
+static void gtk_window_limit_size
+( GtkWidget *window )
 {
+	GdkScreen *screen =
+		gtk_window_get_screen(GTK_WINDOW(window));
 
+	gint max_w = (gdk_screen_get_width(screen)  / 4) * 3,
+	     max_h = (gdk_screen_get_height(screen) / 4) * 3,
+	     win_w, win_h;
 
-    gtk_main_quit ();
+	gboolean resize = FALSE;
+
+	gtk_window_get_size(GTK_WINDOW(window), &win_w, &win_h);
+
+	if (win_w > max_w) { win_w = max_w; resize = TRUE; }
+	if (win_h > max_h) { win_h = max_h; resize = TRUE; }
+
+	if (resize)
+	{
+		gtk_window_set_default_size
+			(GTK_WINDOW(window), win_w, win_h);
+	}
 }
 
 void ui_main_window_create
@@ -286,6 +302,8 @@ void ui_main_window_create
 	{
 		activate_other_attribute(global_data);
 	}
+
+	gtk_window_limit_size(window);
 
 }
 
