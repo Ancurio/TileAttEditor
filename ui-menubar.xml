@@ -1,0 +1,19 @@
+const gchar *ui_info =
+
+"<ui>"
+"  <menubar name='MenuBar'>"
+"    <menu action='FileMenu'>"
+"      <menuitem action='New'/>"
+"      <menuitem action='Open'/>"
+"      <menuitem action='Save'/>"
+"      <menuitem action='Close'/>"
+"      <separator/>"
+"      <menuitem action='Quit'/>"
+"    </menu>"
+"    <menu action='EditMenu'>"
+"      <menuitem action='Flip'/>"
+"      <separator/>"
+"      <menuitem action='Preferences'/>"
+"    </menu>"
+"  </menubar>"
+"</ui>";
