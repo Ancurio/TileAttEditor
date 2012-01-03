@@ -24,6 +24,8 @@ static void attr_button_box_set_expand
 	}
 }
 
+static void attempt_open_file
+
 static void show_error_message
 ( GtkWidget *parent, gchar *message )
 {
@@ -526,4 +528,30 @@ gboolean cb_tileset_area_leave_notify
 	return FALSE;
 }
 
+gboolean cb_tileset_area_drag_data_received
+( GtkWidget *widget, GdkDragContext *context,
+  gint x, gint y, GtkSelectionData *sdata,
+  guint info, guint timestamp, gpointer data)
+{
+	CAST_GLOBAL_DATA
+
+	if (sdata->data) {g_message("%s", sdata->data);}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
 

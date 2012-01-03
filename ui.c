@@ -2,6 +2,7 @@
 #include <gtk/gtk.h>
 
 #include "tileatteditor.h"
+#include "tileset-area.h"
 #include "callback.h"
 #include "ui-menubar.xml"
 
@@ -40,6 +41,15 @@ static GtkToggleActionEntry toggle_entry =
 	{ "Flip", NULL, "_Flip Workspace", "<control>F",
 	  "Flip the workspace orientation\n(Just try it out!)",
 	  G_CALLBACK( cb_editmenu_flip ), FALSE };
+
+
+static GtkTargetEntry dnd_target_entries[] =
+{
+	{ "text/uri-list", 0, 0 }
+};
+
+static guint dnd_target_entries_count =
+	G_N_ELEMENTS (dnd_target_entries);
 
 
 
@@ -113,12 +123,21 @@ static GtkWidget* ui_tilesetarea_create
 	g_signal_connect( G_OBJECT (tileset_area), "motion-notify-event",
 					  G_CALLBACK (cb_tileset_area_motion_notify),
 					  global_data );
-	g_signal_connect_after( G_OBJECT (tileset_area), "scroll-event",
-					        G_CALLBACK (cb_tileset_area_motion_notify),
-					        global_data );
+	g_signal_connect( G_OBJECT (tileset_area), "scroll-event",
+					  G_CALLBACK (cb_tileset_area_motion_notify),
+					  global_data );
 	g_signal_connect( G_OBJECT (tileset_area), "leave-notify-event",
 					  G_CALLBACK (cb_tileset_area_leave_notify),
 					  global_data );
+
+	g_signal_connect( G_OBJECT (scrollarea), "drag_data_received",
+					  G_CALLBACK (cb_tileset_area_drag_data_received),
+					  global_data );
+
+	gtk_drag_dest_set
+		(scrollarea, GTK_DEST_DEFAULT_ALL,
+		 dnd_target_entries, dnd_target_entries_count,
+		 GDK_ACTION_COPY);
 
 
 	vbox = gtk_vbox_new(TRUE, 4);

@@ -22,3 +22,7 @@ gboolean cb_tileset_area_motion_notify
 ( GtkWidget *widget, GdkEvent *b_event, gpointer data );
 gboolean cb_tileset_area_leave_notify
 ( GtkWidget *widget, GdkEventButton *b_event, gpointer data );
+gboolean cb_tileset_area_drag_data_received
+( GtkWidget *widget, GdkDragContext *context,
+  gint x, gint y, GtkSelectionData *sdata,
+  guint info, guint timestamp, gpointer data);
