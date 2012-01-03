@@ -110,6 +110,9 @@ gboolean tileset_create_from_file
 	global_data->tileset = tileset;
 	tileset_update_scale(global_data);
 
+	gtk_widget_show
+		(global_data->main_window->tileset_area);
+
 	return TRUE;
 
 }
@@ -117,6 +120,9 @@ gboolean tileset_create_from_file
 void tileset_destroy
 ( struct GlobalData *global_data )
 {
+	gtk_widget_hide
+		(global_data->main_window->tileset_area);
+
 	struct Tileset *tileset =
 		global_data->tileset;
 

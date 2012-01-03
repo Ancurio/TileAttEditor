@@ -139,6 +139,11 @@ static GtkWidget* ui_tilesetarea_create
 	gtk_widget_set_size_request
 		(scrollarea, T_AREA_MIN_WIDTH+0x20, T_AREA_MIN_HEIGHT+0x20);
 
+	gtk_widget_show(hbox);
+	gtk_widget_show(vbox);
+	gtk_widget_show(viewport);
+	gtk_widget_show(scrollarea);
+
 	*_tileset_area = tileset_area;
 	*_tileset_viewport = viewport;
 	return scrollarea;
@@ -237,11 +242,13 @@ void ui_main_window_create
 	main_window->workspace_separator = separator;
 	global_data->main_window = main_window;
 
-	gtk_widget_show_all(tileset_frame);
+	gtk_widget_show(tileset_frame);
 	gtk_widget_show(separator);
 	gtk_widget_show(attribute_box);
 	gtk_widget_show(workspace_box);
 	gtk_widget_show(statusbar);
+	if (global_data->tileset)
+		{ gtk_widget_show(tileset_area); }
 
 	menubar_box = ui_menubar_create(window, global_data);
 	gtk_widget_show_all(menubar_box);
@@ -251,8 +258,7 @@ void ui_main_window_create
 	gtk_box_pack_start(GTK_BOX(mainbox), statusbar, FALSE, FALSE, 0);
 
 	gtk_widget_show(mainbox);
-//GtkAllocation alloc; gtk_widget_get_allocation(statusbar, &alloc);
-//g_message("statusbar alloc: %d | %d", alloc.width, alloc.height);
+
 	global_data->active_attribute =
 		global_data->tile_attributes
 			[global_data->settings->active_attr_id];

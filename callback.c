@@ -271,16 +271,9 @@ void cb_attr_button_toggled
 gboolean cb_tileset_area_expose
 ( GtkWidget *widget, GdkEventExpose *event, gpointer data )
 {
-	//struct Tileset *tileset =
-		//(struct Tileset*)data;
-
 	CAST_GLOBAL_DATA
 
 	struct Tileset *tileset = global_data->tileset;
-
-//	if (!tileset) { return FALSE; }
-
-//	if (!tileset->cached_composition) {return FALSE;}
 
 	if (tileset)
 	{
@@ -298,24 +291,15 @@ gboolean cb_tileset_area_expose
 		{
 			gtk_widget_set_size_request(widget, 128, 256);
 		}
+		return;
 	}
 
 	cairo_t *cr = gdk_cairo_create(widget->window);
+	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
 	gdk_cairo_region(cr, event->region);
 	cairo_clip(cr);
-	if (tileset)
-	{
-		if (tileset->cached_composition)
-		{
-			cairo_set_source_surface
-				(cr, tileset->cached_composition, 0, 0);
-		}
-	}
-	else
-	{
-		cairo_set_source_rgba(cr, 0, 0, 0, 0);
-		cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-	}
+	cairo_set_source_surface
+		(cr, tileset->cached_composition, 0, 0);
 	cairo_paint(cr);
 	cairo_destroy(cr);
 
