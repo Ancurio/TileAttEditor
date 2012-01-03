@@ -23,7 +23,6 @@ static xmlChar* xml_get_attribute_contents
 	return NULL;
 }
 
-
 static xmlNodePtr xml_get_child_node
 ( xmlNode *parent, xmlChar *name )
 {
@@ -163,7 +162,6 @@ static gchar* make_absolute_path
 }
 
 
-
 void str_clear
 (gchar *str, gint len)
 {
@@ -266,8 +264,6 @@ static gchar* csv_create_string
 
 	return return_string;
 }
-
-
 
 
 
@@ -490,6 +486,7 @@ gboolean file_save
 	return (xmlSaveFile(filename, file->doc) != -1);
 
 }
+
 
 gboolean file_close
 ( struct GlobalData *global_data )

@@ -2,7 +2,7 @@
 #include <gtk/gtk.h>
 
 #include "tileatteditor.h"
-#include "tileset-area"
+#include "tileset-area.h"
 #include "callback.h"
 #include "dialog.h"
 #include "util.h"
