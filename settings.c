@@ -1,4 +1,5 @@
 
+#include <stdlib.h>
 #include <glib.h>
 
 #include "tileatteditor.h"
@@ -110,11 +111,30 @@ static gchar* settings_chomp_identifier
 	return identifier;
 }
 
+static gchar* settings_get_keyfile_path
+( gboolean mkdir )
+{
+	GString *keyfile_path = g_string_new('\0');
+
+	g_string_append(keyfile_path, getenv("HOME"));
+	g_string_append(keyfile_path, "/.local/share/TileAttEditor/");
+	if (mkdir)
+	{
+		if (!g_file_test(keyfile_path->str, G_FILE_TEST_IS_DIR))
+			{ g_mkdir_with_parents(keyfile_path->str, 0x1ED); }
+	}
+
+	g_string_append(keyfile_path, SETTINGS_FILE_NAME);
+	gchar *return_string = keyfile_path->str;
+	g_string_free(keyfile_path, FALSE);
+	return return_string;
+}
+
 
 void settings_write
 ( struct Settings *settings, struct TileAttribute **tile_attr )
 {
-	const char *keyfile_filename = SETTINGS_FILE_NAME;
+	gchar *keyfile_filename = settings_get_keyfile_path(TRUE);
 	GKeyFile *keyfile = g_key_file_new();
 
 	VALUE_TO_KEY_INIT(keyfile, "Settings")
@@ -146,12 +166,14 @@ void settings_write
 		g_key_file_to_data(keyfile, &data_length, NULL);
 	g_file_set_contents
 		(keyfile_filename, keyfile_data, (gssize)data_length, NULL);
+
+	g_free(keyfile_filename);
 }
 
 void settings_read
 ( struct GlobalData *global_data )
 {
-	const char *keyfile_filename = SETTINGS_FILE_NAME;
+	gchar *keyfile_filename = settings_get_keyfile_path(FALSE);
 	GKeyFile *keyfile = g_key_file_new();
 
 	g_key_file_load_from_file
@@ -210,4 +232,6 @@ void settings_read
 		}
 		g_free(key);
 	}
+
+	g_free(keyfile_filename);
 }
