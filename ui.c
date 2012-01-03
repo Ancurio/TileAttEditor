@@ -177,6 +177,8 @@ static GtkWidget* ui_attribute_buttons_create
 static void destroy( GtkWidget *widget,
                      gpointer   data )
 {
+
+
     gtk_main_quit ();
 }
 
@@ -185,6 +187,11 @@ void ui_main_window_create
 {
 	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), "TileAttEditor");
+	gtk_window_set_default_size
+		(GTK_WINDOW(window),
+		 global_data->settings->window_width,
+		 global_data->settings->window_height);
+
 
 	GtkWidget *mainbox = gtk_vbox_new(FALSE, 8);
 	GtkWidget *menubar_box;
@@ -229,7 +236,9 @@ void ui_main_window_create
 	g_signal_connect (window, "destroy",
 			G_CALLBACK (gtk_widget_destroyed), &window);
 	g_signal_connect (window, "delete-event",
-			G_CALLBACK (destroy), NULL);
+			G_CALLBACK (cb_window_delete), global_data);
+	g_signal_connect (window, "configure-event",
+			G_CALLBACK (cb_window_configure), global_data);
 
 	struct MainWindow *main_window =
 		g_malloc( sizeof( struct MainWindow ) );

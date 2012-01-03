@@ -233,6 +233,28 @@ void cb_editmenu_flip
 }
 
 
+gboolean cb_window_delete
+( GtkWidget *widget, gpointer data )
+{
+		/* TODO: add save/confirmation dialog here */
+	gtk_main_quit();
+	return FALSE;
+}
+
+gboolean cb_window_configure
+( GtkWidget *widget, GdkEventConfigure *event, gpointer data )
+{
+	CAST_GLOBAL_DATA
+
+	gtk_window_get_size
+		(GTK_WINDOW(widget),
+		 &global_data->settings->window_width,
+		 &global_data->settings->window_height);
+	return FALSE;
+}
+
+
+
 void cb_attr_button_toggled
 ( GtkWidget *button, gpointer data )
 {
