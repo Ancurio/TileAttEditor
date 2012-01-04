@@ -54,8 +54,7 @@ gboolean file_check
 ( struct File *file, enum ErrorFileParse *error );
 
 gboolean file_parse  /* parses doc, sets variables and inits tileset */
-( struct GlobalData *global_data,
-  struct File *file, enum ErrorFileParse *error );
+( struct GlobalData *global_data, struct File *file );
 
 gboolean file_save /* updates csv strings and dumps doc to file */
 ( struct GlobalData *global_data, gchar *filename );

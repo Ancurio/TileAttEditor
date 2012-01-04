@@ -43,8 +43,9 @@ gint main
 		realpath(argv[1], filepath);
 
 		struct File *file = file_open(filepath, NULL);
-		if (file && file_parse(global_data, file, NULL))
+		if (file && file_check(file, NULL))
 		{
+			file_parse(global_data, file);
 			global_data->open_file_path = g_strdup(filepath);
 		}
 		else

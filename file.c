@@ -380,11 +380,8 @@ gboolean file_check
 
 
 gboolean file_parse
-( struct GlobalData *global_data,
-  struct File *file, enum ErrorFileParse *error )
+( struct GlobalData *global_data, struct File *file )
 {
-	if (!file) { ERROR(NO_FILE, FALSE); }
-
 	xmlNode *root_node = file->root_node;
 
 	gint tile_width = (gint)g_ascii_strtod
@@ -393,13 +390,9 @@ gboolean file_parse
 	gint tile_height = (gint)g_ascii_strtod
 		(xml_get_attribute_contents(root_node, "tileheight"), NULL);
 
-	if (tile_width < 1 || tile_height < 1)
-		{ ERROR(BAD_TILE_SIZES, FALSE); }
-
-	if (!tileset_create_from_file
-			(global_data, file->image_filename_abs,
-			 tile_width, tile_height))
-	{ ERROR(BAD_IMAGE_FILE, FALSE); }
+	tileset_create_from_file
+		(global_data, file->image_filename_abs,
+		 tile_width, tile_height);
 
 	struct Tileset *tileset = global_data->tileset;
 

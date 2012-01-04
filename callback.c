@@ -100,7 +100,7 @@ void cb_filemenu_open
 		}
 
 		cb_filemenu_close(NULL, global_data);
-		file_parse(global_data, file, NULL);
+		file_parse(global_data, file);
 		global_data->open_file_path = filename;
 		global_data->buffer_changed = FALSE;
 		tileset_area_update_viewport(global_data);

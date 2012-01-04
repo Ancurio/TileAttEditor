@@ -154,15 +154,13 @@ static void cb_button_ok_clicked
 	gtk_widget_destroy(dialog->window);
 	g_free(dialog);
 
-	file_parse(global_data,
-	           file_create(filename, tile_w, tile_h),
-	           NULL);
+	file_parse
+		(global_data, file_create(filename, tile_w, tile_h));
 
 	tileset_area_update_viewport(global_data);
 	tileset_area_redraw_cache(global_data);
 	gtk_widget_queue_draw
 		(global_data->main_window->tileset_area);
-
 }
 
 

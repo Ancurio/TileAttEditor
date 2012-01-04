@@ -15,8 +15,6 @@ TODO:
 	- have the last opened file be saved in config, and reopen on restart
 	- make many parts of the app independent of GlobalData header
 	  (make them return data instead of attaching it to gdata themselves)
-	- files should only be closed at the very last moment:
-	  write function to take over checking files from file_parse
 	- maybe make function prototypes in headers more uniform..
 	- create app icon
 	- have the attribute buttons contain icons
