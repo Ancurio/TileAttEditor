@@ -3,6 +3,7 @@
 
 #include "tileatteditor.h"
 #include "tileset-area.h"
+#include "callback.h"
 #include "dialog.h"
 #include "file.h"
 #include "util.h"
@@ -144,10 +145,11 @@ static void cb_button_ok_clicked
 
 	}
 
-	/* TODO: add function call here that closes file without updating tileset area */
+	cb_filemenu_close(NULL, global_data);
 
 	global_data->settings->preferred_tile_width = tile_w;
 	global_data->settings->preferred_tile_height = tile_h;
+	global_data->buffer_changed = TRUE;
 
 	gtk_widget_destroy(dialog->window);
 	g_free(dialog);

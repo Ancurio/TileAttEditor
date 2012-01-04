@@ -294,6 +294,7 @@ struct File* file_create
 	file->doc = doc;
 	file->root_node = root_node;
 	file->image_node = image_node;
+	file->attr_nodes = 0;
 	file->image_filename_abs = g_strdup(image_filename);
 
 	return file;
@@ -340,6 +341,7 @@ struct File* file_open
 	file->doc = doc;
 	file->root_node = root_node;
 	file->image_node = image_node;
+	file->attr_nodes = 0;
 	file->image_filename_abs = image_filename_abs;
 
 	return file;
@@ -347,10 +349,42 @@ struct File* file_open
 }
 
 
+gboolean file_check
+( struct File *file, enum ErrorFileParse *error )
+{
+	if (!file) { ERROR(NO_FILE, FALSE); }
+
+	xmlNode *root_node = file->root_node;
+
+	gint tile_width = (gint)g_ascii_strtod
+		(xml_get_attribute_contents(root_node, "tilewidth"), NULL);
+
+	gint tile_height = (gint)g_ascii_strtod
+		(xml_get_attribute_contents(root_node, "tileheight"), NULL);
+
+	if (tile_width < 1 || tile_height < 1)
+		{ ERROR(BAD_TILE_SIZES, FALSE); }
+
+	cairo_surface_t *check =
+		cairo_image_surface_create_from_png(file->image_filename_abs);
+
+	if (cairo_surface_status(check) != CAIRO_STATUS_SUCCESS)
+	{
+		cairo_surface_destroy(check);
+		ERROR(BAD_IMAGE_FILE, FALSE);
+	}
+	cairo_surface_destroy(check);
+
+	return TRUE;
+}
+
+
 gboolean file_parse
 ( struct GlobalData *global_data,
   struct File *file, enum ErrorFileParse *error )
 {
+	if (!file) { ERROR(NO_FILE, FALSE); }
+
 	xmlNode *root_node = file->root_node;
 
 	gint tile_width = (gint)g_ascii_strtod
@@ -488,6 +522,19 @@ gboolean file_save
 }
 
 
+void file_destroy
+( struct File *file )
+{
+	if (!file) { return; }
+
+	if (file->attr_nodes)
+		{ g_free(file->attr_nodes); }
+	xmlFreeDoc(file->doc);
+	g_free(file->image_filename_abs);
+	g_free(file);
+}
+
+
 gboolean file_close
 ( struct GlobalData *global_data )
 {
@@ -496,10 +543,7 @@ gboolean file_close
 	struct File *file =
 		(struct File*)global_data->open_file;
 
-	xmlFreeDoc(file->doc);
-	g_free(file->attr_nodes);
-	g_free(file->image_filename_abs);
-	g_free(file);
+	file_destroy(file);
 
 	tileset_destroy(global_data);
 

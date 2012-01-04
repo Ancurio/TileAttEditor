@@ -4,7 +4,7 @@ objects   = main.o settings.o ui.o callback.o tileset-area.o \
             attribute.o util.o attr-dummility.o attr-passability.o
 include   = `pkg-config --libs --cflags gtk+-2.0 cairo` \
             `xml2-config --libs --cflags`
-gcc-flags = -g -Wall
+gcc-flags = -g
 
 
 $(app) : $(objects)

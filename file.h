@@ -38,6 +38,7 @@ enum ErrorFileOpen
 
 enum ErrorFileParse
 {
+	NO_FILE,
 	BAD_TILE_SIZES,		/* Error: bad tile* values */
 	BAD_IMAGE_FILE		/* Error: could not create cairo surface from file */
 };
@@ -49,12 +50,18 @@ struct File* file_create
 struct File* file_open
 ( gchar *filename, enum ErrorFileOpen *error );
 
+gboolean file_check
+( struct File *file, enum ErrorFileParse *error );
+
 gboolean file_parse  /* parses doc, sets variables and inits tileset */
 ( struct GlobalData *global_data,
   struct File *file, enum ErrorFileParse *error );
 
 gboolean file_save /* updates csv strings and dumps doc to file */
 ( struct GlobalData *global_data, gchar *filename );
+
+void file_destroy
+( struct File *file );
 
 gboolean file_close /* frees all file related data */
 ( struct GlobalData *global_data );

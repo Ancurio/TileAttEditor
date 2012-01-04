@@ -7,6 +7,9 @@ gboolean tileset_create_from_file
 ( struct GlobalData *global_data, gchar *tileset_file,
   gint tile_width, gint tile_height );
 
+void tileset_destroy
+( struct GlobalData *global_data );
+
 void tileset_area_update_viewport
 ( struct GlobalData *global_data );
 

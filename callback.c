@@ -43,17 +43,14 @@ void cb_filemenu_new
 ( GtkAction *action, gpointer data )
 {
 	CAST_GLOBAL_DATA
-	cb_filemenu_close(NULL, global_data);
+
 	new_file_dialog_run(global_data);
-	global_data->buffer_changed = TRUE;
 }
 
 void cb_filemenu_open
 ( GtkAction *action, gpointer data )
 {
 	CAST_GLOBAL_DATA
-
-	cb_filemenu_close(NULL, global_data);
 
 	GtkWidget *file_chooser =
 		gtk_file_chooser_dialog_new
@@ -92,8 +89,9 @@ void cb_filemenu_open
 		}
 		else
 		{
-			if (!file_parse(global_data, file, NULL))
+			if (!file_check(file, NULL))
 			{
+				file_destroy(file);
 				show_error_message
 					(global_data->main_window->window,
 					 "The selected file could not be parsed");
@@ -101,6 +99,8 @@ void cb_filemenu_open
 			}
 		}
 
+		cb_filemenu_close(NULL, global_data);
+		file_parse(global_data, file, NULL);
 		global_data->open_file_path = filename;
 		global_data->buffer_changed = FALSE;
 		tileset_area_update_viewport(global_data);
@@ -112,8 +112,6 @@ void cb_filemenu_open
 	{
 		gtk_widget_destroy(file_chooser);
 	}
-
-
 }
 
 void cb_filemenu_save

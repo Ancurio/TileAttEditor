@@ -41,14 +41,14 @@ gint main
 	{
 		gchar filepath[1024];
 		realpath(argv[1], filepath);
-		g_message("cwd: %s", filepath);
 
 		struct File *file = file_open(filepath, NULL);
-		if (file)
+		if (file && file_parse(global_data, file, NULL))
 		{
-			if (file_parse(global_data, file, NULL))
-				{ global_data->open_file_path = g_strdup(filepath); }
+			global_data->open_file_path = g_strdup(filepath);
 		}
+		else
+			{ file_destroy(file); }
 	}
 
 	ui_main_window_create(global_data);
