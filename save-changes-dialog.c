@@ -41,6 +41,7 @@ GtkWidget* save_changes_dialog_new
 	GtkWidget *dialog = gtk_dialog_new();
 	gtk_window_set_transient_for
 		(GTK_WINDOW(dialog), GTK_WINDOW(parent));
+	gtk_window_set_title(GTK_WINDOW(dialog), "Unsaved Changes");
 
 	GtkWidget *action_area =
 		gtk_dialog_get_action_area(GTK_DIALOG(dialog));
@@ -127,8 +128,7 @@ GtkWidget* save_changes_dialog_new
 	gtk_widget_show_all(content_area);
 	gtk_widget_show_all(action_area);
 
-	gtk_widget_set_can_default(saveb, TRUE);
-	gtk_window_set_default(GTK_WINDOW(dialog), saveb);
+	gtk_widget_grab_focus(saveb);
 
 	return dialog;
 }

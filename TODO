@@ -2,12 +2,14 @@ TODO:
 
 CRITICAL:
 
+	- restrain window size when opening huge tilesets
 	- make statusbar respond to filemenu actions
 	- have documents dropped into the tileset area be opened
 	- have png files dropped open up new-file-dialog with them selected
 
 MINOR:
 
+	- have the attribute buttons be at the top of the workspace in "flipped" mode
 	- when tileset image cannot be found, allow user to search for it
 	- make KEY_TO_VALUE macros function like (require ';')
 	- write prototypes for static functions
