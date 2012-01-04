@@ -174,28 +174,18 @@ static GtkWidget* ui_attribute_buttons_create
 	return attr_box;
 }
 
-static void gtk_window_limit_size
-( GtkWidget *window )
+static void gtk_window_set_limited_size
+( GtkWindow *window, gint win_w, gint win_h )
 {
-	GdkScreen *screen =
-		gtk_window_get_screen(GTK_WINDOW(window));
+	GdkScreen *screen = gtk_window_get_screen(window);
 
 	gint max_w = (gdk_screen_get_width(screen)  / 4) * 3,
-	     max_h = (gdk_screen_get_height(screen) / 4) * 3,
-	     win_w, win_h;
+	     max_h = (gdk_screen_get_height(screen) / 4) * 3;
 
-	gboolean resize = FALSE;
+	if (win_w > max_w) { win_w = max_w; }
+	if (win_h > max_h) { win_h = max_h; }
 
-	gtk_window_get_size(GTK_WINDOW(window), &win_w, &win_h);
-
-	if (win_w > max_w) { win_w = max_w; resize = TRUE; }
-	if (win_h > max_h) { win_h = max_h; resize = TRUE; }
-
-	if (resize)
-	{
-		gtk_window_set_default_size
-			(GTK_WINDOW(window), win_w, win_h);
-	}
+	gtk_window_set_default_size(window, win_w, win_h);
 }
 
 void ui_main_window_create
@@ -203,7 +193,7 @@ void ui_main_window_create
 {
 	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), "TileAttEditor");
-	gtk_window_set_default_size
+	gtk_window_set_limited_size
 		(GTK_WINDOW(window),
 		 global_data->settings->window_width,
 		 global_data->settings->window_height);
@@ -302,9 +292,6 @@ void ui_main_window_create
 	{
 		activate_other_attribute(global_data);
 	}
-
-	gtk_window_limit_size(window);
-
 }
 
 

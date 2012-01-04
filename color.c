@@ -4,12 +4,21 @@
 
 #include "color.h"
 
+static gdouble check_value
+( gdouble value )
+{
+	if (value < 0) { return 0; }
+	if (value > 1) { return 1; }
+	return value;
+}
+
 struct Color* color_new
 ( gdouble r, gdouble g, gdouble b, gdouble a )
 {
 	struct Color *color =
 		g_malloc( sizeof( struct Color ) );
-	color->r = r; color->g = g; color->b = b; color->a = a;
+	color->r = check_value(r); color->g = check_value(g);
+	color->b = check_value(b); color->a = check_value(a);
 
 	return color;
 }

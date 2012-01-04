@@ -4,7 +4,6 @@ TODO:
 	- make KEY_TO_VALUE macros function like (require ';')
 	- write prototypes for static functions
 	- outsource parts of "Tileset" to "TilesetArea"
-	- save window size to settings and restore on next startup
 	- fine tune gcc include dirs for each .c file (to speed up compilation)
 	- make KEY_TO_VALUE macros own variables on heap
 	- write detailed error messages for file opening
@@ -21,6 +20,8 @@ TODO:
 	- maybe make function prototypes in headers more uniform..
 	- create app icon
 	- have the attribute buttons contain icons
+	
+	- add gif and jpeg support through gdk (j4f)
 	
 	- Add some humble license to the top of every source file =)
 	
