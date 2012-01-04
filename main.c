@@ -25,6 +25,19 @@ struct GlobalData* global_data_create
 	return global_data;
 }
 
+void file_open_attempt
+( struct GlobalData *global_data, gchar *filename )
+{
+	struct File *file = file_open(filename, NULL);
+		if (file && file_check(file, NULL))
+		{
+			file_parse(global_data, file);
+			global_data->open_file_path = g_strdup(filename);
+		}
+		else
+			{ file_destroy(file); }
+}
+
 gint main
 ( gint argc, gchar *argv[] )
 {
@@ -42,14 +55,12 @@ gint main
 		gchar filepath[1024];
 		realpath(argv[1], filepath);
 
-		struct File *file = file_open(filepath, NULL);
-		if (file && file_check(file, NULL))
-		{
-			file_parse(global_data, file);
-			global_data->open_file_path = g_strdup(filepath);
-		}
-		else
-			{ file_destroy(file); }
+		file_open_attempt(global_data, filepath);
+	}
+	else
+	{
+		file_open_attempt
+			(global_data, global_data->settings->last_opened);
 	}
 
 	ui_main_window_create(global_data);
@@ -66,6 +77,13 @@ gint main
 	gtk_widget_show(global_data->main_window->window);
 
 	gtk_main();
+
+	if (global_data->open_file_path)
+	{
+		global_data->settings->last_opened =
+			global_data->open_file_path;
+	}
+	else { global_data->settings->last_opened = ""; }
 
 	settings_write
 		(global_data->settings, global_data->tile_attributes);

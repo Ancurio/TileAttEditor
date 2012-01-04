@@ -22,6 +22,7 @@ struct Settings
 	gint preferred_tile_height;
 	gint window_width;
 	gint window_height;
+	gchar *last_opened;
 };
 
 struct SettingsDialog

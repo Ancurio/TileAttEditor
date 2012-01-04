@@ -12,7 +12,6 @@ TODO:
 	- have window title indicate open file path/name
 	- closing of app should prompt "save changes" dialog
 	- add const to gchar* parameters where neccessary
-	- have the last opened file be saved in config, and reopen on restart
 	- make many parts of the app independent of GlobalData header
 	  (make them return data instead of attaching it to gdata themselves)
 	- maybe make function prototypes in headers more uniform..

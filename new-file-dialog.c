@@ -164,10 +164,6 @@ static void cb_button_ok_clicked
 }
 
 
-
-
-
-
 void new_file_dialog_run
 ( struct GlobalData *global_data )
 {
@@ -320,4 +316,3 @@ void new_file_dialog_run
 
 	gtk_widget_show_all(dialog_window);
 }
-

@@ -152,6 +152,7 @@ void settings_write
 	VALUE_TO_KEY(settings->preferred_tile_height, integer)
 	VALUE_TO_KEY(settings->window_width, integer)
 	VALUE_TO_KEY(settings->window_height, integer)
+	VALUE_TO_KEY(settings->last_opened, string)
 
 	struct TileAttribute **_tile_attr;
 	for (_tile_attr = tile_attr; *_tile_attr; _tile_attr++)
@@ -216,17 +217,10 @@ void settings_read
 	if (settings->preferred_tile_height < 1)
 		{ settings->preferred_tile_height = 32; }
 
-	g_type_init();
-
 	KEY_TO_VALUE(settings->window_width, integer, 128)
-//	if (settings->window_width >
-//	    gdk_screen_get_width(gdk_screen_get_default()))
-//		{ settings->window_width = 128; }
-
 	KEY_TO_VALUE(settings->window_height, integer, 128)
-//	if (settings->window_height >
-//	    gdk_screen_get_height(gdk_screen_get_default()))
-//		{ settings->window_height = 128; }
+
+	KEY_TO_VALUE(settings->last_opened, string, "")
 
 	global_data->settings = settings;
 
