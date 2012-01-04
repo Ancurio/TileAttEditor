@@ -39,11 +39,81 @@ static void show_error_message
 	gtk_widget_destroy(error_dialog);
 }
 
+/* returns FALSE if unsaved data remains */
+static gboolean attempt_save
+( struct GlobalData *global_data )
+{
+	if (!global_data->open_file) {return TRUE; }
+
+	if (!global_data->buffer_changed) {return TRUE; }
+
+	if (!global_data->open_file_path)
+	{
+		GtkWidget *file_chooser =
+			gtk_file_chooser_dialog_new
+				("Specify File Name",
+				 GTK_WINDOW(global_data->main_window->window),
+				 GTK_FILE_CHOOSER_ACTION_SAVE,
+				 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+				 GTK_STOCK_SAVE,   GTK_RESPONSE_ACCEPT,
+				 NULL);
+		gtk_file_chooser_set_do_overwrite_confirmation
+			(GTK_FILE_CHOOSER(file_chooser), TRUE);
+		gtk_file_chooser_set_create_folders
+			(GTK_FILE_CHOOSER(file_chooser), TRUE);
+		gtk_file_chooser_set_current_name
+			(GTK_FILE_CHOOSER(file_chooser), "untitled.tsx");
+
+		if (gtk_dialog_run(GTK_DIALOG(file_chooser))
+		    == GTK_RESPONSE_ACCEPT)
+		{
+			global_data->open_file_path = g_strdup
+				(gtk_file_chooser_get_filename
+					(GTK_FILE_CHOOSER(file_chooser)));
+			gtk_widget_destroy(file_chooser);
+		}
+		else
+		{
+			gtk_widget_destroy(file_chooser);
+			return FALSE;
+		}
+	}
+
+	file_save(global_data, global_data->open_file_path);
+	global_data->buffer_changed = FALSE;
+	return TRUE;
+}
+
+/* returns FALSE if current data shall not be lost */
+static gboolean save_changes
+( struct GlobalData *global_data )
+{
+	if (!global_data->buffer_changed) { return TRUE; }
+
+	GtkWidget *dialog =
+		save_changes_dialog_new(global_data->main_window->window);
+	gint response = gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
+
+	switch (response)
+	{
+		case GTK_RESPONSE_ACCEPT : return attempt_save(global_data);
+
+		case GTK_RESPONSE_REJECT : return TRUE;
+
+		case GTK_RESPONSE_CANCEL       :
+		case GTK_RESPONSE_DELETE_EVENT : return FALSE;
+	}
+
+}
+
+
 void cb_filemenu_new
 ( GtkAction *action, gpointer data )
 {
 	CAST_GLOBAL_DATA
 
+	if (!save_changes(global_data)) { return; }
 	new_file_dialog_run(global_data);
 }
 
@@ -51,6 +121,8 @@ void cb_filemenu_open
 ( GtkAction *action, gpointer data )
 {
 	CAST_GLOBAL_DATA
+
+	if (!save_changes(global_data)) { return; }
 
 	GtkWidget *file_chooser =
 		gtk_file_chooser_dialog_new
@@ -121,43 +193,7 @@ void cb_filemenu_save
 
 	if (!global_data->open_file) {g_message("no filebuffer. aborting..."); return; }
 
-	if (!global_data->buffer_changed) {g_message("no changes to save. aborting.."); return; }
-
-	if (!global_data->open_file_path)
-	{g_message("no filename specified. asking..");
-		GtkWidget *file_chooser =
-			gtk_file_chooser_dialog_new
-				("Specify File Name",
-				 GTK_WINDOW(global_data->main_window->window),
-				 GTK_FILE_CHOOSER_ACTION_SAVE,
-				 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
-				 GTK_STOCK_SAVE,   GTK_RESPONSE_ACCEPT,
-				 NULL);
-		gtk_file_chooser_set_do_overwrite_confirmation
-			(GTK_FILE_CHOOSER(file_chooser), TRUE);
-		gtk_file_chooser_set_create_folders
-			(GTK_FILE_CHOOSER(file_chooser), TRUE);
-		gtk_file_chooser_set_current_name
-			(GTK_FILE_CHOOSER(file_chooser), "untitled.tsx");
-
-		if (gtk_dialog_run(GTK_DIALOG(file_chooser))
-		    == GTK_RESPONSE_ACCEPT)
-		{
-			global_data->open_file_path = g_strdup
-				(gtk_file_chooser_get_filename
-					(GTK_FILE_CHOOSER(file_chooser)));
-			gtk_widget_destroy(file_chooser);g_message("got filename: %s", global_data->open_file_path);
-		}
-		else
-		{
-			gtk_widget_destroy(file_chooser);g_message("no filename chosen. aborting...");
-			return;
-		}
-	}
-
-	gboolean suc = file_save(global_data, global_data->open_file_path);
-	global_data->buffer_changed = FALSE;
-	if (suc) {g_message("Successfully saved");} else {g_message("saving error.");}
+	attempt_save(global_data);
 }
 
 void cb_filemenu_close
@@ -166,8 +202,10 @@ void cb_filemenu_close
 	CAST_GLOBAL_DATA
 	if (!global_data->open_file) { return; }
 
+	if (!save_changes(global_data)) { return; }
+
 	file_close(global_data);
-	if (global_data->open_file_path) /* TODO: replace this with "unsaved data" dialog */
+	if (global_data->open_file_path)
 	{
 		g_free(global_data->open_file_path);
 		global_data->open_file_path = NULL;
@@ -181,7 +219,8 @@ void cb_filemenu_close
 void cb_filemenu_quit
 ( GtkAction *action, gpointer data )
 {
-	gtk_main_quit();
+	CAST_GLOBAL_DATA
+	cb_window_delete(NULL, NULL, global_data);
 }
 
 void cb_editmenu_preferences
@@ -232,9 +271,10 @@ void cb_editmenu_flip
 
 
 gboolean cb_window_delete
-( GtkWidget *widget, gpointer data )
+( GtkWidget *widget, GdkEvent *event, gpointer data )
 {
-		/* TODO: add save/confirmation dialog here */
+	CAST_GLOBAL_DATA
+	if (!save_changes(global_data)) { return TRUE; }
 	gtk_main_quit();
 	return FALSE;
 }

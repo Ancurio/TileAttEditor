@@ -1,7 +1,8 @@
 app       = TileAttEditor
 objects   = main.o settings.o ui.o callback.o tileset-area.o \
-            new-file-dialog.o settings-dialog.o color.o file.o \
-            attribute.o util.o attr-dummility.o attr-passability.o
+            new-file-dialog.o settings-dialog.o save-changes-dialog.o \
+            color.o file.o attribute.o util.o  \
+            attr-dummility.o attr-passability.o
 include   = `pkg-config --libs --cflags gtk+-2.0 cairo` \
             `xml2-config --libs --cflags`
 gcc-flags = -g
@@ -30,6 +31,9 @@ new-file-dialog.o : tileatteditor.h dialog.h
 
 settings-dialog.o : tileatteditor.h dialog.h callback.h
 	cc -c settings-dialog.c -o settings-dialog.o $(include) $(gcc-flags)
+
+save-changes-dialog.o : tileatteditor.h dialog.h util.h
+	cc -c save-changes-dialog.c -o save-changes-dialog.o $(include) $(gcc-flags)
 
 color.o : color.h
 	cc -c color.c -o color.o $(include) $(gcc-flags)

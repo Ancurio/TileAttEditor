@@ -145,7 +145,12 @@ static void cb_button_ok_clicked
 
 	}
 
-	cb_filemenu_close(NULL, global_data);
+	file_close(global_data);
+	if (global_data->open_file_path)
+	{
+		g_free(global_data->open_file_path);
+		global_data->open_file_path = NULL;
+	}
 
 	global_data->settings->preferred_tile_width = tile_w;
 	global_data->settings->preferred_tile_height = tile_h;

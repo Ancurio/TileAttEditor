@@ -1,5 +1,13 @@
 TODO:
 
+CRITICAL:
+
+	- make statusbar respond to filemenu actions
+	- have documents dropped into the tileset area be opened
+	- have png files dropped open up new-file-dialog with them selected
+
+MINOR:
+
 	- when tileset image cannot be found, allow user to search for it
 	- make KEY_TO_VALUE macros function like (require ';')
 	- write prototypes for static functions
@@ -7,10 +15,7 @@ TODO:
 	- fine tune gcc include dirs for each .c file (to speed up compilation)
 	- make KEY_TO_VALUE macros own variables on heap
 	- write detailed error messages for file opening
-	- make statusbar respond to filemenu actions
-	- have documents dropped into the tileset area be opened
 	- have window title indicate open file path/name
-	- closing of app should prompt "save changes" dialog
 	- add const to gchar* parameters where neccessary
 	- make many parts of the app independent of GlobalData header
 	  (make them return data instead of attaching it to gdata themselves)
