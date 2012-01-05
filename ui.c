@@ -130,15 +130,6 @@ static GtkWidget* ui_tilesetarea_create
 					  G_CALLBACK (cb_tileset_area_leave_notify),
 					  global_data );
 
-	g_signal_connect( G_OBJECT (scrollarea), "drag_data_received",
-					  G_CALLBACK (cb_tileset_area_drag_data_received),
-					  global_data );
-
-	gtk_drag_dest_set
-		(scrollarea, GTK_DEST_DEFAULT_ALL,
-		 dnd_target_entries, dnd_target_entries_count,
-		 GDK_ACTION_COPY);
-
 
 	vbox = gtk_vbox_new(TRUE, 4);
 	hbox = gtk_hbox_new(TRUE, 4);
@@ -150,6 +141,15 @@ static GtkWidget* ui_tilesetarea_create
 		(GTK_SCROLLED_WINDOW(scrollarea), vbox);
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollarea),
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+
+	g_signal_connect( G_OBJECT (scrollarea), "drag_data_received",
+					  G_CALLBACK (cb_tileset_area_drag_data_received),
+					  global_data );
+
+	gtk_drag_dest_set
+		(scrollarea, GTK_DEST_DEFAULT_ALL,
+		 dnd_target_entries, dnd_target_entries_count,
+		 GDK_ACTION_COPY);
 
 	viewport =
 		gtk_container_get_children(GTK_CONTAINER(scrollarea))->data;

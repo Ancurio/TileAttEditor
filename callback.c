@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 #include <gtk/gtk.h>
 
 #include "tileatteditor.h"
@@ -23,8 +23,6 @@ static void attr_button_box_set_expand
 			 (*tile_attr)->button, expand, expand, 8, GTK_PACK_START);
 	}
 }
-
-static void attempt_open_file
 
 static void show_error_message
 ( GtkWidget *parent, gchar *message )
@@ -528,6 +526,26 @@ gboolean cb_tileset_area_leave_notify
 	return FALSE;
 }
 
+
+static gchar* extract_path
+( const gchar *uri )
+{
+	if (!g_str_has_prefix(uri, "file://")) { return NULL; }
+
+	gint cp_count;
+	for (cp_count = 0;
+	     uri[cp_count+6] != '\n' && uri[cp_count+6] != '\0';
+	     cp_count++) {}
+
+	gchar *path = g_malloc(sizeof(gchar)*cp_count);
+
+	gint i; for (i=0;i<cp_count-1;i++)
+		{ path[i] = uri[i+7]; }
+	path[i] = '\0';
+
+	return path;
+}
+
 gboolean cb_tileset_area_drag_data_received
 ( GtkWidget *widget, GdkDragContext *context,
   gint x, gint y, GtkSelectionData *sdata,
@@ -535,7 +553,13 @@ gboolean cb_tileset_area_drag_data_received
 {
 	CAST_GLOBAL_DATA
 
-	if (sdata->data) {g_message("%s", sdata->data);}
+	if (!sdata->data) { return; }
+
+	gchar *path = extract_path(sdata->data);
+
+	if (!path) { return; }
+
+
 
 
 
