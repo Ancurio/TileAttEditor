@@ -170,7 +170,7 @@ static void cb_button_ok_clicked
 
 
 void new_file_dialog_run
-( struct GlobalData *global_data )
+( struct GlobalData *global_data, const gchar *image_path )
 {
 	struct NewFileDialog *dialog =
 		g_malloc( sizeof( *dialog ) );
@@ -196,6 +196,11 @@ void new_file_dialog_run
 	gtk_file_filter_add_pattern(filter, "*");
 	gtk_file_chooser_add_filter
 		(GTK_FILE_CHOOSER(file_dialog), filter);
+	if(image_path)
+	{
+		gtk_file_chooser_set_filename
+			(GTK_FILE_CHOOSER(file_dialog), image_path);
+	}
 
 
 	GtkWidget *file_button =

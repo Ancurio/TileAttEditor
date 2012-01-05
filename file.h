@@ -66,5 +66,7 @@ gboolean file_close /* frees all file related data */
 ( struct GlobalData *global_data );
 
 
+void file_open_attempt_noerror
+( struct GlobalData *global_data, gchar *filename );
 
 

@@ -1,4 +1,4 @@
-#include <stdio.h>
+
 #include <gtk/gtk.h>
 
 #include "tileatteditor.h"
@@ -37,6 +37,49 @@ static void show_error_message
 		(GTK_MESSAGE_DIALOG(error_dialog), message);
 	gtk_dialog_run(GTK_DIALOG(error_dialog));
 	gtk_widget_destroy(error_dialog);
+}
+
+/* should always be used after 'save_changes' */
+static void file_open_attempt
+( struct GlobalData *global_data, const gchar *filename)
+{
+	gchar *_filename = g_strdup(filename);
+
+	struct File *file = file_open(_filename, NULL);
+	if (!file)
+	{
+		show_error_message
+			(global_data->main_window->window,
+			 "The selected file could not be loaded");
+		g_free(_filename);
+		return;
+	}
+	else
+	{
+		if (!file_check(file, NULL))
+		{
+			file_destroy(file);
+			show_error_message
+				(global_data->main_window->window,
+				 "The selected file could not be parsed");
+			g_free(_filename);
+			return;
+		}
+	}
+
+	file_close(global_data);
+	if (global_data->open_file_path)
+	{
+		g_free(global_data->open_file_path);
+		global_data->open_file_path = NULL;
+	}
+	file_parse(global_data, file);
+	global_data->open_file_path = _filename;
+	global_data->buffer_changed = FALSE;
+	tileset_area_update_viewport(global_data);
+	tileset_area_redraw_cache(global_data);
+	gtk_widget_queue_draw
+		(global_data->main_window->tileset_area);
 }
 
 /* returns FALSE if unsaved data remains */
@@ -114,7 +157,7 @@ void cb_filemenu_new
 	CAST_GLOBAL_DATA
 
 	if (!save_changes(global_data)) { return; }
-	new_file_dialog_run(global_data);
+	new_file_dialog_run(global_data, NULL);
 }
 
 void cb_filemenu_open
@@ -148,37 +191,10 @@ void cb_filemenu_open
 	     == GTK_RESPONSE_ACCEPT)
 	{
 		gchar *filename =
-			g_strdup(gtk_file_chooser_get_filename
-				(GTK_FILE_CHOOSER(file_chooser)));
+			gtk_file_chooser_get_filename
+				(GTK_FILE_CHOOSER(file_chooser));
 		gtk_widget_destroy(file_chooser);
-		struct File *file = file_open(filename, NULL);
-		if (!file)
-		{
-			show_error_message
-				(global_data->main_window->window,
-				 "The selected file could not be loaded");
-			return;
-		}
-		else
-		{
-			if (!file_check(file, NULL))
-			{
-				file_destroy(file);
-				show_error_message
-					(global_data->main_window->window,
-					 "The selected file could not be parsed");
-				return;
-			}
-		}
-
-		cb_filemenu_close(NULL, global_data);
-		file_parse(global_data, file);
-		global_data->open_file_path = filename;
-		global_data->buffer_changed = FALSE;
-		tileset_area_update_viewport(global_data);
-		tileset_area_redraw_cache(global_data);
-		gtk_widget_queue_draw
-			(global_data->main_window->tileset_area);
+		file_open_attempt(global_data, filename);
 	}
 	else
 	{
@@ -211,6 +227,7 @@ void cb_filemenu_close
 		global_data->open_file_path = NULL;
 	}
 
+	global_data->buffer_changed = FALSE;
 	tileset_area_update_viewport(global_data);
 	gtk_widget_queue_draw
 		(global_data->main_window->tileset_area);
@@ -534,7 +551,7 @@ static gchar* extract_path
 
 	gint cp_count;
 	for (cp_count = 0;
-	     uri[cp_count+6] != '\n' && uri[cp_count+6] != '\0';
+	     uri[cp_count+6] && uri[cp_count+6] != '\r';
 	     cp_count++) {}
 
 	gchar *path = g_malloc(sizeof(gchar)*cp_count);
@@ -559,23 +576,20 @@ gboolean cb_tileset_area_drag_data_received
 
 	if (!path) { return; }
 
+	if (g_str_has_suffix(path, ".tsx"))
+	{
+		if (!save_changes(global_data)) { goto clean_up; }
+		file_open_attempt(global_data, path);
+		goto clean_up;
+	}
 
+	if (g_str_has_suffix(path, ".png"))
+	{
+		if (!save_changes(global_data)) { goto clean_up; }
+		new_file_dialog_run(global_data, path);
+	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+clean_up:
+	g_free(path);
 }
 

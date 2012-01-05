@@ -551,3 +551,17 @@ gboolean file_close
 	return TRUE;
 }
 
+
+void file_open_attempt_noerror
+( struct GlobalData *global_data, gchar *filename )
+{
+	struct File *file = file_open(filename, NULL);
+		if (file && file_check(file, NULL))
+		{
+			file_parse(global_data, file);
+			global_data->open_file_path = g_strdup(filename);
+		}
+		else
+			{ file_destroy(file); }
+}
+

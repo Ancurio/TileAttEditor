@@ -26,18 +26,6 @@ struct GlobalData* global_data_create
 	return global_data;
 }
 
-void file_open_attempt
-( struct GlobalData *global_data, gchar *filename )
-{
-	struct File *file = file_open(filename, NULL);
-		if (file && file_check(file, NULL))
-		{
-			file_parse(global_data, file);
-			global_data->open_file_path = g_strdup(filename);
-		}
-		else
-			{ file_destroy(file); }
-}
 
 gint main
 ( gint argc, gchar *argv[] )
@@ -56,11 +44,11 @@ gint main
 		gchar filepath[1024];
 		realpath(argv[1], filepath);
 
-		file_open_attempt(global_data, filepath);
+		file_open_attempt_noerror(global_data, filepath);
 	}
 	else
 	{
-		file_open_attempt
+		file_open_attempt_noerror
 			(global_data, global_data->settings->last_opened);
 	}
 
