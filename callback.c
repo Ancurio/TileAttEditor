@@ -40,7 +40,7 @@ static void show_error_message
 }
 
 /* returns FALSE if unsaved data remains */
-static gboolean attempt_save
+static gboolean file_save_attempt
 ( struct GlobalData *global_data )
 {
 	if (!global_data->open_file) {return TRUE; }
@@ -97,7 +97,7 @@ static gboolean save_changes
 
 	switch (response)
 	{
-		case GTK_RESPONSE_ACCEPT : return attempt_save(global_data);
+		case GTK_RESPONSE_ACCEPT : return file_save_attempt(global_data);
 
 		case GTK_RESPONSE_REJECT : return TRUE;
 
@@ -193,7 +193,7 @@ void cb_filemenu_save
 
 	if (!global_data->open_file) {g_message("no filebuffer. aborting..."); return; }
 
-	attempt_save(global_data);
+	file_save_attempt(global_data);
 }
 
 void cb_filemenu_close
