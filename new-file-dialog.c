@@ -1,4 +1,4 @@
-
+#include <stdio.h>
 #include <gtk/gtk.h>
 
 #include "tileatteditor.h"
@@ -26,6 +26,7 @@ static void cb_button_cancel_clicked
 
 	gtk_widget_destroy(dialog->window);
 	g_free(dialog);
+	global_data->new_file_dialog = NULL;
 }
 
 static void cb_button_ok_clicked
@@ -137,6 +138,7 @@ static void cb_button_ok_clicked
 			case GTK_RESPONSE_NONE :
 				gtk_widget_destroy(warning_dialog);
 				g_free(filename);
+
 				return;
 
 			default :
@@ -166,12 +168,16 @@ static void cb_button_ok_clicked
 	tileset_area_redraw_cache(global_data);
 	gtk_widget_queue_draw
 		(global_data->main_window->tileset_area);
+	g_free(filename);
+	global_data->new_file_dialog = NULL;
 }
 
 
 void new_file_dialog_run
 ( struct GlobalData *global_data, const gchar *image_path )
 {
+	if (global_data->new_file_dialog) { return; }
+
 	struct NewFileDialog *dialog =
 		g_malloc( sizeof( *dialog ) );
 
@@ -196,15 +202,15 @@ void new_file_dialog_run
 	gtk_file_filter_add_pattern(filter, "*");
 	gtk_file_chooser_add_filter
 		(GTK_FILE_CHOOSER(file_dialog), filter);
+
+
+	GtkWidget *file_button =
+		gtk_file_chooser_button_new_with_dialog(file_dialog);
 	if(image_path)
 	{
 		gtk_file_chooser_set_filename
 			(GTK_FILE_CHOOSER(file_dialog), image_path);
 	}
-
-
-	GtkWidget *file_button =
-		gtk_file_chooser_button_new_with_dialog(file_dialog);
 
 	GtkWidget *spinb_tilewidth =
 		gtk_spin_button_new_with_range(1, 0x100, 1);

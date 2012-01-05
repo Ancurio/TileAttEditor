@@ -572,7 +572,9 @@ gboolean cb_tileset_area_drag_data_received
 
 	if (!sdata->data) { return; }
 
-	gchar *path = extract_path(sdata->data);
+	gchar **uris = g_uri_list_extract_uris(sdata->data);
+	gchar *path = g_filename_from_uri(uris[0], NULL, NULL);
+	g_strfreev(uris);
 
 	if (!path) { return; }
 

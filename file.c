@@ -146,8 +146,6 @@ static gchar* make_absolute_path
 	gchar *absolute_path =
 		g_malloc(sizeof(gchar)*(base_cp_count+rel_path_cp_count));
 
-//	gint base_rd_end = i;
-
 	for (i=0; i<base_cp_count; i++)
 		{ absolute_path[i] = base[i]; }
 
@@ -227,7 +225,7 @@ gint* csv_parse_string
 	{
 		val_buffer[val_count] = default_value;
 	}
-g_message("Successfully created buffer of size %d", *buffer_size);
+//	g_message("Successfully created buffer of size %d", *buffer_size);
 	return val_buffer;
 }
 
@@ -402,7 +400,7 @@ gboolean file_parse
 	{
 		if (tileset->width/tile_width !=
 				(gint)g_ascii_strtod(xml_get_attribute_contents(root_node, "width"), NULL))
-		{ g_message("Warning: different tileset width"); }
+		{ g_warning("different tileset width"); }
 	}
 	else
 	{
@@ -415,7 +413,7 @@ gboolean file_parse
 	{
 		if (tileset->height/tile_height !=
 				(gint)g_ascii_strtod(xml_get_attribute_contents(root_node, "height"), NULL))
-		{ g_message("Warning: different tileset height"); }
+		{ g_warning("different tileset height"); }
 	}
 	else
 	{
@@ -440,7 +438,7 @@ gboolean file_parse
 				 "name", tile_attr[i]->name);
 		if (!attr_nodes[i])
 		{
-			g_message("Attr [%s] not found. Creating...", tile_attr[i]->name);
+//			g_message("Attr [%s] not found. Creating...", tile_attr[i]->name);
 			attr_nodes[i] = xmlNewNode(NULL, TILE_ATTR_STRING);
 			xmlSetProp(attr_nodes[i], "name", tile_attr[i]->name);
 			xmlSetProp(attr_nodes[i], "defaultvalue",
@@ -452,7 +450,7 @@ gboolean file_parse
 		if (!xml_get_child_node_with_prop
 				(attr_nodes[i], "data", "encoding", "csv"))
 		{
-			g_message("Attr [%s] has no csv encoded data. Creating node..", tile_attr[i]->name);
+//			g_message("Attr [%s] has no csv encoded data. Creating node..", tile_attr[i]->name);
 			xmlNode *data = xmlNewNode(NULL, "data");
 			xmlSetProp(data, "encoding", "csv");
 			xmlAddChild(data, xmlNewText(" "));

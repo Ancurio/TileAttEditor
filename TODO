@@ -4,8 +4,6 @@ CRITICAL:
 
 	- restrain window size when opening huge tilesets
 	- make statusbar respond to filemenu actions
-	- have documents dropped into the tileset area be opened
-	- have png files dropped open up new-file-dialog with them selected
 
 MINOR:
 

@@ -90,9 +90,6 @@ gboolean tileset_create_from_file
 
 	struct Tileset *tileset = global_data->tileset;
 
-//	gdouble scale_ratio =
-//		global_data->settings->tileset_scale_ratio;
-
 	if (tileset->cairo_surface)
 		{ cairo_surface_destroy(tileset->cairo_surface); }
 
@@ -160,19 +157,24 @@ void tileset_area_update_viewport
 		return;
 	}
 
+	GdkScreen *screen =
+		gtk_window_get_screen
+			(GTK_WINDOW(global_data->main_window->window));
+	gint max_w = (gdk_screen_get_width(screen)  / 4) * 3,
+	     view_w = global_data->tileset->disp_width;
+
+//	view_w = (view_w > max_w) ? : max_w : view_w;
+	if (view_w > max_w) { view_w = max_w; }
+
 	if (global_data->settings->workspace_flipped)
 	{
 		gtk_widget_set_size_request
-			(viewport,
-			 global_data->tileset->disp_width
-			 +VIEWPORT_CORRECTION_V, 0x20);
+			(viewport, view_w + VIEWPORT_CORRECTION_V, 0x20);
 	}
 	else
 	{
 		gtk_widget_set_size_request
-			(viewport,
-			 global_data->tileset->disp_width
-			 +VIEWPORT_CORRECTION_H, 0x20);
+			(viewport, view_w + VIEWPORT_CORRECTION_H, 0x20);
 	}
 }
 
