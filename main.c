@@ -16,8 +16,8 @@ struct GlobalData* global_data_create
 		g_malloc( sizeof( *global_data ) );
 	global_data->buffer_changed = FALSE;
 	global_data->hovered_tile = -1;
-	global_data->hover_context_id = 0;
-	global_data->hover_message_id = 0;
+	global_data->statusbar_context_id = 0;
+	global_data->statusbar_message_id = 0;
 	global_data->tileset = NULL;
 	global_data->settings_dialog = NULL;
 	global_data->new_file_dialog = NULL;

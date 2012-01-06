@@ -52,8 +52,8 @@ struct GlobalData
 	gint hovered_tile;
 	gdouble hovered_offset_x;
 	gdouble hovered_offset_y;
-	guint hover_context_id;
-	guint hover_message_id;
+	guint statusbar_context_id;
+	guint statusbar_message_id;
 
 	struct Settings *settings;
 	struct Tileset *tileset;

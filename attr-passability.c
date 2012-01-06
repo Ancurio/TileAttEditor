@@ -29,6 +29,7 @@ static void draw_attr
 		         cairo_line_to(cr, 0.7, 0.7);
 		         cairo_move_to(cr, 0.7, 0.3);
 		         cairo_line_to(cr, 0.3, 0.7);
+		         cairo_set_line_cap(cr, CAIRO_LINE_CAP_SQUARE);
 	}
 
 	if (hovered) { tile_attr_set_primary_color(cr); }
@@ -50,7 +51,6 @@ struct TileAttribute* attr_passability_create
 	attr->name = "Passability";
 	attr->default_value = 0;
 	attr->hover_precision = FALSE;
-//	attr->value_buffer = malloc(sizeof(gint)*buffer_size);
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;
 

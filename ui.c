@@ -231,9 +231,9 @@ void ui_main_window_create
 		ui_attribute_buttons_create(global_data);
 	GtkWidget *statusbar = gtk_statusbar_new();
 
-	global_data->hover_context_id =
+	global_data->statusbar_context_id =
 		gtk_statusbar_get_context_id
-			(GTK_STATUSBAR(statusbar), "Hover information");
+			(GTK_STATUSBAR(statusbar), "");
 
 	/** [hackery] **/
 	gtk_box_pack_start(GTK_BOX(attribute_box),

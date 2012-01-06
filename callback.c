@@ -24,6 +24,23 @@ static void attr_button_box_set_expand
 	}
 }
 
+static void statusbar_update_message
+( struct GlobalData *global_data, const gchar *message )
+{
+	if (global_data->statusbar_message_id)
+	{
+		gtk_statusbar_remove
+			(GTK_STATUSBAR( global_data->main_window->statusbar ),
+			 global_data->statusbar_context_id,
+			 global_data->statusbar_message_id);
+	}
+
+	global_data->statusbar_message_id =
+		gtk_statusbar_push
+			(GTK_STATUSBAR(global_data->main_window->statusbar),
+			 global_data->statusbar_context_id, message);
+}
+
 static void show_error_message
 ( GtkWidget *parent, gchar *message )
 {
@@ -80,15 +97,20 @@ static void file_open_attempt
 	tileset_area_redraw_cache(global_data);
 	gtk_widget_queue_draw
 		(global_data->main_window->tileset_area);
+	statusbar_update_message(global_data, "File opened.");
 }
 
 /* returns FALSE if unsaved data remains */
 static gboolean file_save_attempt
 ( struct GlobalData *global_data )
 {
-	if (!global_data->open_file) {return TRUE; }
+//	if (!global_data->open_file) { return TRUE; }
 
-	if (!global_data->buffer_changed) {return TRUE; }
+	if (!global_data->buffer_changed)
+	{
+		statusbar_update_message(global_data, "No changes to save.");
+		return TRUE;
+	}
 
 	if (!global_data->open_file_path)
 	{
@@ -124,6 +146,7 @@ static gboolean file_save_attempt
 
 	file_save(global_data, global_data->open_file_path);
 	global_data->buffer_changed = FALSE;
+	statusbar_update_message(global_data, "File saved.");
 	return TRUE;
 }
 
@@ -207,7 +230,11 @@ void cb_filemenu_save
 {
 	CAST_GLOBAL_DATA
 
-	if (!global_data->open_file) {g_message("no filebuffer. aborting..."); return; }
+	if (!global_data->open_file)
+	{
+		statusbar_update_message(global_data, "No file to save.");
+		return;
+	}
 
 	file_save_attempt(global_data);
 }
@@ -231,6 +258,7 @@ void cb_filemenu_close
 	tileset_area_update_viewport(global_data);
 	gtk_widget_queue_draw
 		(global_data->main_window->tileset_area);
+	statusbar_update_message(global_data, "File closed.");
 }
 
 void cb_filemenu_quit
@@ -403,12 +431,12 @@ static gint tileset_area_determine_tile_id
 static void tileset_area_update_statusbar_hover
 ( struct GlobalData *global_data )
 {
-	if (global_data->hover_message_id)
+	if (global_data->statusbar_message_id)
 	{
 		gtk_statusbar_remove
 			(GTK_STATUSBAR( global_data->main_window->statusbar ),
-			 global_data->hover_context_id,
-			 global_data->hover_message_id);
+			 global_data->statusbar_context_id,
+			 global_data->statusbar_message_id);
 	}
 
 	GString *buffer = g_string_new('\0');
@@ -425,10 +453,10 @@ static void tileset_area_update_statusbar_hover
 			"Tile: %d", global_data->hovered_tile+1);
 	}
 
-	global_data->hover_message_id =
+	global_data->statusbar_message_id =
 		gtk_statusbar_push
 			(GTK_STATUSBAR(global_data->main_window->statusbar),
-			 global_data->hover_context_id,
+			 global_data->statusbar_context_id,
 			 buffer->str);
 
 	g_string_free(buffer, TRUE);
@@ -524,13 +552,13 @@ gboolean cb_tileset_area_leave_notify
 	gint hovered_tile_old = global_data->hovered_tile;
 	global_data->hovered_tile = -1;
 
-	if (global_data->hover_message_id)
+	if (global_data->statusbar_message_id)
 	{
 		gtk_statusbar_remove
 			(GTK_STATUSBAR( global_data->main_window->statusbar ),
-			 global_data->hover_context_id,
-			 global_data->hover_message_id);
-		global_data->hover_message_id = 0;
+			 global_data->statusbar_context_id,
+			 global_data->statusbar_message_id);
+		global_data->statusbar_message_id = 0;
 	}
 
 	if (!global_data->active_attribute) {return FALSE;}
@@ -541,26 +569,6 @@ gboolean cb_tileset_area_leave_notify
 		(global_data, 1, hovered_tile_old);
 
 	return FALSE;
-}
-
-
-static gchar* extract_path
-( const gchar *uri )
-{
-	if (!g_str_has_prefix(uri, "file://")) { return NULL; }
-
-	gint cp_count;
-	for (cp_count = 0;
-	     uri[cp_count+6] && uri[cp_count+6] != '\r';
-	     cp_count++) {}
-
-	gchar *path = g_malloc(sizeof(gchar)*cp_count);
-
-	gint i; for (i=0;i<cp_count-1;i++)
-		{ path[i] = uri[i+7]; }
-	path[i] = '\0';
-
-	return path;
 }
 
 gboolean cb_tileset_area_drag_data_received
@@ -594,4 +602,3 @@ gboolean cb_tileset_area_drag_data_received
 clean_up:
 	g_free(path);
 }
-
