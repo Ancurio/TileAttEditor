@@ -8,85 +8,83 @@
 #define SETTINGS_FILE_NAME "TileAttEditor.conf"
 
 #define VALUE_TO_KEY_INIT(keyfile, groupname)                  \
-	GKeyFile *VALUE_TO_KEY_KEYFILE = keyfile;	               \
-	const gchar *VALUE_TO_KEY_GROUPNAME = groupname;	       \
-	gchar *VALUE_TO_KEY_TEMP_HEAP_STRING;	                   \
-	gdouble VALUE_TO_KEY_TEMP_ARRAY[4];	                       \
-	gdouble *VALUE_TO_KEY_TEMP_ARRAY_PTR;	                   \
-	gsize VALUE_TO_KEY_TEMP_ARRAY_LEN;	                       \
-	GError *VALUE_TO_KEY_ERROR = NULL;	                       \
+    GKeyFile *VALUE_TO_KEY_KEYFILE = keyfile;                  \
+    const gchar *VALUE_TO_KEY_GROUPNAME = groupname;
 
 
 #define VALUE_TO_KEY(val, type)                                \
-	VALUE_TO_KEY_TEMP_HEAP_STRING =	                           \
-		settings_chomp_identifier(g_strdup(#val));		       \
-	g_key_file_set_##type	                                   \
-		(VALUE_TO_KEY_KEYFILE,		                           \
-		 VALUE_TO_KEY_GROUPNAME,		                       \
-		 VALUE_TO_KEY_TEMP_HEAP_STRING, val);		           \
-	g_free(VALUE_TO_KEY_TEMP_HEAP_STRING);
+{                                                              \
+    gchar *chomped_value_name =                                \
+        settings_chomp_identifier(g_strdup(#val));             \
+    g_key_file_set_##type                                      \
+        (VALUE_TO_KEY_KEYFILE,                                 \
+         VALUE_TO_KEY_GROUPNAME,                               \
+         chomped_value_name, val);                             \
+    g_free(chomped_value_name);                                \
+}
 
 
 #define COLOR_TO_KEY(color)                                    \
-	VALUE_TO_KEY_TEMP_HEAP_STRING =	                           \
-		settings_chomp_identifier(g_strdup(#color));		   \
-	VALUE_TO_KEY_TEMP_ARRAY[0] = color->r;	                   \
-	VALUE_TO_KEY_TEMP_ARRAY[1] = color->g;	                   \
-	VALUE_TO_KEY_TEMP_ARRAY[2] = color->b;	                   \
-	VALUE_TO_KEY_TEMP_ARRAY[3] = color->a;	                   \
-	g_key_file_set_double_list	                               \
-		(VALUE_TO_KEY_KEYFILE,		                           \
-		 VALUE_TO_KEY_GROUPNAME,		                       \
-		 VALUE_TO_KEY_TEMP_HEAP_STRING,		                   \
-		 VALUE_TO_KEY_TEMP_ARRAY, 4);		                   \
-	g_free(VALUE_TO_KEY_TEMP_HEAP_STRING);
+{                                                              \
+    gchar *chomped_value_name =                                \
+        settings_chomp_identifier(g_strdup(#color));           \
+    gdouble color_array[] =                                    \
+        { color->r, color->g, color->b, color->a };            \
+    g_key_file_set_double_list                                 \
+        (VALUE_TO_KEY_KEYFILE,                                 \
+         VALUE_TO_KEY_GROUPNAME,                               \
+         chomped_value_name,                                   \
+         color_array, 4);                                      \
+    g_free(chomped_value_name);                                \
+}
 
 
 #define KEY_TO_VALUE(val, type, default_val)                   \
-	VALUE_TO_KEY_TEMP_HEAP_STRING =	                           \
-		settings_chomp_identifier(g_strdup(#val));		       \
-	val = g_key_file_get_##type	                               \
-		(VALUE_TO_KEY_KEYFILE,		                           \
-		 VALUE_TO_KEY_GROUPNAME,		                       \
-		 VALUE_TO_KEY_TEMP_HEAP_STRING,		                   \
-		 &VALUE_TO_KEY_ERROR);		                           \
-	if (VALUE_TO_KEY_ERROR)	                                   \
-	{	                                                       \
-		val = (default_val);		                           \
-		g_error_free(VALUE_TO_KEY_ERROR);		               \
-		VALUE_TO_KEY_ERROR = NULL;		                       \
-	}	                                                       \
-	g_free(VALUE_TO_KEY_TEMP_HEAP_STRING);
+{                                                              \
+    GError *error = NULL;                                      \
+    gchar *chomped_value_name =                                \
+        settings_chomp_identifier(g_strdup(#val));             \
+    val = g_key_file_get_##type                                \
+        (VALUE_TO_KEY_KEYFILE,                                 \
+         VALUE_TO_KEY_GROUPNAME,                               \
+         chomped_value_name,                                   \
+         &error);                                              \
+    if (error)                                                 \
+    {                                                          \
+        val = (default_val);                                   \
+        g_error_free(error);                                   \
+    }                                                          \
+    g_free(chomped_value_name);                                \
+}
 
 
 #define KEY_TO_COLOR(color, def_r, def_g, def_b, def_a)        \
-	VALUE_TO_KEY_TEMP_HEAP_STRING =	                           \
-		settings_chomp_identifier(g_strdup(#color));		   \
-	VALUE_TO_KEY_TEMP_ARRAY_PTR =	                           \
-		g_key_file_get_double_list		                       \
-			(VALUE_TO_KEY_KEYFILE,			                   \
-			 VALUE_TO_KEY_GROUPNAME,			               \
-			 VALUE_TO_KEY_TEMP_HEAP_STRING,			           \
-			 &VALUE_TO_KEY_TEMP_ARRAY_LEN,			           \
-			 &VALUE_TO_KEY_ERROR);			                   \
-	if (VALUE_TO_KEY_ERROR ||	                               \
-	    VALUE_TO_KEY_TEMP_ARRAY_LEN != 4)	                   \
-	{	                                                       \
-		color = color_new		                               \
-			(def_r, def_g, def_b, def_a);			           \
-		if (VALUE_TO_KEY_ERROR)		                           \
-			{ g_error_free(VALUE_TO_KEY_ERROR); }			   \
-		VALUE_TO_KEY_ERROR = NULL;		                       \
-	}	                                                       \
-	else	                                                   \
-	{	                                                       \
-		color = color_new		                               \
-			(VALUE_TO_KEY_TEMP_ARRAY_PTR[0],			       \
-			 VALUE_TO_KEY_TEMP_ARRAY_PTR[1],			       \
-			 VALUE_TO_KEY_TEMP_ARRAY_PTR[2],			       \
-			 VALUE_TO_KEY_TEMP_ARRAY_PTR[3]);			       \
-	}	                                                       \
-	g_free(VALUE_TO_KEY_TEMP_HEAP_STRING);
+{                                                              \
+    GError *error = NULL;                                      \
+    gchar *chomped_value_name =                                \
+        settings_chomp_identifier(g_strdup(#color));           \
+    gsize array_size;                                          \
+    gdouble *color_array =                                     \
+        g_key_file_get_double_list                             \
+            (VALUE_TO_KEY_KEYFILE,                             \
+             VALUE_TO_KEY_GROUPNAME,                           \
+             chomped_value_name,                               \
+             &array_size,                                      \
+             &error);                                          \
+    if (error || array_size != 4)                              \
+    {                                                          \
+        color = color_new                                      \
+            (def_r, def_g, def_b, def_a);                      \
+        if (error) { g_error_free(error); }                    \
+    }                                                          \
+    else                                                       \
+    {                                                          \
+        color = color_new                                      \
+            (color_array[0], color_array[1],                   \
+             color_array[2], color_array[3]);                  \
+    }                                                          \
+    g_free(chomped_value_name);                                \
+}
 
 
 static gchar* settings_chomp_identifier
@@ -139,20 +137,20 @@ void settings_write
 
 	VALUE_TO_KEY_INIT(keyfile, "Settings")
 
-	VALUE_TO_KEY(settings->active_attr_id, integer)
-	VALUE_TO_KEY(settings->tileset_scale_ratio, double)
-	VALUE_TO_KEY(settings->attribute_alpha, double)
-	VALUE_TO_KEY(settings->smooth_zoom, boolean)
-	VALUE_TO_KEY(settings->workspace_flipped, boolean)
+	VALUE_TO_KEY(settings->active_attr_id, integer);
+	VALUE_TO_KEY(settings->tileset_scale_ratio, double);
+	VALUE_TO_KEY(settings->attribute_alpha, double);
+	VALUE_TO_KEY(settings->smooth_zoom, boolean);
+	VALUE_TO_KEY(settings->workspace_flipped, boolean);
 
-	COLOR_TO_KEY(settings->bg_color)
-	COLOR_TO_KEY(settings->grid_color)
+	COLOR_TO_KEY(settings->bg_color);
+	COLOR_TO_KEY(settings->grid_color);
 
-	VALUE_TO_KEY(settings->preferred_tile_width, integer)
-	VALUE_TO_KEY(settings->preferred_tile_height, integer)
-	VALUE_TO_KEY(settings->window_width, integer)
-	VALUE_TO_KEY(settings->window_height, integer)
-	VALUE_TO_KEY(settings->last_opened, string)
+	VALUE_TO_KEY(settings->preferred_tile_width, integer);
+	VALUE_TO_KEY(settings->preferred_tile_height, integer);
+	VALUE_TO_KEY(settings->window_width, integer);
+	VALUE_TO_KEY(settings->window_height, integer);
+	VALUE_TO_KEY(settings->last_opened, string);
 
 	struct TileAttribute **_tile_attr;
 	for (_tile_attr = tile_attr; *_tile_attr; _tile_attr++)
@@ -188,39 +186,39 @@ void settings_read
 
 	VALUE_TO_KEY_INIT(keyfile, "Settings")
 
-	KEY_TO_VALUE(settings->active_attr_id, integer, 0)
+	KEY_TO_VALUE(settings->active_attr_id, integer, 0);
 	if (settings->active_attr_id > ATTRIBUTE_COUNT-1)
 		{ settings->active_attr_id = 0;}
 
-	KEY_TO_VALUE(settings->tileset_scale_ratio, double, 1.5)
+	KEY_TO_VALUE(settings->tileset_scale_ratio, double, 1.5);
 	if (settings->tileset_scale_ratio < 0.1)
 		{ settings->tileset_scale_ratio = 1.5; }
 
-	KEY_TO_VALUE(settings->attribute_alpha, double, 0.8)
+	KEY_TO_VALUE(settings->attribute_alpha, double, 0.8);
 	if (settings->attribute_alpha < 0 ||
 	    settings->attribute_alpha > 1)
 		{ settings->attribute_alpha = 0.8; }
 
-	KEY_TO_VALUE(settings->smooth_zoom, boolean, FALSE)
-	KEY_TO_VALUE(settings->workspace_flipped, boolean, FALSE)
+	KEY_TO_VALUE(settings->smooth_zoom, boolean, FALSE);
+	KEY_TO_VALUE(settings->workspace_flipped, boolean, FALSE);
 
-	KEY_TO_COLOR(settings->bg_color, 0.04, 0.65, 0.72, 1)
+	KEY_TO_COLOR(settings->bg_color, 0.04, 0.65, 0.72, 1);
 	settings->bg_color->a = 1;
 
-	KEY_TO_COLOR(settings->grid_color, 0, 0, 0, 0.6)
+	KEY_TO_COLOR(settings->grid_color, 0, 0, 0, 0.6);
 
-	KEY_TO_VALUE(settings->preferred_tile_width, integer, 32)
+	KEY_TO_VALUE(settings->preferred_tile_width, integer, 32);
 	if (settings->preferred_tile_width < 1)
 		{ settings->preferred_tile_width = 32; }
 
-	KEY_TO_VALUE(settings->preferred_tile_height, integer, 32)
+	KEY_TO_VALUE(settings->preferred_tile_height, integer, 32);
 	if (settings->preferred_tile_height < 1)
 		{ settings->preferred_tile_height = 32; }
 
-	KEY_TO_VALUE(settings->window_width, integer, 128)
-	KEY_TO_VALUE(settings->window_height, integer, 128)
+	KEY_TO_VALUE(settings->window_width, integer, 128);
+	KEY_TO_VALUE(settings->window_height, integer, 128);
 
-	KEY_TO_VALUE(settings->last_opened, string, "")
+	KEY_TO_VALUE(settings->last_opened, string, "");
 
 	global_data->settings = settings;
 

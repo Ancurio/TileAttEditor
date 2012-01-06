@@ -11,11 +11,9 @@ MINOR:
 	- when tileset image cannot be found, allow user to search for it
 	- write detailed error messages for file opening
 	- have window title indicate open file path/name
-		- make KEY_TO_VALUE macros function like (require ';')
 	- write prototypes for static functions
 	- outsource parts of "Tileset" to "TilesetArea"
 	- fine tune gcc include dirs for each .c file (to speed up compilation)
-	- make KEY_TO_VALUE macros own variables on heap
 	- add const to gchar* parameters where neccessary
 	- make many parts of the app independent of GlobalData header
 	  (make them return data instead of attaching it to gdata themselves)
