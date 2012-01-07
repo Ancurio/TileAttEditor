@@ -24,6 +24,25 @@ static void attr_button_box_set_expand
 	}
 }
 
+static void workspace_box_flip_packing
+( GtkWidget *workspace_box )
+{
+	GList *children =
+		gtk_container_get_children(GTK_CONTAINER(workspace_box));
+
+	gint i;
+
+	for (i=0; children; children = children->next)
+	{
+		gtk_box_reorder_child
+			(GTK_BOX(workspace_box),
+			 GTK_WIDGET(children->data), 2-i);
+		i++;
+	}
+
+	g_free(children);
+}
+
 static void statusbar_update_message
 ( struct GlobalData *global_data, const gchar *message )
 {
@@ -281,34 +300,38 @@ void cb_editmenu_flip
 {
 	CAST_GLOBAL_DATA
 
+	GtkOrientation workspace_orient;
+	GtkOrientation children_orent;
+	gboolean state;
+
 	if (gtk_toggle_action_get_active(GTK_TOGGLE_ACTION(action)))
 	{
-		gtk_orientable_set_orientation
-			(GTK_ORIENTABLE(global_data->main_window->workspace_box),
-			 GTK_ORIENTATION_VERTICAL);
-		gtk_orientable_set_orientation
-			(GTK_ORIENTABLE(global_data->main_window->workspace_separator),
-			 GTK_ORIENTATION_HORIZONTAL);
-		gtk_orientable_set_orientation
-			(GTK_ORIENTABLE(global_data->main_window->attr_button_box),
-			 GTK_ORIENTATION_HORIZONTAL);
-		attr_button_box_set_expand(global_data, TRUE);
-		global_data->settings->workspace_flipped = TRUE;
+		workspace_orient = GTK_ORIENTATION_VERTICAL;
+		children_orent = GTK_ORIENTATION_HORIZONTAL;
+		state = TRUE;
 	}
 	else
 	{
-		gtk_orientable_set_orientation
-			(GTK_ORIENTABLE(global_data->main_window->workspace_box),
-			 GTK_ORIENTATION_HORIZONTAL);
-		gtk_orientable_set_orientation
-			(GTK_ORIENTABLE(global_data->main_window->workspace_separator),
-			 GTK_ORIENTATION_VERTICAL);
-		gtk_orientable_set_orientation
-			(GTK_ORIENTABLE(global_data->main_window->attr_button_box),
-			 GTK_ORIENTATION_VERTICAL);
-			 attr_button_box_set_expand(global_data, FALSE);
-			 global_data->settings->workspace_flipped = FALSE;
+		workspace_orient = GTK_ORIENTATION_HORIZONTAL;
+		children_orent = GTK_ORIENTATION_VERTICAL;
+		state = FALSE;
 	}
+
+	workspace_box_flip_packing
+		(global_data->main_window->workspace_box);
+
+	gtk_orientable_set_orientation
+		(GTK_ORIENTABLE(global_data->main_window->workspace_box),
+		 workspace_orient);
+	gtk_orientable_set_orientation
+		(GTK_ORIENTABLE(global_data->main_window->workspace_separator),
+		 children_orent);
+	gtk_orientable_set_orientation
+		(GTK_ORIENTABLE(global_data->main_window->attr_button_box),
+		 children_orent);
+	attr_button_box_set_expand(global_data, state);
+	global_data->settings->workspace_flipped = state;
+
 
 	tileset_area_update_viewport(global_data);
 
