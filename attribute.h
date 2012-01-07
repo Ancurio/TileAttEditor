@@ -8,6 +8,7 @@ struct TileAttribute
 	/* defined by attribute constructor */
 	gchar *name;
 	gint default_value;
+	gint icon_value;
 	gboolean hover_precision;
 
 	gint (*tile_clicked)

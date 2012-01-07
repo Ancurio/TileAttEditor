@@ -51,6 +51,7 @@ struct TileAttribute* attr_dummility_create
 
 	attr->name = "DummilityYo";
 	attr->default_value = 0;
+	attr->icon_value = 1;
 	attr->hover_precision = TRUE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;

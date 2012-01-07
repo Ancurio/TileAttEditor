@@ -8,6 +8,8 @@ void cb_filemenu_quit(GtkAction *action, gpointer data);
 void cb_editmenu_preferences(GtkAction *action, gpointer data);
 void cb_editmenu_flip(GtkAction *action, gpointer data);
 
+void cb_attr_icon_expose
+( GtkWidget *icon, GdkEventExpose *event, gpointer data );
 void cb_attr_button_toggled(GtkWidget *button, gpointer data);
 
 gboolean cb_window_delete

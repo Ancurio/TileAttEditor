@@ -50,6 +50,7 @@ struct TileAttribute* attr_passability_create
 
 	attr->name = "Passability";
 	attr->default_value = 0;
+	attr->icon_value = 0;
 	attr->hover_precision = FALSE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;

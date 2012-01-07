@@ -337,6 +337,18 @@ gboolean cb_window_configure
 }
 
 
+void cb_attr_icon_expose
+( GtkWidget *icon, GdkEventExpose *event, gpointer data )
+{
+	struct TileAttribute *tile_attr =
+		(struct TileAttribute*)data;
+
+	cairo_t *cr = gdk_cairo_create(icon->window);
+	(*tile_attr->draw_attr)(tile_attr->icon_value, cr, FALSE, 0, 0);
+	cairo_destroy(cr);
+}
+
+
 
 void cb_attr_button_toggled
 ( GtkWidget *button, gpointer data )
