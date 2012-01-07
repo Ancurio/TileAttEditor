@@ -65,8 +65,3 @@ struct GlobalData
 	gpointer open_file;
 };
 
-void ui_main_window_create
-( struct GlobalData *global_data );
-
-void tile_attr_buffer_renew
-( struct GlobalData *global_data );

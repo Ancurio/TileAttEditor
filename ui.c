@@ -234,8 +234,11 @@ static void gtk_window_set_limited_size
 }
 
 void ui_main_window_create
-( struct GlobalData *global_data )
+( gpointer *_global_data )
 {
+	struct GlobalData *global_data =
+		(struct GlobalData*)_global_data;
+
 	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
 	gtk_window_set_title(GTK_WINDOW(window), "TileAttEditor");
 	gtk_window_set_limited_size
@@ -340,14 +343,109 @@ void ui_main_window_create
 }
 
 
+void attr_button_box_set_expand
+( gpointer *_global_data, gboolean expand )
+{
+	struct GlobalData *global_data =
+		(struct GlobalData*)_global_data;
+	struct TileAttribute **tile_attr;
+	for (tile_attr=global_data->tile_attributes;
+	     *tile_attr; tile_attr++)
+	{
+		gtk_box_set_child_packing
+			(GTK_BOX(global_data->main_window->attr_button_box),
+			 (*tile_attr)->button, expand, expand, 8, GTK_PACK_START);
+	}
+}
 
+void workspace_box_flip_packing
+( GtkWidget *workspace_box )
+{
+	GList *children =
+		gtk_container_get_children(GTK_CONTAINER(workspace_box));
 
+	gint i;
 
+	for (i=0; children; children = children->next)
+	{
+		gtk_box_reorder_child
+			(GTK_BOX(workspace_box),
+			 GTK_WIDGET(children->data), 2-i);
+		i++;
+	}
 
+	g_free(children);
+}
 
+gchar *find_image_file_attempt
+( GtkWidget *parent )
+{
+	gchar *image_file = NULL;
 
+	GtkWidget *file_dialog =
+		gtk_file_chooser_dialog_new
+			("Find tileset image", NULL,
+			 GTK_FILE_CHOOSER_ACTION_OPEN,
+			 GTK_STOCK_CANCEL, GTK_RESPONSE_CANCEL,
+			 GTK_STOCK_OPEN,   GTK_RESPONSE_ACCEPT,
+			 NULL);
 
+	GtkFileFilter *filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "PNG images");
+	gtk_file_filter_add_mime_type(filter, "image/png");
+//	gtk_file_filter_add_mime_type(filter, "image/jpeg");
+//	gtk_file_filter_add_mime_type(filter, "image/gif");
+	gtk_file_chooser_add_filter
+		(GTK_FILE_CHOOSER(file_dialog), filter);
 
+	filter = gtk_file_filter_new();
+	gtk_file_filter_set_name(filter, "All");
+	gtk_file_filter_add_pattern(filter, "*");
+	gtk_file_chooser_add_filter
+		(GTK_FILE_CHOOSER(file_dialog), filter);
 
+	gchar message[] =
+		"The tileset image specified in the file you are trying to open\n"
+		"cannot be found. Do you want to search for it manually?";
+
+	GtkWidget *question_dialog =
+		gtk_message_dialog_new
+			(GTK_WINDOW(parent), GTK_DIALOG_DESTROY_WITH_PARENT,
+			 GTK_MESSAGE_INFO, GTK_BUTTONS_YES_NO,
+			 message);
+
+	switch (gtk_dialog_run(GTK_DIALOG(question_dialog)))
+	{
+		case GTK_RESPONSE_YES          : goto search_file;
+
+		case GTK_RESPONSE_NO           :
+		case GTK_RESPONSE_DELETE_EVENT : goto cancel_search;
+	}
+
+search_file:
+
+	switch (gtk_dialog_run(GTK_DIALOG(file_dialog)))
+	{
+		case GTK_RESPONSE_ACCEPT       : goto file_found;
+
+		case GTK_RESPONSE_CANCEL       :
+		case GTK_RESPONSE_DELETE_EVENT : goto cancel_search;
+
+	}
+
+file_found:
+
+	image_file =
+		gtk_file_chooser_get_filename
+			(GTK_FILE_CHOOSER(file_dialog));
+
+cancel_search:
+
+	gtk_widget_destroy(file_dialog);
+	gtk_widget_destroy(question_dialog);
+
+	return image_file;
+
+}
 
 

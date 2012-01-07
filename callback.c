@@ -11,38 +11,6 @@
 #define CAST_BUTTON_EVENT GdkEventButton *b_event = (GdkEventButton*)
 
 
-static void attr_button_box_set_expand
-( struct GlobalData *global_data, gboolean expand )
-{
-	struct TileAttribute **tile_attr;
-	for (tile_attr=global_data->tile_attributes;
-	     *tile_attr; tile_attr++)
-	{
-		gtk_box_set_child_packing
-			(GTK_BOX(global_data->main_window->attr_button_box),
-			 (*tile_attr)->button, expand, expand, 8, GTK_PACK_START);
-	}
-}
-
-static void workspace_box_flip_packing
-( GtkWidget *workspace_box )
-{
-	GList *children =
-		gtk_container_get_children(GTK_CONTAINER(workspace_box));
-
-	gint i;
-
-	for (i=0; children; children = children->next)
-	{
-		gtk_box_reorder_child
-			(GTK_BOX(workspace_box),
-			 GTK_WIDGET(children->data), 2-i);
-		i++;
-	}
-
-	g_free(children);
-}
-
 static void statusbar_update_message
 ( struct GlobalData *global_data, const gchar *message )
 {
@@ -92,7 +60,7 @@ static void file_open_attempt
 	}
 	else
 	{
-		if (!file_check(file, NULL))
+		if (!file_check(global_data, file, NULL))
 		{
 			file_destroy(file);
 			show_error_message
@@ -151,9 +119,9 @@ static gboolean file_save_attempt
 		if (gtk_dialog_run(GTK_DIALOG(file_chooser))
 		    == GTK_RESPONSE_ACCEPT)
 		{
-			global_data->open_file_path = g_strdup
-				(gtk_file_chooser_get_filename
-					(GTK_FILE_CHOOSER(file_chooser)));
+			global_data->open_file_path =
+				gtk_file_chooser_get_filename
+					(GTK_FILE_CHOOSER(file_chooser));
 			gtk_widget_destroy(file_chooser);
 		}
 		else

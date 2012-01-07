@@ -1,6 +1,4 @@
 
-
-#include <glib.h>
 #include <cairo.h>
 
 #include "tileatteditor.h"
@@ -409,7 +407,8 @@ struct File* file_open
 
 
 gboolean file_check
-( struct File *file, enum ErrorFileParse *error )
+( struct GlobalData *global_data, struct File *file,
+  enum ErrorFileParse *error )
 {
 	if (!file) { ERROR(NO_FILE, FALSE); }
 
@@ -423,6 +422,13 @@ gboolean file_check
 
 	if (tile_width < 1 || tile_height < 1)
 		{ ERROR(BAD_TILE_SIZES, FALSE); }
+
+	if (!g_file_test(file->image_filename_abs, G_FILE_TEST_EXISTS))
+	{
+		file->image_filename_abs =
+			find_image_file_attempt(global_data->main_window->window);
+		if (!file->image_filename_abs) { ERROR(BAD_IMAGE_FILE, FALSE); }
+	}
 
 	cairo_surface_t *check =
 		cairo_image_surface_create_from_png(file->image_filename_abs);
@@ -590,7 +596,7 @@ void file_open_attempt_noerror
 ( struct GlobalData *global_data, gchar *filename )
 {
 	struct File *file = file_open(filename, NULL);
-		if (file && file_check(file, NULL))
+		if (file && file_check(global_data, file, NULL))
 		{
 			file_parse(global_data, file);
 			global_data->open_file_path = g_strdup(filename);

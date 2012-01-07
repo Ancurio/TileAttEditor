@@ -16,3 +16,14 @@ struct MainWindow
 
 };
 
+void ui_main_window_create
+( gpointer *_global_data );
+
+void attr_button_box_set_expand
+( gpointer *_global_data, gboolean expand );
+
+void workspace_box_flip_packing
+( GtkWidget *workspace_box );
+
+gchar *find_image_file_attempt
+( GtkWidget *parent );
