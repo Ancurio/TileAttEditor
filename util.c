@@ -85,6 +85,8 @@ gint tile_attr_find_id
 gchar* get_filename_from_path
 ( const gchar *path, gchar dlm )
 {
+	if (!path) { return; }
+
 	gint read_head, last_dlm, cp_count;
 
 	for (read_head=0; path[read_head]; read_head++)

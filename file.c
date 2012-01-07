@@ -424,10 +424,12 @@ gboolean file_check
 
 	if (!g_file_test(file->image_filename_abs, G_FILE_TEST_EXISTS))
 	{
+		if (!global_data->main_window) { goto skip_filetest; }
 		file->image_filename_abs =
 			find_image_file_attempt
 				(global_data->main_window->window,
 				 file->image_filename_abs);
+skip_filetest:
 		if (!file->image_filename_abs) { ERROR(BAD_IMAGE_FILE, FALSE); }
 	}
 
