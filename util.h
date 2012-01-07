@@ -1,11 +1,11 @@
 
 
-#define CAST_GLOBAL_DATA \
-	struct GlobalData *global_data = \
+#define CAST_GLOBAL_DATA               \
+    struct GlobalData *global_data =   \
     (struct GlobalData*)data;
 
-#define CAST_GLOBAL_DATA_PTR(ptr) \
-	struct GlobalData *global_data = \
+#define CAST_GLOBAL_DATA_PTR(ptr)      \
+    struct GlobalData *global_data =   \
     (struct GlobalData*)ptr;
 
 
@@ -23,3 +23,6 @@ void activate_other_attribute
 
 gint tile_attr_find_id
 ( struct TileAttribute *tile_attr );
+
+gchar* get_filename_from_path
+( const gchar *path, gchar dlm );

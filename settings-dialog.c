@@ -53,7 +53,7 @@ static void apply_settings
 			gtk_widget_show(tile_attr->button);
 			if (file_attribute_enable
 					(global_data->open_file, tile_attr, i))
-			{ global_data->buffer_changed = TRUE; }
+			{ ui_set_buffer_changed(global_data, TRUE); }
 		}
 	}
 

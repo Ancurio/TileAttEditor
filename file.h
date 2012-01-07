@@ -54,7 +54,7 @@ struct File* file_create
 ( gchar *image_filename, gint tile_width, gint tile_height );
 
 struct File* file_open
-( gchar *filename, enum ErrorFileOpen *error );
+( const gchar *filename, enum ErrorFileOpen *error );
 
 gboolean file_check
 ( struct GlobalData *global_data, struct File *file,
@@ -74,6 +74,6 @@ gboolean file_close /* frees all file related data */
 
 
 void file_open_attempt_noerror
-( struct GlobalData *global_data, gchar *filename );
+( struct GlobalData *global_data, const gchar *filename );
 
 

@@ -5,7 +5,6 @@
 #include "tileset-area.h"
 #include "file.h"
 
-#define DELIMITER '/'
 #define TILE_ATTR_STRING "tileattribute"
 
 
@@ -49,7 +48,7 @@ static xmlNodePtr xml_get_child_node_with_prop
 }
 
 
-static gint str_len(gchar *string)
+static gint str_len(const gchar *string)
 {
 	gint i; for (i=0;string[i] != '\0';i++) {}
 	return i;
@@ -107,7 +106,7 @@ static gchar* make_relative_path
 }
 
 static gchar* make_absolute_path
-( gchar *base, gchar *rel_path, gchar dlm )
+( const gchar *base, const gchar *rel_path, gchar dlm )
 {
 	if (!(base&&rel_path))  { return NULL; }	/* check if empty strings */
 
@@ -360,7 +359,7 @@ struct File* file_create
 
 
 struct File* file_open
-( gchar *filename, enum ErrorFileOpen *error )
+( const gchar *filename, enum ErrorFileOpen *error )
 {
 	if (!g_file_test(filename, G_FILE_TEST_EXISTS))
 		{ ERROR(NONEXISTANT_FILE, NULL); }
@@ -426,7 +425,9 @@ gboolean file_check
 	if (!g_file_test(file->image_filename_abs, G_FILE_TEST_EXISTS))
 	{
 		file->image_filename_abs =
-			find_image_file_attempt(global_data->main_window->window);
+			find_image_file_attempt
+				(global_data->main_window->window,
+				 file->image_filename_abs);
 		if (!file->image_filename_abs) { ERROR(BAD_IMAGE_FILE, FALSE); }
 	}
 
@@ -468,8 +469,10 @@ gboolean file_parse
 	if (xml_get_attribute_contents(root_node, "width"))
 	{
 		if (tileset->width/tile_width !=
-				(gint)g_ascii_strtod(xml_get_attribute_contents(root_node, "width"), NULL))
-		{ g_warning("different tileset width"); }
+				(gint)g_ascii_strtod
+					(xml_get_attribute_contents
+						(root_node, "width"), NULL))
+			{ g_warning("different tileset width"); }
 	}
 	else
 	{
@@ -481,8 +484,10 @@ gboolean file_parse
 	if (xml_get_attribute_contents(root_node, "height"))
 	{
 		if (tileset->height/tile_height !=
-				(gint)g_ascii_strtod(xml_get_attribute_contents(root_node, "height"), NULL))
-		{ g_warning("different tileset height"); }
+				(gint)g_ascii_strtod
+					(xml_get_attribute_contents
+						(root_node, "height"), NULL))
+			{ g_warning("different tileset height"); }
 	}
 	else
 	{
@@ -593,13 +598,13 @@ gboolean file_close
 
 
 void file_open_attempt_noerror
-( struct GlobalData *global_data, gchar *filename )
+( struct GlobalData *global_data, const gchar *filename )
 {
 	struct File *file = file_open(filename, NULL);
 		if (file && file_check(global_data, file, NULL))
 		{
 			file_parse(global_data, file);
-			global_data->open_file_path = g_strdup(filename);
+			ui_set_open_file_path(global_data, filename);
 		}
 		else
 			{ file_destroy(file); }

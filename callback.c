@@ -75,11 +75,10 @@ static void file_open_attempt
 	if (global_data->open_file_path)
 	{
 		g_free(global_data->open_file_path);
-		global_data->open_file_path = NULL;
 	}
 	file_parse(global_data, file);
 	global_data->open_file_path = _filename;
-	global_data->buffer_changed = FALSE;
+	ui_set_buffer_changed(global_data, FALSE);
 	tileset_area_update_viewport(global_data);
 	tileset_area_redraw_cache(global_data);
 	gtk_widget_queue_draw
@@ -119,9 +118,10 @@ static gboolean file_save_attempt
 		if (gtk_dialog_run(GTK_DIALOG(file_chooser))
 		    == GTK_RESPONSE_ACCEPT)
 		{
-			global_data->open_file_path =
-				gtk_file_chooser_get_filename
-					(GTK_FILE_CHOOSER(file_chooser));
+			ui_set_open_file_path
+				(global_data,
+				 gtk_file_chooser_get_filename
+					(GTK_FILE_CHOOSER(file_chooser)));
 			gtk_widget_destroy(file_chooser);
 		}
 		else
@@ -132,7 +132,7 @@ static gboolean file_save_attempt
 	}
 
 	file_save(global_data, global_data->open_file_path);
-	global_data->buffer_changed = FALSE;
+	ui_set_buffer_changed(global_data, FALSE);
 	statusbar_update_message(global_data, "File saved.");
 	return TRUE;
 }
@@ -241,7 +241,7 @@ void cb_filemenu_close
 		global_data->open_file_path = NULL;
 	}
 
-	global_data->buffer_changed = FALSE;
+	ui_set_buffer_changed(global_data, FALSE);
 	tileset_area_update_viewport(global_data);
 	gtk_widget_queue_draw
 		(global_data->main_window->tileset_area);
@@ -500,7 +500,7 @@ gboolean cb_tileset_area_button_press
 			 tile_offset_x, tile_offset_y);
 
 	tileset_area_update_statusbar_hover(global_data);
-	global_data->buffer_changed = TRUE;
+	ui_set_buffer_changed(global_data, TRUE);
 	tileset_area_redraw_cache_tile(global_data, tile_id);
 	tileset_area_queue_tile_redraw(global_data, 1, tile_id);
 

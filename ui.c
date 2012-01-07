@@ -5,6 +5,12 @@
 #include "tileset-area.h"
 #include "callback.h"
 #include "ui-menubar.xml"
+#include "util.h"
+
+
+
+static void ui_update_window_title
+( struct GlobalData *global_data );
 
 
 static GtkActionEntry action_entries[] =
@@ -234,17 +240,16 @@ static void gtk_window_set_limited_size
 }
 
 void ui_main_window_create
-( gpointer *_global_data )
+( gpointer _global_data )
 {
-	struct GlobalData *global_data =
-		(struct GlobalData*)_global_data;
+	CAST_GLOBAL_DATA_PTR(_global_data);
 
 	GtkWidget *window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-	gtk_window_set_title(GTK_WINDOW(window), "TileAttEditor");
 	gtk_window_set_limited_size
 		(GTK_WINDOW(window),
 		 global_data->settings->window_width,
 		 global_data->settings->window_height);
+	ui_update_window_title(global_data);
 
 
 	GtkWidget *mainbox = gtk_vbox_new(FALSE, 8);
@@ -344,7 +349,7 @@ void ui_main_window_create
 
 
 void attr_button_box_set_expand
-( gpointer *_global_data, gboolean expand )
+( gpointer _global_data, gboolean expand )
 {
 	struct GlobalData *global_data =
 		(struct GlobalData*)_global_data;
@@ -378,7 +383,7 @@ void workspace_box_flip_packing
 }
 
 gchar *find_image_file_attempt
-( GtkWidget *parent )
+( GtkWidget *parent, const gchar *bad_path )
 {
 	gchar *image_file = NULL;
 
@@ -406,13 +411,18 @@ gchar *find_image_file_attempt
 
 	gchar message[] =
 		"The tileset image specified in the file you are trying to open\n"
-		"cannot be found. Do you want to search for it manually?";
+		"(<b>%s</b>) cannot be found. Do you want to search for it manually?";
+
+	gchar *image_filename =
+		get_filename_from_path(bad_path, DELIMITER);
 
 	GtkWidget *question_dialog =
-		gtk_message_dialog_new
+		gtk_message_dialog_new_with_markup
 			(GTK_WINDOW(parent), GTK_DIALOG_DESTROY_WITH_PARENT,
 			 GTK_MESSAGE_INFO, GTK_BUTTONS_YES_NO,
-			 message);
+			 message, image_filename);
+
+	g_free(image_filename);
 
 	switch (gtk_dialog_run(GTK_DIALOG(question_dialog)))
 	{
@@ -446,6 +456,55 @@ cancel_search:
 
 	return image_file;
 
+}
+
+
+static void ui_update_window_title
+( struct GlobalData *global_data )
+{
+	if (!global_data->main_window) { return; }
+
+	GString *title = g_string_new('\0');
+
+	if (!global_data->open_file)
+		{ g_string_append(title, "TileAttEditor"); goto set_title; }
+
+	if (global_data->buffer_changed)
+		{ g_string_append_c(title, '*'); }
+
+	gchar *filename;
+	if (global_data->open_file_path)
+	{
+		filename = get_filename_from_path
+			(global_data->open_file_path, DELIMITER);
+	}
+	else { filename = g_strdup("untitled.tsx"); }
+
+	g_string_append(title, filename);
+	g_free(filename);
+	g_string_append(title, " - TileAttEditor");
+
+set_title:
+	gtk_window_set_title
+		(GTK_WINDOW(global_data->main_window->window), title->str);
+	g_string_free(title, TRUE);
+}
+
+
+void ui_set_buffer_changed
+( gpointer _global_data, gboolean buffer_changed )
+{
+	CAST_GLOBAL_DATA_PTR(_global_data);
+	global_data->buffer_changed = buffer_changed;
+	ui_update_window_title(global_data);
+}
+
+void ui_set_open_file_path
+( gpointer _global_data, const gchar *open_file_path )
+{
+	CAST_GLOBAL_DATA_PTR(_global_data);
+	global_data->open_file_path = g_strdup(open_file_path);
+	ui_update_window_title(global_data);
 }
 
 

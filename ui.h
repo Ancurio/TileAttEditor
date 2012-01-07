@@ -17,13 +17,19 @@ struct MainWindow
 };
 
 void ui_main_window_create
-( gpointer *_global_data );
+( gpointer _global_data );
 
 void attr_button_box_set_expand
-( gpointer *_global_data, gboolean expand );
+( gpointer _global_data, gboolean expand );
 
 void workspace_box_flip_packing
 ( GtkWidget *workspace_box );
 
 gchar *find_image_file_attempt
-( GtkWidget *parent );
+( GtkWidget *parent, const gchar *bad_path );
+
+void ui_set_buffer_changed
+( gpointer _global_data, gboolean buffer_changed );
+
+void ui_set_open_file_path
+( gpointer _global_data, const gchar *open_file_path );

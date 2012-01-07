@@ -156,7 +156,6 @@ static void cb_button_ok_clicked
 
 	global_data->settings->preferred_tile_width = tile_w;
 	global_data->settings->preferred_tile_height = tile_h;
-	global_data->buffer_changed = TRUE;
 
 	gtk_widget_destroy(dialog->window);
 	g_free(dialog);
@@ -164,6 +163,7 @@ static void cb_button_ok_clicked
 	file_parse
 		(global_data, file_create(filename, tile_w, tile_h));
 
+	ui_set_buffer_changed(global_data, TRUE);
 	tileset_area_update_viewport(global_data);
 	tileset_area_redraw_cache(global_data);
 	gtk_widget_queue_draw

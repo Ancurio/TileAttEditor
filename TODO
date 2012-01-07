@@ -2,10 +2,9 @@ TODO:
 
 CRITICAL:
 
+	- actually write the damn attributes
 
 MINOR:
-
-	- have window title indicate open file path/name
 	
 	- write detailed error messages for file opening
 	- write prototypes for static functions

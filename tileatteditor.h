@@ -6,6 +6,7 @@
 #include "attribute.h"
 #include "ui.h"
 
+#define DELIMITER '/'
 
 struct Settings
 {
