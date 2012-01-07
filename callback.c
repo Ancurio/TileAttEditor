@@ -78,6 +78,7 @@ static void file_open_attempt
 	}
 	file_parse(global_data, file);
 	global_data->open_file_path = _filename;
+	ui_update_tileset_frame(global_data);
 	ui_set_buffer_changed(global_data, FALSE);
 	tileset_area_update_viewport(global_data);
 	tileset_area_redraw_cache(global_data);
@@ -241,6 +242,7 @@ void cb_filemenu_close
 		global_data->open_file_path = NULL;
 	}
 
+	ui_update_tileset_frame(global_data);
 	ui_set_buffer_changed(global_data, FALSE);
 	tileset_area_update_viewport(global_data);
 	gtk_widget_queue_draw

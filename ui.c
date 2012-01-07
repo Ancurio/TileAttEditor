@@ -6,6 +6,7 @@
 #include "callback.h"
 #include "ui-menubar.xml"
 #include "util.h"
+#include "file.h"
 
 
 
@@ -303,7 +304,8 @@ void ui_main_window_create
 		g_malloc( sizeof( struct MainWindow ) );
 	main_window->window = window;
 	main_window->tileset_area = tileset_area;
-	main_window->tileset_viewport =
+	main_window->tileset_viewport = tileset_viewport;
+	main_window->tileset_frame = tileset_frame;
 	main_window->statusbar = statusbar;
 	main_window->workspace_box = workspace_box;
 	main_window->attr_button_box = attribute_box;
@@ -329,6 +331,8 @@ void ui_main_window_create
 	gtk_box_pack_start(GTK_BOX(mainbox), statusbar, FALSE, FALSE, 0);
 
 	gtk_widget_show(mainbox);
+
+	ui_update_tileset_frame(global_data);
 
 	global_data->active_attribute =
 		global_data->tile_attributes
@@ -505,6 +509,26 @@ void ui_set_open_file_path
 	CAST_GLOBAL_DATA_PTR(_global_data);
 	global_data->open_file_path = g_strdup(open_file_path);
 	ui_update_window_title(global_data);
+}
+
+
+void ui_update_tileset_frame
+( gpointer _global_data )
+{
+	CAST_GLOBAL_DATA_PTR(_global_data);
+	struct File *file = global_data->open_file;
+	GString *frame_title = g_string_new('\0');
+	g_string_append(frame_title, "Tileset");
+	if (file)
+	{
+		g_string_append(frame_title, ": \"");
+		g_string_append(frame_title, file->tileset_name);
+		g_string_append_c(frame_title, '"');
+	}
+	gtk_frame_set_label
+		(GTK_FRAME(global_data->main_window->tileset_frame),
+		 frame_title->str);g_message("Updating frame title to: %s", frame_title->str);
+	g_string_free(frame_title, TRUE);
 }
 
 

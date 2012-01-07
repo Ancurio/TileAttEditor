@@ -9,6 +9,7 @@ struct MainWindow
 	GtkWidget *window;
 	GtkWidget *tileset_area;
 	GtkWidget *tileset_viewport;
+	GtkWidget *tileset_frame;
 	GtkWidget *statusbar;
 	GtkWidget *workspace_box;
 	GtkWidget *attr_button_box;
@@ -33,3 +34,6 @@ void ui_set_buffer_changed
 
 void ui_set_open_file_path
 ( gpointer _global_data, const gchar *open_file_path );
+
+void ui_update_tileset_frame
+( gpointer _global_data );

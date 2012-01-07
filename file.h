@@ -21,6 +21,7 @@ struct File						/* member set by:   */
 	xmlNode **attr_nodes;		/* file_parse       */
 
 	gint min_buffer_size;		/* file_parse       */
+	gchar *tileset_name;				/* file_parse       */
 
 //	xmlSaveCtxt *save_context;	/* (placeholder) */
 
@@ -51,7 +52,8 @@ gboolean file_attribute_enable
 
 
 struct File* file_create
-( gchar *image_filename, gint tile_width, gint tile_height );
+( gchar *image_filename, gint tile_width, gint tile_height,
+  gchar *tileset_name );
 
 struct File* file_open
 ( const gchar *filename, enum ErrorFileOpen *error );

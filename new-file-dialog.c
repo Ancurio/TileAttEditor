@@ -12,6 +12,7 @@ struct NewFileDialog
 {
 	GtkWidget *window;
 
+	GtkWidget *name_entry;
 	GtkWidget *file_button;
 	GtkWidget *spinb_tilewidth;
 	GtkWidget *spinb_tileheight;
@@ -40,6 +41,9 @@ static void cb_button_ok_clicked
 	      *warning_message = 0;
 
 	gint remainder;
+
+	gchar *tileset_name =
+		g_strdup(gtk_entry_get_text(GTK_ENTRY(dialog->name_entry)));
 
 	gchar *filename = gtk_file_chooser_get_filename
 		(GTK_FILE_CHOOSER(dialog->file_button));
@@ -161,8 +165,10 @@ static void cb_button_ok_clicked
 	g_free(dialog);
 
 	file_parse
-		(global_data, file_create(filename, tile_w, tile_h));
+		(global_data, file_create
+			(filename, tile_w, tile_h, tileset_name));
 
+	ui_update_tileset_frame(global_data);
 	ui_set_buffer_changed(global_data, TRUE);
 	tileset_area_update_viewport(global_data);
 	tileset_area_redraw_cache(global_data);
@@ -203,6 +209,7 @@ void new_file_dialog_run
 	gtk_file_chooser_add_filter
 		(GTK_FILE_CHOOSER(file_dialog), filter);
 
+	GtkWidget *name_entry = gtk_entry_new();
 
 	GtkWidget *file_button =
 		gtk_file_chooser_button_new_with_dialog(file_dialog);
@@ -238,6 +245,13 @@ void new_file_dialog_run
 
 	GtkWidget *content_area = gtk_vbox_new(FALSE, 2);
 	GtkWidget *hbox;
+
+	hbox = gtk_hbox_new(FALSE, 2);
+	gtk_box_pack_start(GTK_BOX(hbox),
+		gtk_label_new("Name:"), FALSE, FALSE, 8);
+	gtk_box_pack_end(GTK_BOX(hbox),
+		name_entry, TRUE, TRUE, 2);
+	gtk_box_pack_start(GTK_BOX(content_area), hbox, TRUE, TRUE, 2);
 
 	hbox = gtk_hbox_new(FALSE, 2);
 	gtk_box_pack_start(GTK_BOX(hbox),
@@ -325,6 +339,7 @@ void new_file_dialog_run
 
 
 	dialog->window = dialog_window;
+	dialog->name_entry = name_entry;
 	dialog->file_button = file_button;
 	dialog->spinb_tilewidth = spinb_tilewidth;
 	dialog->spinb_tileheight = spinb_tileheight;

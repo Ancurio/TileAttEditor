@@ -324,7 +324,8 @@ gboolean file_attribute_enable
 
 
 struct File* file_create
-( gchar *image_filename, gint tile_width, gint tile_height )
+( gchar *image_filename, gint tile_width, gint tile_height,
+  gchar *tileset_name )
 {
 
 	xmlDoc *doc = xmlNewDoc("1.0");
@@ -338,6 +339,8 @@ struct File* file_create
 
 	xmlSetProp(root_node, (xmlChar*)"tileheight",
 	g_ascii_dtostr(buffer, 8, (gdouble)tile_height));
+
+	xmlSetProp(root_node, "name", (xmlChar*)tileset_name);
 
 	xmlNode *image_node = xmlNewNode(NULL, "image");
 	xmlAddChild(root_node, image_node);
@@ -458,6 +461,11 @@ gboolean file_parse
 	gint tile_height = (gint)g_ascii_strtod
 		(xml_get_attribute_contents(root_node, "tileheight"), NULL);
 
+	gchar *tileset_name =
+		xml_get_attribute_contents(root_node, "name");
+
+	tileset_name = tileset_name ? tileset_name : "";
+g_message("Tileset name is: %s", tileset_name);
 	tileset_create_from_file
 		(global_data, file->image_filename_abs,
 		 tile_width, tile_height);
@@ -465,6 +473,7 @@ gboolean file_parse
 	struct Tileset *tileset = global_data->tileset;
 
 	file->min_buffer_size = tileset->tile_count;
+	file->tileset_name = tileset_name;
 
 	gchar buffer[16];
 
