@@ -174,29 +174,37 @@ static GtkWidget* ui_attribute_buttons_create
 	struct TileAttribute **tile_attr = global_data->tile_attributes;
 
 	GtkWidget *attr_box = gtk_vbox_new(FALSE, 8);
+	GtkSizeGroup *sgroup =
+		gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
 
 	gint i;
 	for (i=0;tile_attr[i];i++)
 	{
-		//GtkWidget *attr_button_box = gtk_hbox_new(FALSE, 4);
+		GtkWidget *attr_button_box = gtk_hbox_new(FALSE, 0);
+		GtkWidget *attr_center_box = gtk_hbox_new(FALSE, 4);
 
-		//GtkWidget *attr_icon = gtk_drawing_area_new();
-		//gtk_widget_set_size_request(attr_icon, 32, 32);
-		//g_signal_connect
-			//(attr_icon, "expose-event",
-			 //G_CALLBACK( cb_attr_icon_expose ), tile_attr[i]);
+		GtkWidget *attr_icon = gtk_drawing_area_new();
+		gtk_widget_set_size_request(attr_icon, 32, 32);
+		g_signal_connect
+			(attr_icon, "expose-event",
+			 G_CALLBACK( cb_attr_icon_expose ), tile_attr[i]);
 
-		//gtk_box_pack_start
-			//(GTK_BOX(attr_button_box), attr_icon, FALSE, FALSE, 4);
-		//gtk_box_pack_start
-			//(GTK_BOX(attr_button_box),
-			 //gtk_label_new(tile_attr[i]->name), FALSE, FALSE, 4);
-		//gtk_widget_show_all(attr_button_box);
+		gtk_box_pack_start
+			(GTK_BOX(attr_center_box), attr_icon, FALSE, FALSE, 4);
+		gtk_box_pack_start
+			(GTK_BOX(attr_center_box),
+			 gtk_label_new(tile_attr[i]->name), FALSE, FALSE, 4);
+		gtk_size_group_add_widget(sgroup, attr_center_box);
+
+		gtk_box_pack_start
+			(GTK_BOX(attr_button_box),
+			 attr_center_box, TRUE, FALSE, 0);
+		gtk_widget_show_all(attr_button_box);
 
 		GtkWidget *attr_button =
-			gtk_toggle_button_new_with_label("asdkj");
-//		gtk_container_add
-//			(GTK_CONTAINER(attr_button), attr_button_box);
+			gtk_toggle_button_new();
+		gtk_container_add
+			(GTK_CONTAINER(attr_button), attr_button_box);
 
 		tile_attr[i]->signal_handler_id =
 			g_signal_connect(attr_button, "toggled",

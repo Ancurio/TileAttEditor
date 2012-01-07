@@ -5,7 +5,6 @@ CRITICAL:
 
 MINOR:
 
-	- have the attribute buttons contain icons
 	- have the attribute buttons be at the top of the workspace in "flipped" mode
 	- when tileset image cannot be found, allow user to search for it
 	- have window title indicate open file path/name

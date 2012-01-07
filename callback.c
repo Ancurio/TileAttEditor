@@ -344,6 +344,16 @@ void cb_attr_icon_expose
 		(struct TileAttribute*)data;
 
 	cairo_t *cr = gdk_cairo_create(icon->window);
+	cairo_scale(cr, 32, 32);
+
+	cairo_save(cr);
+	cairo_rectangle(cr, 0, 0, 1, 1);
+	cairo_set_line_width(cr, 0.125);
+	cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+	cairo_set_source_rgb(cr, 0, 0, 0);
+	cairo_stroke(cr);
+	cairo_restore(cr);
+
 	(*tile_attr->draw_attr)(tile_attr->icon_value, cr, FALSE, 0, 0);
 	cairo_destroy(cr);
 }
