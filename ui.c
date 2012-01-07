@@ -527,7 +527,7 @@ void ui_update_tileset_frame
 	}
 	gtk_frame_set_label
 		(GTK_FRAME(global_data->main_window->tileset_frame),
-		 frame_title->str);g_message("Updating frame title to: %s", frame_title->str);
+		 frame_title->str);
 	g_string_free(frame_title, TRUE);
 }
 

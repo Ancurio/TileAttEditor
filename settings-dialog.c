@@ -20,11 +20,13 @@ static void apply_settings
 	struct SettingsDialog *dialog = global_data->settings_dialog;
 
 	settings->tileset_scale_ratio =
-		gtk_spin_button_get_value(GTK_SPIN_BUTTON(dialog->spinb_scale));
+		gtk_spin_button_get_value
+			(GTK_SPIN_BUTTON(dialog->spinb_scale));
 	settings->attribute_alpha =
 		gtk_range_get_value(GTK_RANGE(dialog->hscale_alpha));
 	settings->smooth_zoom =
-		gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(dialog->checkb_smooth));
+		gtk_toggle_button_get_active
+			(GTK_TOGGLE_BUTTON(dialog->checkb_smooth));
 	color_set_from_button(settings->bg_color, dialog->colorb_bg);
 	color_set_from_button(settings->grid_color, dialog->colorb_grid);
 

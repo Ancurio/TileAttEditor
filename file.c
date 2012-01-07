@@ -465,7 +465,7 @@ gboolean file_parse
 		xml_get_attribute_contents(root_node, "name");
 
 	tileset_name = tileset_name ? tileset_name : "";
-g_message("Tileset name is: %s", tileset_name);
+
 	tileset_create_from_file
 		(global_data, file->image_filename_abs,
 		 tile_width, tile_height);
