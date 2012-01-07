@@ -2,19 +2,19 @@ TODO:
 
 CRITICAL:
 
-	- only save attributes which are enabled
 
 MINOR:
 
 	- have the attribute buttons contain icons
 	- have the attribute buttons be at the top of the workspace in "flipped" mode
 	- when tileset image cannot be found, allow user to search for it
-	- write detailed error messages for file opening
 	- have window title indicate open file path/name
+	
+	- write detailed error messages for file opening
 	- write prototypes for static functions
+	- add const to gchar* parameters where neccessary
 	- outsource parts of "Tileset" to "TilesetArea"
 	- fine tune gcc include dirs for each .c file (to speed up compilation)
-	- add const to gchar* parameters where neccessary
 	- make many parts of the app independent of GlobalData header
 	  (make them return data instead of attaching it to gdata themselves)
 	- maybe make function prototypes in headers more uniform..

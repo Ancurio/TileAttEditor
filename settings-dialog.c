@@ -5,6 +5,7 @@
 #include "tileset-area.h"
 #include "callback.h"
 #include "dialog.h"
+#include "file.h"
 #include "util.h"
 
 #define CAST_SETTINGS_DIALOG                    \
@@ -30,14 +31,16 @@ static void apply_settings
 	gboolean active_attr_disabled = FALSE;
 	gint i; for (i=0;i<ATTRIBUTE_COUNT;i++)
 	{
+		struct TileAttribute *tile_attr =
+			global_data->tile_attributes[i];
+
 		if (!gtk_toggle_button_get_active
 				(GTK_TOGGLE_BUTTON(dialog->checkb_attributes[i])))
 		{
-			global_data->tile_attributes[i]->enabled = FALSE;
-			gtk_widget_hide(global_data->tile_attributes[i]->button);
+			tile_attr->enabled = FALSE;
+			gtk_widget_hide(tile_attr->button);
 
-			if (global_data->tile_attributes[i] ==
-			    global_data->active_attribute)
+			if (tile_attr == global_data->active_attribute)
 			{
 				/* Catch active attribute, but process this later
 				 * after all attributes have been enabled/disabled */
@@ -46,8 +49,11 @@ static void apply_settings
 		}
 		else
 		{
-			global_data->tile_attributes[i]->enabled = TRUE;
-			gtk_widget_show(global_data->tile_attributes[i]->button);
+			tile_attr->enabled = TRUE;
+			gtk_widget_show(tile_attr->button);
+			if (file_attribute_enable
+					(global_data->open_file, tile_attr, i))
+			{ global_data->buffer_changed = TRUE; }
 		}
 	}
 

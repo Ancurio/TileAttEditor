@@ -20,6 +20,8 @@ struct File						/* member set by:   */
 
 	xmlNode **attr_nodes;		/* file_parse       */
 
+	gint min_buffer_size;		/* file_parse       */
+
 //	xmlSaveCtxt *save_context;	/* (placeholder) */
 
 	gchar *image_filename_abs;	/* file_create/open */
@@ -42,6 +44,10 @@ enum ErrorFileParse
 	BAD_TILE_SIZES,		/* Error: bad tile* values */
 	BAD_IMAGE_FILE		/* Error: could not create cairo surface from file */
 };
+
+
+gboolean file_attribute_enable
+( struct File *file, struct TileAttribute *tile_attr, gint attr_id );
 
 
 struct File* file_create

@@ -264,6 +264,67 @@ static gchar* csv_create_string
 }
 
 
+static xmlNode* file_attribute_parse_node
+( struct TileAttribute *tile_attr, xmlNode *root_node, gint min_buffer_size )
+{
+	gchar buffer[16];
+
+	xmlNode *attr_node =
+		xml_get_child_node_with_prop
+			(root_node, TILE_ATTR_STRING,
+			 "name", tile_attr->name);
+	if (!attr_node)
+		{
+			g_message("Attr [%s] not found. Creating...", tile_attr->name);
+			attr_node = xmlNewNode(NULL, TILE_ATTR_STRING);
+			xmlSetProp(attr_node, "name", tile_attr->name);
+			xmlSetProp(attr_node, "defaultvalue",
+				g_ascii_dtostr(buffer, 16, (gdouble)tile_attr->default_value));
+			xmlAddChild(root_node, attr_node);
+			xmlAddPrevSibling(attr_node, xmlNewText(" "));
+			xmlAddNextSibling(attr_node, xmlNewText("\n"));
+		}
+		if (!xml_get_child_node_with_prop
+				(attr_node, "data", "encoding", "csv"))
+		{
+			g_message("Attr [%s] has no csv encoded data. Creating node..", tile_attr->name);
+			xmlNode *data = xmlNewNode(NULL, "data");
+			xmlSetProp(data, "encoding", "csv");
+			xmlAddChild(data, xmlNewText(" "));
+			xmlAddChild(attr_node, data);
+			xmlAddPrevSibling(data, xmlNewText("\n  "));
+			xmlAddNextSibling(data, xmlNewText("\n "));
+		}
+
+		tile_attr->value_buffer =
+			csv_parse_string
+				(xml_get_child_node_with_prop
+					(attr_node, "data",
+					"encoding", "csv")
+					->children->content,
+				 &tile_attr->buffer_size,
+				 tile_attr->default_value,
+				 min_buffer_size);
+
+	return attr_node;
+}
+
+gboolean file_attribute_enable
+( struct File *file, struct TileAttribute *tile_attr, gint attr_id )
+{
+	if (!file) { return FALSE; }
+
+	if (file->attr_nodes[attr_id]) { return FALSE; }
+
+	file->attr_nodes[attr_id] =
+		file_attribute_parse_node
+			(tile_attr,
+			 file->root_node,
+			 file->min_buffer_size);
+	return TRUE;
+}
+
+
 
 struct File* file_create
 ( gchar *image_filename, gint tile_width, gint tile_height )
@@ -394,6 +455,8 @@ gboolean file_parse
 
 	struct Tileset *tileset = global_data->tileset;
 
+	file->min_buffer_size = tileset->tile_count;
+
 	gchar buffer[16];
 
 	if (xml_get_attribute_contents(root_node, "width"))
@@ -432,41 +495,13 @@ gboolean file_parse
 	gint i;
 	for (i=0; i<ATTRIBUTE_COUNT; i++)
 	{
-		file->attr_nodes[i] =
-			xml_get_child_node_with_prop
-				(root_node, TILE_ATTR_STRING,
-				 "name", tile_attr[i]->name);
-		if (!attr_nodes[i])
-		{
-//			g_message("Attr [%s] not found. Creating...", tile_attr[i]->name);
-			attr_nodes[i] = xmlNewNode(NULL, TILE_ATTR_STRING);
-			xmlSetProp(attr_nodes[i], "name", tile_attr[i]->name);
-			xmlSetProp(attr_nodes[i], "defaultvalue",
-				g_ascii_dtostr(buffer, 16, (gdouble)tile_attr[i]->default_value));
-			xmlAddChild(root_node, attr_nodes[i]);
-			xmlAddPrevSibling(attr_nodes[i], xmlNewText(" "));
-			xmlAddNextSibling(attr_nodes[i], xmlNewText("\n"));
-		}
-		if (!xml_get_child_node_with_prop
-				(attr_nodes[i], "data", "encoding", "csv"))
-		{
-//			g_message("Attr [%s] has no csv encoded data. Creating node..", tile_attr[i]->name);
-			xmlNode *data = xmlNewNode(NULL, "data");
-			xmlSetProp(data, "encoding", "csv");
-			xmlAddChild(data, xmlNewText(" "));
-			xmlAddChild(attr_nodes[i], data);
-			xmlAddPrevSibling(data, xmlNewText("\n  "));
-			xmlAddNextSibling(data, xmlNewText("\n "));
-		}
+		if (!tile_attr[i]->enabled)
+			{ file->attr_nodes[i] = NULL; continue; }
 
-		tile_attr[i]->value_buffer =
-			csv_parse_string(xml_get_child_node_with_prop
-						(attr_nodes[i], "data",
-						 "encoding", "csv")
-						->children->content,
-			          &tile_attr[i]->buffer_size,
-			          tile_attr[i]->default_value,
-			          tileset->tile_count);
+		file->attr_nodes[i] =
+			file_attribute_parse_node
+				(tile_attr[i], root_node,
+				 file->min_buffer_size);
 	}
 
 	global_data->open_file = file;
@@ -490,6 +525,7 @@ gboolean file_save
 	gint i;
 	for (i=0; i<ATTRIBUTE_COUNT; i++)
 	{
+		if (!tile_attr[i]->enabled) { continue; }
 		xmlNode *data_node =
 			xml_get_child_node_with_prop
 				(attr_nodes[i], "data", "encoding", "csv");
