@@ -272,7 +272,7 @@ static xmlNode* file_attribute_parse_node
 			 "name", tile_attr->name);
 	if (!attr_node)
 		{
-			g_message("Attr [%s] not found. Creating...", tile_attr->name);
+//			g_message("Attr [%s] not found. Creating...", tile_attr->name);
 			attr_node = xmlNewNode(NULL, TILE_ATTR_STRING);
 			xmlSetProp(attr_node, "name", tile_attr->name);
 			xmlSetProp(attr_node, "defaultvalue",
@@ -284,7 +284,7 @@ static xmlNode* file_attribute_parse_node
 		if (!xml_get_child_node_with_prop
 				(attr_node, "data", "encoding", "csv"))
 		{
-			g_message("Attr [%s] has no csv encoded data. Creating node..", tile_attr->name);
+//			g_message("Attr [%s] has no csv encoded data. Creating node..", tile_attr->name);
 			xmlNode *data = xmlNewNode(NULL, "data");
 			xmlSetProp(data, "encoding", "csv");
 			xmlAddChild(data, xmlNewText(" "));

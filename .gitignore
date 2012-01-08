@@ -18,6 +18,7 @@ gui
 ###################
 *.txt
 *.conf
+*.svg
 gui.c
 path.c
 
