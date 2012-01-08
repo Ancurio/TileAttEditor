@@ -1,7 +1,7 @@
 
 #include <gtk/gtk.h>
 
-#define ATTRIBUTE_COUNT 2
+#define ATTRIBUTE_COUNT 3
 
 struct TileAttribute
 {
@@ -39,5 +39,6 @@ struct TileAttribute** tile_attr_create
 
 /* Individual attribute constructors */
 struct TileAttribute* attr_passability_create();
+struct TileAttribute* attr_bushflag_create();
 struct TileAttribute* attr_dummility_create();
 

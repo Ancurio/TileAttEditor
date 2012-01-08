@@ -30,8 +30,17 @@ struct TileAttribute** tile_attr_create
 		g_malloc(sizeof(struct TileAttribute*) * ATTRIBUTE_COUNT+1);
 
 	tile_attr[0] = attr_passability_create();
-	tile_attr[1] = attr_dummility_create();
-	tile_attr[ATTRIBUTE_COUNT] = 0;
+	tile_attr[1] = attr_bushflag_create();
+	tile_attr[2] = attr_dummility_create();
+	tile_attr[ATTRIBUTE_COUNT] = NULL;
+
+	//tile_attr[] =
+	//{
+		//attr_passability_create(),
+		//attr_bushflag_create(),
+		//attr_dummility_create(),
+		//NULL
+	//};
 
 	gint i; for (i=0;tile_attr[i];i++)
 		{ tile_attr[i]->global_data = global_data; }

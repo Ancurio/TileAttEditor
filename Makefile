@@ -2,7 +2,7 @@ app       = TileAttEditor
 objects   = main.o settings.o ui.o callback.o tileset-area.o \
             new-file-dialog.o settings-dialog.o save-changes-dialog.o \
             color.o file.o attribute.o util.o  \
-            attr-dummility.o attr-passability.o
+            attr-dummility.o attr-bushflag.o attr-passability.o
 include   = `pkg-config --libs --cflags gtk+-2.0 cairo` \
             `xml2-config --libs --cflags`
 gcc-flags = -g
@@ -50,6 +50,9 @@ util.o : util.c util.h
 
 attr-passability.o : attr-passability.c attribute.h
 	cc -c attr-passability.c -o attr-passability.o $(include) $(gcc-flags)
+
+attr-bushflag.o : attr-bushflag.c attribute.h
+	cc -c attr-bushflag.c -o attr-bushflag.o $(include) $(gcc-flags)
 
 attr-dummility.o : attr-dummility.c attribute.h
 	cc -c attr-dummility.c -o attr-dummility.o $(include) $(gcc-flags)

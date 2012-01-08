@@ -6,10 +6,10 @@
 
 #define G_TAU 2*G_PI
 
-#define CURVD 0.14
-#define AMPL  0.06
-#define SPANW 0.25
-#define SPANH 0.30
+#define CURVD 0.11
+#define AMPL  0.02
+#define SPANW 0.20
+#define SPANH 0.16
 #define LINEW 0.14
 
 
@@ -41,7 +41,7 @@ static void draw_attr
 ( gint attr_value, cairo_t *cr, gboolean hovered,
   gdouble offset_x, gdouble offset_y )
 {
-	cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+	cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
 
 	switch(attr_value)
 	{
