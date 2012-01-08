@@ -2,7 +2,8 @@ app       = TileAttEditor
 objects   = main.o settings.o ui.o callback.o tileset-area.o \
             new-file-dialog.o settings-dialog.o save-changes-dialog.o \
             color.o file.o attribute.o util.o  \
-            attr-dummility.o attr-bushflag.o attr-passability.o
+            attr-passability.o attr-quadpassability.o attr-priority.o  \
+            attr-bushflag.o attr-counterflag.o attr-terrainflag.o
 include   = `pkg-config --libs --cflags gtk+-2.0 cairo` \
             `xml2-config --libs --cflags`
 gcc-flags = -g
@@ -51,11 +52,20 @@ util.o : util.c util.h
 attr-passability.o : attr-passability.c attribute.h
 	cc -c attr-passability.c -o attr-passability.o $(include) $(gcc-flags)
 
+attr-quadpassability.o : attr-quadpassability.c attribute.h
+	cc -c attr-quadpassability.c -o attr-quadpassability.o $(include) $(gcc-flags)
+
+attr-priority.o : attr-priority.c attribute.h
+	cc -c attr-priority.c -o attr-priority.o $(include) $(gcc-flags)
+
 attr-bushflag.o : attr-bushflag.c attribute.h
 	cc -c attr-bushflag.c -o attr-bushflag.o $(include) $(gcc-flags)
 
-attr-dummility.o : attr-dummility.c attribute.h
-	cc -c attr-dummility.c -o attr-dummility.o $(include) $(gcc-flags)
+attr-counterflag.o : attr-counterflag.c attribute.h
+	cc -c attr-counterflag.c -o attr-counterflag.o $(include) $(gcc-flags)
+
+attr-terrainflag.o : attr-terrainflag.c attribute.h
+	cc -c attr-terrainflag.c -o attr-terrainflag.o $(include) $(gcc-flags)
 
 
 

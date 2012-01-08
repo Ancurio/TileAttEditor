@@ -16,11 +16,21 @@ void tile_attr_set_secondary_color
 	cairo_set_source_rgb(cr, 0, 0, 0);
 }
 
-//gint* tile_attr_create_value_buffer
-//( gint buffer_size )
-//{
-	//return malloc(sizeof(gint) * buffer_size);
-//}
+void tile_attr_set_color
+( cairo_t *cr, gboolean hovered, enum AttrColor color )
+{
+	switch (color)
+	{
+		case ATTR_COLOR_PRI :
+			if (hovered) { tile_attr_set_secondary_color(cr); }
+			else         { tile_attr_set_primary_color(cr); }
+			break;
+		case ATTR_COLOR_SEC :
+			if (hovered) { tile_attr_set_primary_color(cr); }
+			else         { tile_attr_set_secondary_color(cr); }
+	}
+}
+
 
 struct TileAttribute** tile_attr_create
 ( gpointer global_data )
@@ -30,8 +40,11 @@ struct TileAttribute** tile_attr_create
 		g_malloc(sizeof(struct TileAttribute*) * ATTRIBUTE_COUNT+1);
 
 	tile_attr[0] = attr_passability_create();
-	tile_attr[1] = attr_bushflag_create();
-	tile_attr[2] = attr_dummility_create();
+	tile_attr[1] = attr_quadpassability_create();
+	tile_attr[2] = attr_priority_create();
+	tile_attr[3] = attr_bushflag_create();
+	tile_attr[4] = attr_counterflag_create();
+	tile_attr[5] = attr_terrainflag_create();
 	tile_attr[ATTRIBUTE_COUNT] = NULL;
 
 	//tile_attr[] =

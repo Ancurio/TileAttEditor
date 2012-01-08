@@ -4,8 +4,6 @@
 
 #include "attribute.h"
 
-#define G_TAU 2*G_PI
-
 static gint tile_clicked
 ( gint old_value, gdouble x, gdouble y )
 {
@@ -32,12 +30,10 @@ static void draw_attr
 		         cairo_set_line_cap(cr, CAIRO_LINE_CAP_SQUARE);
 	}
 
-	if (hovered) { tile_attr_set_primary_color(cr); }
-	else         { tile_attr_set_secondary_color(cr); }
+	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
 	cairo_set_line_width(cr, 0.1);
 	cairo_stroke_preserve(cr);
-	if (hovered) { tile_attr_set_secondary_color(cr); }
-	else         { tile_attr_set_primary_color(cr); }
+	tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
 	cairo_set_line_width(cr, 0.05);
 	cairo_stroke(cr);
 }
