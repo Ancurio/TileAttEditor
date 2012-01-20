@@ -8,7 +8,6 @@ MINOR:
 	  instead of throwing it away
 	- allow filling buffers with defaultvalue when tileset source
 	  has expanded horizontally
-	- replace g_ascii_dtostr with g_snprintf for integers
 	- write detailed error messages for file opening
 	- write prototypes for static functions
 	- add const to gchar* parameters where neccessary

@@ -36,8 +36,10 @@ enum AttrColor
 	ATTR_COLOR_SEC,
 };
 
-void tile_attr_set_primary_color(cairo_t *cr);
-void tile_attr_set_secondary_color(cairo_t *cr);
+void tile_attr_set_primary_color
+( cairo_t *cr );
+void tile_attr_set_secondary_color
+( cairo_t *cr );
 void tile_attr_set_color
 ( cairo_t *cr, gboolean hovered, enum AttrColor color );
 
