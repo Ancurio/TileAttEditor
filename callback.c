@@ -78,6 +78,8 @@ static void file_open_attempt
 	}
 	file_parse(global_data, file);
 	global_data->open_file_path = _filename;
+	ui_filemenu_set_action_sensitivity
+		(global_data->main_window, TRUE);
 	ui_update_tileset_frame(global_data);
 	ui_set_buffer_changed(global_data, FALSE);
 	tileset_area_update_viewport(global_data);
@@ -242,6 +244,8 @@ void cb_filemenu_close
 		global_data->open_file_path = NULL;
 	}
 
+	ui_filemenu_set_action_sensitivity
+		(global_data->main_window, FALSE);
 	ui_update_tileset_frame(global_data);
 	ui_set_buffer_changed(global_data, FALSE);
 	tileset_area_update_viewport(global_data);

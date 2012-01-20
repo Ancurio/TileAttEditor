@@ -4,7 +4,7 @@
 
 #include "attribute.h"
 
-
+/* Style-Parameters: These define the visual look */
 #define LINEW 0.125
 #define LINEH 0.1
 #define HEADW 0.07
@@ -26,19 +26,16 @@ static enum QuadDirection get_direction
 {
 	gdouble angle = (0.5-y)/(x-0.5);
 
-	if (angle*angle < 1)
-		{ return (x > 0.5) ? QDIR_RIGHT : QDIR_LEFT; }
-	else
-		{ return (y > 0.5) ? QDIR_DOWN : QDIR_UP; }
+	return (angle*angle < 1) ?
+		((x > 0.5) ? QDIR_RIGHT : QDIR_LEFT) :
+		((y > 0.5) ? QDIR_DOWN  : QDIR_UP  ) ;
 }
 
 
 static gint tile_clicked
 ( gint old_value, gdouble x, gdouble y )
 {
-	enum QuadDirection dir = get_direction(x, y);
-
-	return (old_value & dir) ? old_value-dir : old_value+dir;
+	return old_value ^ get_direction(x, y);
 }
 
 static void draw_empty
@@ -133,8 +130,6 @@ static void draw_attr
 		}
 	else
 		{ draw_empty(cr, 0.5, 0.75, hovered&&(hover_dir&QDIR_DOWN)); }
-
-
 
 }
 

@@ -168,6 +168,8 @@ static void cb_button_ok_clicked
 		(global_data, file_create
 			(filename, tile_w, tile_h, tileset_name));
 
+	ui_filemenu_set_action_sensitivity
+		(global_data->main_window, TRUE);
 	ui_update_tileset_frame(global_data);
 	ui_set_buffer_changed(global_data, TRUE);
 	tileset_area_update_viewport(global_data);

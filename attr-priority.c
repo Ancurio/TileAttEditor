@@ -6,9 +6,12 @@
 
 #define FLAG_MAX_VAL 5
 
+/* Style-Parameters: These define the visual look */
 #define FONT_SIZE 0.5
-#define OUTL_SIZE 0.03
-#define STARD     0.17
+#define STAR_SIZE 0.375
+#define OUTL_SIZE 0.07
+#define STARD     0.2
+#define STAR_OFFY 0.02
 
 
 static gint tile_clicked
@@ -33,24 +36,27 @@ static void draw_attr
 	switch (attr_value)
 	{
 		case -1 :
-			cairo_set_font_size(cr, FONT_SIZE*1.5);
+			cairo_set_font_size(cr, FONT_SIZE*1.2);
 			cairo_text_extents(cr, "★", &ext);
-			cairo_move_to
-				(cr, 0.5-ext.width/2-ext.x_bearing,
-					 0.5-ext.height/2-ext.y_bearing);
-			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-			cairo_show_text(cr, "★");
 
 			cairo_move_to
 				(cr, 0.5-ext.width/2-ext.x_bearing,
 					 0.5-ext.height/2-ext.y_bearing);
 			cairo_text_path(cr, "★");
 			tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-			cairo_set_line_width(cr, OUTL_SIZE*1.5);
+			cairo_set_line_width(cr, OUTL_SIZE*1.2);
 			cairo_stroke(cr);
+
+			cairo_move_to
+				(cr, 0.5-ext.width/2-ext.x_bearing,
+					 0.5-ext.height/2-ext.y_bearing);
+			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
+			cairo_show_text(cr, "★");
+
 			break;
 
 		case 0  :
+			cairo_move_to(cr, 0.5, 0.5);
 			cairo_arc(cr, 0.5, 0.5, 0.05, 0, G_TAU);
 			tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
 			cairo_set_line_width(cr, 0.06);
@@ -60,37 +66,39 @@ static void draw_attr
 			break;
 
 		default :
-			cairo_set_font_size(cr, FONT_SIZE);
+			cairo_set_font_size(cr, STAR_SIZE);
 			cairo_text_extents(cr, "★", &ext);
-			cairo_move_to
-				(cr, 0.5-STARD-ext.width/2-ext.x_bearing,
-					 0.5-ext.height/2-ext.y_bearing);
-			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-			cairo_show_text(cr, "★");
 
 			cairo_move_to
 				(cr, 0.5-STARD-ext.width/2-ext.x_bearing,
-					 0.5-ext.height/2-ext.y_bearing);
+					 0.5-STAR_OFFY-ext.height/2-ext.y_bearing);
 			cairo_text_path(cr, "★");
 			tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
 			cairo_set_line_width(cr, OUTL_SIZE);
 			cairo_stroke(cr);
 
-			g_ascii_dtostr(value_str, 4, (gdouble)attr_value);
-			cairo_text_extents(cr, value_str, &ext);
 			cairo_move_to
-				(cr, 0.5+STARD-ext.width/2-ext.x_bearing,
-					 0.5-ext.height/2-ext.y_bearing);
+				(cr, 0.5-STARD-ext.width/2-ext.x_bearing,
+					 0.5-STAR_OFFY-ext.height/2-ext.y_bearing);
 			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-			cairo_show_text(cr, value_str);
+			cairo_show_text(cr, "★");
+
+			g_ascii_dtostr(value_str, 4, (gdouble)attr_value);
+			cairo_set_font_size(cr, FONT_SIZE);
+			cairo_text_extents(cr, value_str, &ext);
 
 			cairo_move_to
 				(cr, 0.5+STARD-ext.width/2-ext.x_bearing,
 					 0.5-ext.height/2-ext.y_bearing);
 			cairo_text_path(cr, value_str);
 			tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-			cairo_set_line_width(cr, OUTL_SIZE);
 			cairo_stroke(cr);
+
+			cairo_move_to
+				(cr, 0.5+STARD-ext.width/2-ext.x_bearing,
+					 0.5-ext.height/2-ext.y_bearing);
+			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
+			cairo_show_text(cr, value_str);
 	}
 }
 

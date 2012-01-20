@@ -4,6 +4,11 @@ CRITICAL:
 
 MINOR:
 	
+	- if file_check successfully creates a surface, reuse it in file_parse
+	  instead of throwing it away
+	- allow filling buffers with defaultvalue when tileset source
+	  has expanded horizontally
+	- replace g_ascii_dtostr with g_snprintf for integers
 	- write detailed error messages for file opening
 	- write prototypes for static functions
 	- add const to gchar* parameters where neccessary

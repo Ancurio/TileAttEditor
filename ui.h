@@ -15,6 +15,8 @@ struct MainWindow
 	GtkWidget *attr_button_box;
 	GtkWidget *workspace_separator;
 
+	GtkActionGroup *action_group;
+
 };
 
 void ui_main_window_create
@@ -37,3 +39,9 @@ void ui_set_open_file_path
 
 void ui_update_tileset_frame
 ( gpointer _global_data );
+
+void ui_filemenu_set_action_save_sensitivity
+( struct MainWindow *main_window, gboolean sensitive );
+
+void ui_filemenu_set_action_sensitivity
+( struct MainWindow *main_window, gboolean sensitive );

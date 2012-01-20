@@ -4,6 +4,7 @@
 
 #include "attribute.h"
 
+/* Style-Parameters: These define the visual look */
 #define CURVD 0.11
 #define AMPL  0.02
 #define SPANW 0.20

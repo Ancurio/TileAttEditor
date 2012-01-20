@@ -6,8 +6,9 @@
 
 #define FLAG_MAX_VAL 7
 
+/* Style-Parameters: These define the visual look */
 #define FONT_SIZE 0.7
-#define OUTL_SIZE 0.035
+#define OUTL_SIZE 0.08
 
 
 static gint tile_clicked
@@ -32,11 +33,6 @@ static void draw_attr
 	cairo_set_font_size(cr, FONT_SIZE);
 	cairo_text_extents_t ext;
 	cairo_text_extents(cr, value_str, &ext);
-	cairo_move_to
-		(cr, 0.5-ext.width/2-ext.x_bearing,
-		     0.5-ext.height/2-ext.y_bearing);
-	tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-	cairo_show_text(cr, value_str);
 
 	cairo_move_to
 		(cr, 0.5-ext.width/2-ext.x_bearing,
@@ -45,6 +41,12 @@ static void draw_attr
 	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
 	cairo_set_line_width(cr, OUTL_SIZE);
 	cairo_stroke(cr);
+
+	cairo_move_to
+		(cr, 0.5-ext.width/2-ext.x_bearing,
+		     0.5-ext.height/2-ext.y_bearing);
+	tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
+	cairo_show_text(cr, value_str);
 }
 
 struct TileAttribute* attr_terrainflag_create

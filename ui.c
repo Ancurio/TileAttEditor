@@ -62,7 +62,8 @@ static guint dnd_target_entries_count =
 
 /* returns a hbox containing the menubar */
 static GtkWidget* ui_menubar_create
-( GtkWidget *window, struct GlobalData *global_data )
+( GtkWidget *window, struct GlobalData *global_data,
+  GtkActionGroup **action_group )
 {
 	GtkUIManager *ui;
 	GtkWidget *ui_widget;
@@ -97,7 +98,9 @@ static GtkWidget* ui_menubar_create
 	ui_widget = gtk_ui_manager_get_widget(ui, "/MenuBar");
 	ui_wrap_box = gtk_hbox_new(FALSE, 0);
 	gtk_box_pack_start(GTK_BOX(ui_wrap_box), ui_widget, TRUE, TRUE, 0);
-	g_object_unref(ui);
+//	g_object_unref(ui);
+
+	*action_group = actions;
 
 	return ui_wrap_box;
 }
@@ -270,17 +273,6 @@ void ui_main_window_create
 		gtk_statusbar_get_context_id
 			(GTK_STATUSBAR(statusbar), "");
 
-	/** [hackery] **/
-	gtk_box_pack_start(GTK_BOX(attribute_box),
-		gtk_button_new_with_label("DummyAttribute"), TRUE, TRUE, 8);
-	gtk_box_pack_start(GTK_BOX(attribute_box),
-		gtk_button_new_with_label("SecondAttribute"), TRUE, TRUE, 8);
-	gtk_box_pack_start(GTK_BOX(attribute_box),
-		gtk_button_new_with_label("ThirdAttribute"), TRUE, TRUE, 8);
-	gtk_box_pack_start(GTK_BOX(attribute_box),
-		gtk_button_new_with_label("Munyamunamisha"), TRUE, TRUE, 8);
-	/** [/hackery] **/
-
 	gtk_frame_set_shadow_type(GTK_FRAME(tileset_frame), GTK_SHADOW_IN);
 	gtk_container_add(GTK_CONTAINER(tileset_frame), tilesetarea_box);
 
@@ -323,7 +315,10 @@ void ui_main_window_create
 		tileset_area_update_viewport(global_data);
 	}
 
-	menubar_box = ui_menubar_create(window, global_data);
+	menubar_box = ui_menubar_create
+		(window, global_data, &main_window->action_group);
+	ui_filemenu_set_action_sensitivity
+		(main_window, (gboolean)global_data->open_file);
 	gtk_widget_show_all(menubar_box);
 
 	gtk_box_pack_start(GTK_BOX(mainbox), menubar_box, FALSE, FALSE, 0);
@@ -501,6 +496,8 @@ void ui_set_buffer_changed
 	CAST_GLOBAL_DATA_PTR(_global_data);
 	global_data->buffer_changed = buffer_changed;
 	ui_update_window_title(global_data);
+	ui_filemenu_set_action_save_sensitivity
+		(global_data->main_window, buffer_changed);
 }
 
 void ui_set_open_file_path
@@ -529,6 +526,28 @@ void ui_update_tileset_frame
 		(GTK_FRAME(global_data->main_window->tileset_frame),
 		 frame_title->str);
 	g_string_free(frame_title, TRUE);
+}
+
+void ui_filemenu_set_action_save_sensitivity
+( struct MainWindow *main_window, gboolean sensitive )
+{
+	gtk_action_set_sensitive
+		(GTK_ACTION(gtk_action_group_get_action
+			(GTK_ACTION_GROUP(main_window->action_group),
+			 "Save")),
+		 sensitive);
+}
+
+void ui_filemenu_set_action_sensitivity
+( struct MainWindow *main_window, gboolean sensitive )
+{
+	ui_filemenu_set_action_save_sensitivity
+		(main_window, sensitive);
+	gtk_action_set_sensitive
+		(GTK_ACTION(gtk_action_group_get_action
+			(GTK_ACTION_GROUP(main_window->action_group),
+			 "Close")),
+		 sensitive);
 }
 
 
