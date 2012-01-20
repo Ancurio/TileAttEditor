@@ -238,7 +238,7 @@ static gchar* csv_create_string
 	gint i, row_watch = 0;
 	for (i=0; i<buffer_size-1; i++)
 	{
-		g_ascii_dtostr(buffer, 16, (gdouble)value_buffer[i]);
+		g_snprintf(buffer, 16, "%d", value_buffer[i]);
 		g_string_append(csv_string, buffer);
 		g_string_append_c(csv_string, ',');
 
@@ -249,7 +249,7 @@ static gchar* csv_create_string
 			row_watch = 0;
 		}
 	}
-	g_ascii_dtostr(buffer, 16, (gdouble)value_buffer[i]);
+	g_snprintf(buffer, 16, "%d", value_buffer[i]);
 	g_string_append(csv_string, buffer);
 
 	g_string_append(csv_string, "\n  ");
@@ -275,8 +275,8 @@ static xmlNode* file_attribute_parse_node
 //			g_message("Attr [%s] not found. Creating...", tile_attr->name);
 			attr_node = xmlNewNode(NULL, TILE_ATTR_STRING);
 			xmlSetProp(attr_node, "name", tile_attr->name);
-			xmlSetProp(attr_node, "defaultvalue",
-				g_ascii_dtostr(buffer, 16, (gdouble)tile_attr->default_value));
+			g_snprintf(buffer, 16, "%d", tile_attr->default_value);
+			xmlSetProp(attr_node, "defaultvalue", buffer);
 			xmlAddChild(root_node, attr_node);
 			xmlAddPrevSibling(attr_node, xmlNewText(" "));
 			xmlAddNextSibling(attr_node, xmlNewText("\n"));
@@ -334,11 +334,11 @@ struct File* file_create
 
 	gchar buffer[8];
 
-	xmlSetProp(root_node, (xmlChar*)"tilewidth",
-	g_ascii_dtostr(buffer, 8, (gdouble)tile_width));
+	g_snprintf(buffer, 8, "%d", tile_width);
+	xmlSetProp(root_node, (xmlChar*)"tilewidth", buffer);
 
-	xmlSetProp(root_node, (xmlChar*)"tileheight",
-	g_ascii_dtostr(buffer, 8, (gdouble)tile_height));
+	g_snprintf(buffer, 8, "%d", tile_height);
+	xmlSetProp(root_node, (xmlChar*)"tileheight", buffer);
 
 	xmlSetProp(root_node, "name", (xmlChar*)tileset_name);
 
@@ -487,9 +487,8 @@ gboolean file_parse
 	}
 	else
 	{
-		xmlSetProp(root_node, "width",
-			g_ascii_dtostr(buffer, 16,
-				(gint)tileset->width/tile_width));
+		g_snprintf(buffer, 16, "%d", tileset->width/tile_width);
+		xmlSetProp(root_node, "width", buffer);
 	}
 
 	if (xml_get_attribute_contents(root_node, "height"))
@@ -502,9 +501,8 @@ gboolean file_parse
 	}
 	else
 	{
-		xmlSetProp(root_node, "height",
-			g_ascii_dtostr(buffer, 16,
-				(gint)tileset->height/tile_height));
+		g_snprintf(buffer, 16, "%d", tileset->height/tile_height);
+		xmlSetProp(root_node, "height", buffer);
 	}
 
 	file->attr_nodes =

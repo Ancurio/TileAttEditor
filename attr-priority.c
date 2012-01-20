@@ -83,7 +83,7 @@ static void draw_attr
 			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
 			cairo_show_text(cr, "★");
 
-			g_ascii_dtostr(value_str, 4, (gdouble)attr_value);
+			g_snprintf(value_str, 4, "%d", attr_value);
 			cairo_set_font_size(cr, FONT_SIZE);
 			cairo_text_extents(cr, value_str, &ext);
 

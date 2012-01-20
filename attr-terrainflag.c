@@ -25,7 +25,7 @@ static void draw_attr
   gdouble offset_x, gdouble offset_y )
 {
 	gchar value_str[4];
-	g_ascii_dtostr(value_str, 4, (gdouble)attr_value);
+	g_snprintf(value_str, 4, "%d", attr_value);
 
 	cairo_select_font_face
 		(cr, "Fantasy",
