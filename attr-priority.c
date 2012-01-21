@@ -117,3 +117,4 @@ struct TileAttribute* attr_priority_create
 
 	return attr;
 }
+

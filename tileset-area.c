@@ -370,20 +370,3 @@ void tileset_area_queue_tile_redraw
 	gdk_region_destroy(region);
 }
 
-//void tileset_area_queue_tile_redraw
-//( struct GlobalData *global_data, gint tile_id )
-//{
-	//struct Tileset *tileset = global_data->tileset;
-
-	//gint tile_x =
-			//tile_id % (tileset->width/tileset->tile_width);
-	//gint tile_y =
-		//tile_id / (tileset->width/tileset->tile_width);
-
-	//gtk_widget_queue_draw_area
-		//(global_data->main_window->tileset_area,
-		 //(gint)(tile_x * tileset->tile_disp_width),
-		 //(gint)(tile_y * tileset->tile_disp_height),
-		 //(gint)tileset->tile_disp_width,
-		 //(gint)tileset->tile_disp_height);
-//}

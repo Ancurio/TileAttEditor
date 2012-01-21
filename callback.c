@@ -646,3 +646,4 @@ gboolean cb_tileset_area_drag_data_received
 clean_up:
 	g_free(path);
 }
+

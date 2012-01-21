@@ -264,3 +264,4 @@ void settings_destroy
 
 	g_free(settings);
 }
+

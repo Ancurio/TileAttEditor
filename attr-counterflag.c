@@ -56,3 +56,4 @@ struct TileAttribute* attr_counterflag_create
 
 	return attr;
 }
+

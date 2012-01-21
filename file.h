@@ -78,4 +78,3 @@ gboolean file_close /* frees all file related data */
 void file_open_attempt_quiet
 ( struct GlobalData *global_data, const gchar *filename );
 
-

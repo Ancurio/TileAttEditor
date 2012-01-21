@@ -18,4 +18,3 @@ void tileset_area_redraw_cache
 
 void tileset_area_queue_tile_redraw
 ( struct GlobalData *global_data, gint n_tiles, ... );
-

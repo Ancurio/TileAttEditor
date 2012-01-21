@@ -160,3 +160,4 @@ struct TileAttribute* attr_quadpassability_create
 
 	return attr;
 }
+

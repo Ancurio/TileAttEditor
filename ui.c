@@ -572,4 +572,3 @@ void ui_filemenu_set_action_sensitivity
 		 sensitive);
 }
 
-

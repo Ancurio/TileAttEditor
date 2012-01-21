@@ -53,3 +53,4 @@ struct TileAttribute* attr_passability_create
 
 	return attr;
 }
+

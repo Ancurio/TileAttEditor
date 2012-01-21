@@ -350,3 +350,4 @@ void new_file_dialog_run
 
 	gtk_widget_show_all(dialog_window);
 }
+

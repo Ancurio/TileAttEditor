@@ -64,3 +64,4 @@ struct TileAttribute* attr_terrainflag_create
 
 	return attr;
 }
+

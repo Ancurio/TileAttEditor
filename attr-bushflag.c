@@ -74,3 +74,4 @@ struct TileAttribute* attr_bushflag_create
 
 	return attr;
 }
+

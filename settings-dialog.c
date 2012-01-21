@@ -344,3 +344,4 @@ void settings_dialog_run
 
 	gtk_widget_show_all(dialog_window);
 }
+
