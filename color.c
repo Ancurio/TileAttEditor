@@ -57,3 +57,10 @@ void color_set_button
 		(GTK_COLOR_BUTTON( button ),
 		(guint16)(color->a * 0x0FFFF));
 }
+
+void color_destroy
+( struct Color *color )
+{
+	g_free(color);
+}
+

@@ -9,7 +9,7 @@
 #include "file.h"
 
 
-struct GlobalData* global_data_create
+static struct GlobalData* global_data_create
 ( )
 {
 	struct GlobalData *global_data =
@@ -25,6 +25,19 @@ struct GlobalData* global_data_create
 	global_data->open_file_path = NULL;
 
 	return global_data;
+}
+
+static void global_data_destroy
+( struct GlobalData *global_data )
+{
+	file_close(global_data);
+	settings_destroy(global_data->settings);
+	tile_attr_destroy(global_data->tile_attributes);
+	ui_main_window_destroy(global_data->main_window);
+
+	g_free(global_data->open_file_path);
+
+	g_free(global_data);
 }
 
 
@@ -67,12 +80,14 @@ gint main
 	if (global_data->open_file_path)
 	{
 		global_data->settings->last_opened =
-			global_data->open_file_path;
+			g_strdup(global_data->open_file_path);
 	}
 	else { global_data->settings->last_opened = ""; }
 
 	settings_write
 		(global_data->settings, global_data->tile_attributes);
+
+	global_data_destroy(global_data);
 
 	return 0;
 }

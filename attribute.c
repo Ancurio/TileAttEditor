@@ -60,3 +60,14 @@ struct TileAttribute** tile_attr_create
 
 	return tile_attr;
 }
+
+void tile_attr_destroy
+( struct TileAttribute **tile_attr )
+{
+	struct TileAttribute **_tile_attr;
+	for (_tile_attr = tile_attr; *_tile_attr; _tile_attr++)
+		{ g_free(*_tile_attr); }
+
+	g_free(tile_attr);
+}
+

@@ -22,6 +22,9 @@ struct MainWindow
 void ui_main_window_create
 ( gpointer _global_data );
 
+void ui_main_window_destroy
+( struct MainWindow *main_window );
+
 void attr_button_box_set_expand
 ( gpointer _global_data, gboolean expand );
 

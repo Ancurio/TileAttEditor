@@ -219,7 +219,7 @@ void settings_read
 	KEY_TO_VALUE(settings->window_width, integer, 128);
 	KEY_TO_VALUE(settings->window_height, integer, 128);
 
-	KEY_TO_VALUE(settings->last_opened, string, "");
+	KEY_TO_VALUE(settings->last_opened, string, g_strdup(""));
 
 	global_data->settings = settings;
 
@@ -241,4 +241,16 @@ void settings_read
 	}
 
 	g_free(keyfile_filename);
+}
+
+void settings_destroy
+( struct Settings *settings )
+{
+	color_destroy(settings->bg_color);
+	color_destroy(settings->grid_color);
+
+	if ((*settings->last_opened) != '\0')
+		{ g_free(settings->last_opened); }
+
+	g_free(settings);
 }

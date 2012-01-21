@@ -116,25 +116,13 @@ gboolean tileset_create_from_file
 	global_data->tileset = tileset;
 	tileset_update_scale(global_data);
 
-	if (global_data->main_window)
-	{
-		gtk_widget_show
-			(global_data->main_window->tileset_area);
-	}
-
 	return TRUE;
 
 }
 
 void tileset_destroy
-( struct GlobalData *global_data )
+( struct Tileset *tileset )
 {
-	gtk_widget_hide
-		(global_data->main_window->tileset_area);
-
-	struct Tileset *tileset =
-		global_data->tileset;
-
 	if (!tileset) { return; }
 
 	if (tileset->image_file)
@@ -150,7 +138,6 @@ void tileset_destroy
 		{ cairo_surface_destroy(tileset->cached_composition); }
 
 	g_free(tileset);
-	global_data->tileset = NULL;
 }
 
 void tileset_area_update_viewport

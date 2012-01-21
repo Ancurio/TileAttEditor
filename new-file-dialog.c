@@ -174,6 +174,7 @@ static void cb_button_ok_clicked
 	ui_set_buffer_changed(global_data, TRUE);
 	tileset_area_update_viewport(global_data);
 	tileset_area_redraw_cache(global_data);
+	gtk_widget_show(global_data->main_window->tileset_area);
 	gtk_widget_queue_draw
 		(global_data->main_window->tileset_area);
 	g_free(filename);

@@ -48,6 +48,8 @@ void tile_attr_set_color
 struct TileAttribute** tile_attr_create
 ( gpointer global_data );
 
+void tile_attr_destroy
+( struct TileAttribute **tile_attr );
 
 /* Individual attribute constructors */
 struct TileAttribute* attr_passability_create();

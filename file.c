@@ -592,7 +592,8 @@ gboolean file_close
 
 	file_destroy(file);
 
-	tileset_destroy(global_data);
+	tileset_destroy(global_data->tileset);
+	global_data->tileset = NULL;
 
 	struct TileAttribute **tile_attr;
 	for (tile_attr = global_data->tile_attributes;

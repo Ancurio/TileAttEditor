@@ -346,6 +346,12 @@ void ui_main_window_create
 	}
 }
 
+void ui_main_window_destroy
+( struct MainWindow *main_window )
+{
+	g_free(main_window);
+}
+
 
 void attr_button_box_set_expand
 ( gpointer _global_data, gboolean expand )

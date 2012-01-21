@@ -21,3 +21,6 @@ void color_set_from_button
 
 void color_set_button
 ( struct Color *color, GtkWidget *button );
+
+void color_destroy
+( struct Color *color );
