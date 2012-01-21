@@ -187,7 +187,8 @@ void settings_read
 	VALUE_TO_KEY_INIT(keyfile, "Settings")
 
 	KEY_TO_VALUE(settings->active_attr_id, integer, 0);
-	if (settings->active_attr_id > ATTRIBUTE_COUNT-1)
+	if (settings->active_attr_id > ATTRIBUTE_COUNT-1 ||
+	    settings->active_attr_id < 0                   )
 		{ settings->active_attr_id = 0;}
 
 	KEY_TO_VALUE(settings->tileset_scale_ratio, double, 1.5);

@@ -75,11 +75,20 @@ gboolean tileset_create_from_file
 ( struct GlobalData *global_data, gchar *tileset_file,
   gint tile_width, gint tile_height )
 {
-	cairo_surface_t *surface =
-		cairo_image_surface_create_from_png(tileset_file);
+	cairo_surface_t *surface;
 
-	if (cairo_surface_status(surface)
-	    != CAIRO_STATUS_SUCCESS)   { return FALSE; }
+	if (global_data->reusable_surface)
+	{
+		surface = global_data->reusable_surface;
+		global_data->reusable_surface = NULL;
+	}
+	else
+	{
+		surface =
+			cairo_image_surface_create_from_png(tileset_file);
+		if (cairo_surface_status(surface)
+	    != CAIRO_STATUS_SUCCESS) { return FALSE; }
+	}
 
 	if (!global_data->tileset)
 	{

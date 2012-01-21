@@ -444,7 +444,7 @@ skip_filetest:
 		cairo_surface_destroy(check);
 		ERROR(BAD_IMAGE_FILE, FALSE);
 	}
-	cairo_surface_destroy(check);
+	global_data->reusable_surface = check;
 
 	return TRUE;
 }
@@ -606,7 +606,7 @@ gboolean file_close
 }
 
 
-void file_open_attempt_noerror
+void file_open_attempt_quiet
 ( struct GlobalData *global_data, const gchar *filename )
 {
 	struct File *file = file_open(filename, NULL);

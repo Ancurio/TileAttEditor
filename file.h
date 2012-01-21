@@ -75,7 +75,7 @@ gboolean file_close /* frees all file related data */
 ( struct GlobalData *global_data );
 
 
-void file_open_attempt_noerror
+void file_open_attempt_quiet
 ( struct GlobalData *global_data, const gchar *filename );
 
 

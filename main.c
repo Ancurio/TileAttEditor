@@ -18,6 +18,7 @@ struct GlobalData* global_data_create
 	global_data->hovered_tile = -1;
 	global_data->statusbar_context_id = 0;
 	global_data->statusbar_message_id = 0;
+	global_data->reusable_surface = NULL;
 	global_data->tileset = NULL;
 	global_data->settings_dialog = NULL;
 	global_data->new_file_dialog = NULL;
@@ -44,11 +45,11 @@ gint main
 		gchar filepath[1024];
 		realpath(argv[1], filepath);
 
-		file_open_attempt_noerror(global_data, filepath);
+		file_open_attempt_quiet(global_data, filepath);
 	}
 	else
 	{
-		file_open_attempt_noerror
+		file_open_attempt_quiet
 			(global_data, global_data->settings->last_opened);
 	}
 
@@ -58,10 +59,6 @@ gint main
 	//g_message("Conclusion: %d : %d : %d : %d : %d : %d : %d : %s : %d : %d : %d",
 		//t->width, t->height, t->disp_width, t->disp_height, t->tile_width, t->tile_height, t->tile_count, t->image_file, t->cairo_surface, t->cairo_scaled_surface, t->cached_composition);
 	//cairo_surface_write_to_png(t->cairo_surface, "cairo_surface.png"); cairo_surface_write_to_png(t->cairo_scaled_surface, "cairo_scaled_surface.png"); cairo_surface_write_to_png(t->cached_composition, "cached_composition.png");
-
-//	if (argc > 1)
-//		{ file_open(argv[1]) }
-
 
 	gtk_widget_show(global_data->main_window->window);
 
@@ -76,5 +73,6 @@ gint main
 
 	settings_write
 		(global_data->settings, global_data->tile_attributes);
+
 	return 0;
 }

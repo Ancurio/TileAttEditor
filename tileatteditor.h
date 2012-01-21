@@ -55,6 +55,7 @@ struct GlobalData
 	gdouble hovered_offset_y;
 	guint statusbar_context_id;
 	guint statusbar_message_id;
+	gpointer reusable_surface;
 
 	struct Settings *settings;
 	struct Tileset *tileset;

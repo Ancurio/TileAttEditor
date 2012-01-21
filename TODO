@@ -4,8 +4,6 @@ CRITICAL:
 
 MINOR:
 	
-	- if file_check successfully creates a surface, reuse it in file_parse
-	  instead of throwing it away
 	- allow filling buffers with defaultvalue when tileset source
 	  has expanded horizontally
 	- write detailed error messages for file opening
@@ -15,7 +13,6 @@ MINOR:
 	- fine tune gcc include dirs for each .c file (to speed up compilation)
 	- make many parts of the app independent of GlobalData header
 	  (make them return data instead of attaching it to gdata themselves)
-	- maybe make function prototypes in headers more uniform..
 	- create app icon
 	
 EXPERIMENTAL:
