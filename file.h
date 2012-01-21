@@ -21,7 +21,7 @@ struct File						/* member set by:   */
 	xmlNode **attr_nodes;		/* file_parse       */
 
 	gint min_buffer_size;		/* file_parse       */
-	gchar *tileset_name;				/* file_parse       */
+	gchar *tileset_name;		/* file_parse       */
 
 //	xmlSaveCtxt *save_context;	/* (placeholder) */
 

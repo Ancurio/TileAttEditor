@@ -67,7 +67,7 @@ void activate_other_attribute
 }
 
 gint tile_attr_find_id
-( struct TileAttribute *tile_attr )
+( const struct TileAttribute *tile_attr )
 {
 	CAST_GLOBAL_DATA_PTR(tile_attr->global_data)
 	gint i;
@@ -111,11 +111,4 @@ gchar* get_filename_from_path
 
 	return filename;
 }
-
-
-
-
-
-
-
 

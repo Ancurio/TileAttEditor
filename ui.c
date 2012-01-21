@@ -9,9 +9,25 @@
 #include "file.h"
 
 
+/* private functions */
+static GtkWidget* ui_menubar_create
+( GtkWidget *window, struct GlobalData *global_data,
+  GtkActionGroup **action_group );
+
+static GtkWidget* ui_tilesetarea_create
+( GtkWidget **_tileset_area, GtkWidget **_tileset_viewport,
+  gpointer global_data );
+
+static GtkWidget* ui_attribute_buttons_create
+( struct GlobalData *global_data );
+
+
+static void gtk_window_set_limited_size
+( GtkWindow *window, gint win_w, gint win_h );
 
 static void ui_update_window_title
 ( struct GlobalData *global_data );
+/* ----------------- */
 
 
 static GtkActionEntry action_entries[] =

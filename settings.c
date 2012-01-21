@@ -7,6 +7,16 @@
 
 #define SETTINGS_FILE_NAME "TileAttEditor.conf"
 
+
+/* private functions */
+static gchar* settings_chomp_identifier
+( gchar *identifier );
+
+static gchar* settings_get_keyfile_path
+( gboolean mkdir );
+/* ----------------- */
+
+
 #define VALUE_TO_KEY_INIT(keyfile, groupname)                  \
     GKeyFile *VALUE_TO_KEY_KEYFILE = keyfile;                  \
     const gchar *VALUE_TO_KEY_GROUPNAME = groupname;

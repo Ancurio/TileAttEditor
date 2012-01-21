@@ -4,6 +4,13 @@
 
 #include "color.h"
 
+
+/* private functions */
+static gdouble check_value
+( gdouble value );
+/* ----------------- */
+
+
 static gdouble check_value
 ( gdouble value )
 {

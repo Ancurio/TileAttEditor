@@ -9,6 +9,15 @@
 #include "file.h"
 
 
+/* private functions */
+static struct GlobalData* global_data_create
+( );
+
+static void global_data_destroy
+( struct GlobalData *global_data );
+/* ----------------- */
+
+
 static struct GlobalData* global_data_create
 ( )
 {

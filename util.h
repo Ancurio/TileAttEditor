@@ -22,7 +22,7 @@ void activate_other_attribute
 ( struct GlobalData *global_data );
 
 gint tile_attr_find_id
-( struct TileAttribute *tile_attr );
+( const struct TileAttribute *tile_attr );
 
 gchar* get_filename_from_path
 ( const gchar *path, gchar dlm );

@@ -4,11 +4,7 @@ CRITICAL:
 
 MINOR:
 	
-	- allow filling buffers with defaultvalue when tileset source
-	  has expanded horizontally
 	- write detailed error messages for file opening
-	- write prototypes for static functions
-	- add const to gchar* parameters where neccessary
 	- outsource parts of "Tileset" to "TilesetArea"
 	- fine tune gcc include dirs for each .c file (to speed up compilation)
 	- make many parts of the app independent of GlobalData header
@@ -17,6 +13,8 @@ MINOR:
 	
 EXPERIMENTAL:
 
+	- allow filling buffers with defaultvalue when tileset source
+	  has expanded horizontally
 	- add gif and jpeg support through gdk (j4f)
 	
 	- Add some humble license to the top of every source file =)

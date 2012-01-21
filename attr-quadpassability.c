@@ -13,6 +13,18 @@
 #define OUTLW 0.06
 
 
+/* private functions */
+static enum QuadDirection get_direction
+( gdouble x, gdouble y );
+
+static void draw_empty
+( cairo_t *cr, gdouble x, gdouble y, gboolean hovered );
+
+static void quaddir_draw
+( cairo_t *cr, gboolean hovered );
+/* ----------------- */
+
+
 enum QuadDirection
 {
 	QDIR_LEFT  = 1 << 0,

@@ -8,8 +8,45 @@
 #define TILE_ATTR_STRING "tileattribute"
 
 
+/* private functions */
 static xmlChar* xml_get_attribute_contents
-( xmlNode *node, xmlChar *name )
+( xmlNode *node, const xmlChar *name );
+
+static xmlNode* xml_get_child_node
+( xmlNode *parent, const xmlChar *name );
+
+static xmlNode* xml_get_child_node_with_prop
+( xmlNode *parent, const xmlChar *node_name,
+  const xmlChar *prop_name, const xmlChar *prop_value );
+
+
+static gint str_len
+( const gchar *string );
+
+
+static gchar* make_relative_path
+( const gchar *base, const gchar *dest, gchar dlm );
+
+static gchar* make_absolute_path
+( const gchar *base, const gchar *rel_path, gchar dlm );
+
+
+static gchar* csv_create_string
+( const gint *value_buffer, guint buffer_size, gint row_length );
+
+static gint* csv_parse_string
+(const gchar *str, guint *buffer_size,
+ gint default_value, gint min_buffer_size);
+
+
+static xmlNode* file_attribute_parse_node
+( struct TileAttribute *tile_attr, xmlNode *root_node,
+  gint min_buffer_size );
+/* ----------------- */
+
+
+static xmlChar* xml_get_attribute_contents
+( xmlNode *node, const xmlChar *name )
 {
 	xmlAttr *attr;
 	for (attr = node->properties; attr; attr = attr->next)
@@ -20,8 +57,8 @@ static xmlChar* xml_get_attribute_contents
 	return NULL;
 }
 
-static xmlNodePtr xml_get_child_node
-( xmlNode *parent, xmlChar *name )
+static xmlNode* xml_get_child_node
+( xmlNode *parent, const xmlChar *name )
 {
 	xmlNode *node;
 	for (node = parent->children; node; node = node->next)
@@ -31,9 +68,9 @@ static xmlNodePtr xml_get_child_node
 	return NULL;
 }
 
-static xmlNodePtr xml_get_child_node_with_prop
-( xmlNode *parent, xmlChar *node_name,
-  xmlChar *prop_name, xmlChar *prop_value )
+static xmlNode* xml_get_child_node_with_prop
+( xmlNode *parent, const xmlChar *node_name,
+  const xmlChar *prop_name, const xmlChar *prop_value )
 {
 	xmlNode *node;
 	for (node = parent->children; node; node = node->next)
@@ -48,18 +85,19 @@ static xmlNodePtr xml_get_child_node_with_prop
 }
 
 
-static gint str_len(const gchar *string)
+static gint str_len
+( const gchar *string )
 {
 	gint i; for (i=0;string[i] != '\0';i++) {}
 	return i;
 }
 
 static gchar* make_relative_path
-( gchar *base, gchar *dest, gchar dlm )
+( const gchar *base, const gchar *dest, gchar dlm )
 {
 	if (!(base&&dest)) {return NULL;}	/* check if empty strings */
 
-	gchar *p;
+	const gchar *p;
 	for (p=base;*(p+1);p++)				/* check for two consecutive dlms */
 		{ if (*p == dlm && *(p+1) == dlm) { return NULL; } }
 	for (p=dest;*(p+1);p++)
@@ -172,7 +210,7 @@ void str_append_c
 }
 
 guint csv_count_values
-(gchar *str)
+(const gchar *str)
 {
 	gint i = 0;
 	guint count = 0;
@@ -180,8 +218,9 @@ guint csv_count_values
 	return count+1;
 }
 
-gint* csv_parse_string
-(gchar *str, guint *buffer_size, gint default_value, gint min_buffer_size)
+static gint* csv_parse_string
+(const gchar *str, guint *buffer_size,
+ gint default_value, gint min_buffer_size)
 {
 	*buffer_size = csv_count_values(str);
 	if (*buffer_size < min_buffer_size)
@@ -227,7 +266,7 @@ gint* csv_parse_string
 }
 
 static gchar* csv_create_string
-( gint *value_buffer, guint buffer_size, gint row_length )
+( const gint *value_buffer, guint buffer_size, gint row_length )
 {
 	GString *csv_string =
 		g_string_sized_new
@@ -262,7 +301,8 @@ static gchar* csv_create_string
 
 
 static xmlNode* file_attribute_parse_node
-( struct TileAttribute *tile_attr, xmlNode *root_node, gint min_buffer_size )
+( struct TileAttribute *tile_attr, xmlNode *root_node,
+  gint min_buffer_size )
 {
 	gchar buffer[16];
 

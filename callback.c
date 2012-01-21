@@ -11,6 +11,31 @@
 #define CAST_BUTTON_EVENT GdkEventButton *b_event = (GdkEventButton*)
 
 
+/* private functions */
+static void statusbar_update_message
+( struct GlobalData *global_data, const gchar *message );
+
+static void show_error_message
+( GtkWidget *parent, gchar *message );
+
+static void file_open_attempt
+( struct GlobalData *global_data, const gchar *filename );
+
+static gboolean file_save_attempt
+( struct GlobalData *global_data );
+
+static gboolean save_changes
+( struct GlobalData *global_data );
+
+static gint tileset_area_determine_tile_id
+( struct Tileset *tileset, GdkEventButton *b_event,
+  gdouble *tile_offset_x, gdouble *tile_offset_y );
+
+static void tileset_area_update_statusbar_hover
+( struct GlobalData *global_data );
+/* ----------------- */
+
+
 static void statusbar_update_message
 ( struct GlobalData *global_data, const gchar *message )
 {
@@ -45,7 +70,7 @@ static void show_error_message
 
 /* should always be used after 'save_changes' */
 static void file_open_attempt
-( struct GlobalData *global_data, const gchar *filename)
+( struct GlobalData *global_data, const gchar *filename )
 {
 	gchar *_filename = g_strdup(filename);
 
