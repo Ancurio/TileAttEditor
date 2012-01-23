@@ -1,0 +1,67 @@
+=============
+TileAttEditor - "Tile Attribute Editor"
+=============
+
+
+About
+-----
+
+This is a small, standalone program for GNU/Linux which I
+wrote to emulate the way so called 'Tileset Flags'
+(my program calls them 'Tile Attributes')
+are manipulated in the proprietary application
+"RPG Maker XP" (created by Enterbrain).
+
+This includes things as, for example, setting
+which tiles of a tileset are passable by the character,
+and which are not.
+
+This program is licensed under the zlib license (see COPYING),
+although the code is utter trash and does not even
+deserve to be public domain to be honest with you.
+
+
+Dependencies
+------------
+
+This program requires:
+ -gtk2
+ -cairo
+ -libxml2
+ 
+Any recent gnome distribution should have these
+installed by default. You will, however, need the 
+respective -dev/-devel packages to compile.
+
+
+Compiling
+---------
+
+Simply switch into the src/ directory and type "make";
+if all dependencies are installed everything should go well.
+The resulting executable 'TileAttEditor' can be copied
+to and run from anywhere.
+Although it is standalone, it does save a config file
+in $HOME/.local/share/TileAttEditor/
+
+
+Bugs
+----
+
+Actually, this program was written just for fun and
+I do not expect anyone to ever stumble upon it in the first place.
+In the very unlikely case that you did, and you are
+having problems or experiencing crashes, just shoot me a mail.
+
+
+Acknowledgments
+---------------
+
+The 'cairo_scale_surface()' method was stolen from a
+post on the cairo mailing list by Owen Taylor,
+although I made some modifications.
+(http://lists.cairographics.org/archives/cairo/2006-January/006178.html)
+
+I learned how to do dnd support by looking at the
+dnd code of 'Mousepad' (written by Tarot Osuji).
+(http://git.xfce.org/apps/mousepad/)

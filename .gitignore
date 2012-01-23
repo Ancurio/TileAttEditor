@@ -2,8 +2,6 @@
 ###################
 *.o
 TileAttEditor
-path
-gui
 
 #   Image files   #
 ###################
@@ -19,6 +17,4 @@ gui
 *.txt
 *.conf
 *.svg
-gui.c
-path.c
 
