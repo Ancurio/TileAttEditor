@@ -334,7 +334,7 @@ void ui_main_window_create
 	menubar_box = ui_menubar_create
 		(window, global_data, &main_window->action_group);
 	ui_filemenu_set_action_sensitivity
-		(main_window, (gboolean)global_data->open_file);
+		(main_window, global_data->open_file ? TRUE : FALSE);
 	gtk_widget_show_all(menubar_box);
 
 	gtk_box_pack_start(GTK_BOX(mainbox), menubar_box, FALSE, FALSE, 0);
