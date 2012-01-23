@@ -6,8 +6,9 @@ TileAttEditor - "Tile Attribute Editor"
 About
 -----
 
-This is a small, standalone program for GNU/Linux which I
-wrote to emulate the way so called 'Tileset Flags'
+This is a small, standalone program for GNU/Linux
+which I wrote during my winter holidays
+to emulate the way so called 'Tileset Flags'
 (my program calls them 'Tile Attributes')
 are manipulated in the proprietary application
 "RPG Maker XP" (created by Enterbrain).
