@@ -51,7 +51,6 @@ static cairo_surface_t *scale_surface
 	cairo_scale (cr, scale_x, scale_y);
 	cairo_set_source_surface (cr, old_surface, 0, 0);
 
-//	cairo_pattern_set_extend (cairo_get_source(cr), CAIRO_EXTEND_REFLECT);
 	if (!smooth)
 	{
 		cairo_pattern_set_filter

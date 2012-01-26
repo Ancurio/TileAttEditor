@@ -77,14 +77,6 @@ struct TileAttribute** tile_attr_create
 	tile_attr[5] = attr_terrainflag_create();
 	tile_attr[ATTRIBUTE_COUNT] = NULL;
 
-	//tile_attr[] =
-	//{
-		//attr_passability_create(),
-		//attr_bushflag_create(),
-		//attr_dummility_create(),
-		//NULL
-	//};
-
 	gint i; for (i=0;tile_attr[i];i++)
 		{ tile_attr[i]->global_data = global_data; }
 
