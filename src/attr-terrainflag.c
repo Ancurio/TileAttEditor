@@ -76,7 +76,9 @@ static void draw_attr
 		(cr, 0.5-ext.width/2-ext.x_bearing,
 		     0.5-ext.height/2-ext.y_bearing);
 	tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-	cairo_show_text(cr, value_str);
+//	cairo_show_text(cr, value_str);
+	cairo_text_path(cr, value_str);
+	cairo_fill(cr);
 }
 
 struct TileAttribute* attr_terrainflag_create

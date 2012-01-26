@@ -38,10 +38,12 @@
 
 /* Style-Parameters: These define the visual look */
 #define FONT_SIZE 0.5
-#define STAR_SIZE 0.375
+#define STAR_SIZE 0.45
 #define OUTL_SIZE 0.07
 #define STARD     0.2
 #define STAR_OFFY 0.02
+
+#define STARC     "★"
 
 
 static gint tile_clicked
@@ -67,12 +69,12 @@ static void draw_attr
 	{
 		case -1 :
 			cairo_set_font_size(cr, FONT_SIZE*1.2);
-			cairo_text_extents(cr, "★", &ext);
+			cairo_text_extents(cr, STARC, &ext);
 
 			cairo_move_to
 				(cr, 0.5-ext.width/2-ext.x_bearing,
 					 0.5-ext.height/2-ext.y_bearing);
-			cairo_text_path(cr, "★");
+			cairo_text_path(cr, STARC);
 			tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
 			cairo_set_line_width(cr, OUTL_SIZE*1.2);
 			cairo_stroke(cr);
@@ -81,7 +83,9 @@ static void draw_attr
 				(cr, 0.5-ext.width/2-ext.x_bearing,
 					 0.5-ext.height/2-ext.y_bearing);
 			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-			cairo_show_text(cr, "★");
+//			cairo_show_text(cr, STARC);
+			cairo_text_path(cr, STARC);
+			cairo_fill(cr);
 
 			break;
 
@@ -97,12 +101,12 @@ static void draw_attr
 
 		default :
 			cairo_set_font_size(cr, STAR_SIZE);
-			cairo_text_extents(cr, "★", &ext);
+			cairo_text_extents(cr, STARC, &ext);
 
 			cairo_move_to
 				(cr, 0.5-STARD-ext.width/2-ext.x_bearing,
 					 0.5-STAR_OFFY-ext.height/2-ext.y_bearing);
-			cairo_text_path(cr, "★");
+			cairo_text_path(cr, STARC);
 			tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
 			cairo_set_line_width(cr, OUTL_SIZE);
 			cairo_stroke(cr);
@@ -111,7 +115,9 @@ static void draw_attr
 				(cr, 0.5-STARD-ext.width/2-ext.x_bearing,
 					 0.5-STAR_OFFY-ext.height/2-ext.y_bearing);
 			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-			cairo_show_text(cr, "★");
+//			cairo_show_text(cr, STARC);
+			cairo_text_path(cr, STARC);
+			cairo_fill(cr);
 
 			g_snprintf(value_str, 4, "%d", attr_value);
 			cairo_set_font_size(cr, FONT_SIZE);
@@ -128,7 +134,9 @@ static void draw_attr
 				(cr, 0.5+STARD-ext.width/2-ext.x_bearing,
 					 0.5-ext.height/2-ext.y_bearing);
 			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-			cairo_show_text(cr, value_str);
+//			cairo_show_text(cr, value_str);
+			cairo_text_path(cr, value_str);
+			cairo_fill(cr);
 	}
 }
 
