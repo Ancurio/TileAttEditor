@@ -56,26 +56,6 @@ struct Settings
 	gchar *last_opened;
 };
 
-struct SettingsDialog
-{
-	gboolean resize_required;
-	gboolean redraw_required;
-
-	GtkWidget *window;
-
-	GtkWidget *spinb_scale;
-	GtkWidget *hscale_alpha;
-	GtkWidget *checkb_smooth;
-	GtkWidget *colorb_bg;
-	GtkWidget *colorb_grid;
-	GtkWidget *applyb;
-
-	GtkWidget **checkb_attributes;
-
-//	struct Settings *local_settings;
-
-};
-
 struct GlobalData
 {
 	gchar *open_file_path;
@@ -94,6 +74,6 @@ struct GlobalData
 	struct MainWindow *main_window;
 	struct SettingsDialog *settings_dialog;
 	struct NewFileDialog *new_file_dialog;
-	gpointer open_file;
+	struct File *open_file;
 };
 

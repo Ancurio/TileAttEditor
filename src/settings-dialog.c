@@ -43,6 +43,27 @@
 	(struct SettingsDialog*)data;
 
 
+struct SettingsDialog
+{
+	gboolean resize_required;
+	gboolean redraw_required;
+
+	GtkWidget *window;
+
+	GtkWidget *spinb_scale;
+	GtkWidget *hscale_alpha;
+	GtkWidget *checkb_smooth;
+	GtkWidget *colorb_bg;
+	GtkWidget *colorb_grid;
+	GtkWidget *applyb;
+
+	GtkWidget **checkb_attributes;
+
+//	struct Settings *local_settings;
+
+};
+
+
 static void apply_settings
 ( struct GlobalData *global_data )
 {
