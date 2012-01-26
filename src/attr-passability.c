@@ -34,6 +34,10 @@
 
 #include "attribute.h"
 
+/* Style-Parameters: These define the visual look */
+#define SIZE  0.175
+#define LINEW 0.12
+
 static gint tile_clicked
 ( gint old_value, gdouble x, gdouble y )
 {
@@ -50,21 +54,21 @@ static void draw_attr
 	gint odd = attr_value % 2;
 	switch(odd)
 	{
-		case 0 : cairo_arc(cr, 0.5, 0.5, 0.2, 0, G_TAU);
+		case 0 : cairo_arc(cr, 0.5, 0.5, SIZE, 0, G_TAU);
 		         break;
 
-		case 1 : cairo_move_to(cr, 0.3, 0.3);
-		         cairo_line_to(cr, 0.7, 0.7);
-		         cairo_move_to(cr, 0.7, 0.3);
-		         cairo_line_to(cr, 0.3, 0.7);
+		case 1 : cairo_move_to(cr, 0.5-SIZE, 0.5-SIZE);
+		         cairo_line_to(cr, 0.5+SIZE, 0.5+SIZE);
+		         cairo_move_to(cr, 0.5+SIZE, 0.5-SIZE);
+		         cairo_line_to(cr, 0.5-SIZE, 0.5+SIZE);
 		         cairo_set_line_cap(cr, CAIRO_LINE_CAP_SQUARE);
 	}
 
 	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-	cairo_set_line_width(cr, 0.1);
+	cairo_set_line_width(cr, LINEW);
 	cairo_stroke_preserve(cr);
 	tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-	cairo_set_line_width(cr, 0.05);
+	cairo_set_line_width(cr, LINEW/2);
 	cairo_stroke(cr);
 }
 
