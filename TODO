@@ -2,8 +2,12 @@ TODO:
 
 CRITICAL:
 
+	- if lost image source was found manually, buffer_changed should
+	  be set to TRUE so the new path can be saved
+
 MINOR:
 	
+	- add "About" window
 	- write detailed error messages for file opening
 	- outsource parts of "Tileset" to "TilesetArea"
 	- fine tune gcc include dirs for each .c file (to speed up compilation)
