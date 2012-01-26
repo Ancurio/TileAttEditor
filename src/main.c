@@ -52,16 +52,16 @@ static struct GlobalData* global_data_create
 ( )
 {
 	struct GlobalData *global_data =
-		g_malloc( sizeof( *global_data ) );
-	global_data->buffer_changed = FALSE;
+		g_malloc0( sizeof( *global_data ) );
+	//global_data->buffer_changed = FALSE;
 	global_data->hovered_tile = -1;
-	global_data->statusbar_context_id = 0;
-	global_data->statusbar_message_id = 0;
-	global_data->reusable_surface = NULL;
-	global_data->tileset = NULL;
-	global_data->settings_dialog = NULL;
-	global_data->new_file_dialog = NULL;
-	global_data->open_file_path = NULL;
+	//global_data->statusbar_context_id = 0;
+	//global_data->statusbar_message_id = 0;
+	//global_data->reusable_surface = NULL;
+	//global_data->tileset = NULL;
+	//global_data->settings_dialog = NULL;
+	//global_data->new_file_dialog = NULL;
+	//global_data->open_file_path = NULL;
 
 	return global_data;
 }
