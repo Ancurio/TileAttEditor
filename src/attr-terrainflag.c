@@ -37,7 +37,7 @@
 #define FLAG_MAX_VAL 7
 
 /* Style-Parameters: These define the visual look */
-#define FONT_SIZE 0.7
+#define FONT_SIZE 0.5
 #define OUTL_SIZE 0.08
 
 
