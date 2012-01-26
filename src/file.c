@@ -472,6 +472,7 @@ struct File* file_open
 	file->image_node = image_node;
 	file->attr_nodes = 0;
 	file->image_filename_abs = image_filename_abs;
+	file->image_path_found = FALSE;
 
 	return file;
 
@@ -502,6 +503,8 @@ gboolean file_check
 			find_image_file_attempt
 				(global_data->main_window->window,
 				 file->image_filename_abs);
+		if (file->image_filename_abs)
+			{ file->image_path_found = TRUE; }
 skip_filetest:
 		if (!file->image_filename_abs) { ERROR(BAD_IMAGE_FILE, FALSE); }
 	}
@@ -684,7 +687,7 @@ void file_open_attempt_quiet
 		if (file && file_check(global_data, file, NULL))
 		{
 			file_parse(global_data, file);
-			ui_set_open_file_path(global_data, filename);
+			global_data->open_file_path = g_strdup(filename);
 		}
 		else
 			{ file_destroy(file); }

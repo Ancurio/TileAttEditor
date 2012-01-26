@@ -53,9 +53,10 @@ struct File						/* member set by:   */
 	gint min_buffer_size;		/* file_parse       */
 	gchar *tileset_name;		/* file_parse       */
 
-//	xmlSaveCtxt *save_context;	/* (placeholder) */
+//	xmlSaveCtxt *save_context;	/* (placeholder)    */
 
 	gchar *image_filename_abs;	/* file_create/open */
+	gboolean image_path_found;	/* file_check       */
 };
 
 enum ErrorFileOpen

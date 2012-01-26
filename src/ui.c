@@ -299,7 +299,6 @@ void ui_main_window_create
 		(GTK_WINDOW(window),
 		 global_data->settings->window_width,
 		 global_data->settings->window_height);
-	ui_update_window_title(global_data);
 
 
 	GtkWidget *mainbox = gtk_vbox_new(FALSE, 8);
@@ -374,6 +373,7 @@ void ui_main_window_create
 	gtk_widget_show(mainbox);
 
 	ui_update_tileset_frame(global_data);
+	ui_update_window_title(global_data);
 
 	global_data->active_attribute =
 		global_data->tile_attributes
@@ -480,7 +480,7 @@ gchar *find_image_file_attempt
 		case GTK_RESPONSE_YES          : goto search_file;
 
 		case GTK_RESPONSE_NO           :
-		case GTK_RESPONSE_DELETE_EVENT : goto cancel_search;
+		case GTK_RESPONSE_DELETE_EVENT : goto cleanup;
 	}
 
 search_file:
@@ -490,7 +490,7 @@ search_file:
 		case GTK_RESPONSE_ACCEPT       : goto file_found;
 
 		case GTK_RESPONSE_CANCEL       :
-		case GTK_RESPONSE_DELETE_EVENT : goto cancel_search;
+		case GTK_RESPONSE_DELETE_EVENT : goto cleanup;
 
 	}
 
@@ -500,7 +500,7 @@ file_found:
 		gtk_file_chooser_get_filename
 			(GTK_FILE_CHOOSER(file_dialog));
 
-cancel_search:
+cleanup:
 
 	gtk_widget_destroy(file_dialog);
 	gtk_widget_destroy(question_dialog);

@@ -136,7 +136,7 @@ static void file_open_attempt
 	ui_filemenu_set_action_sensitivity
 		(global_data->main_window, TRUE);
 	ui_update_tileset_frame(global_data);
-	ui_set_buffer_changed(global_data, FALSE);
+	ui_set_buffer_changed(global_data, file->image_path_found);
 	tileset_area_update_viewport(global_data);
 	tileset_area_redraw_cache(global_data);
 	gtk_widget_show(global_data->main_window->tileset_area);

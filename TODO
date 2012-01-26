@@ -2,9 +2,6 @@ TODO:
 
 CRITICAL:
 
-	- if lost image source was found manually, buffer_changed should
-	  be set to TRUE so the new path can be saved
-
 MINOR:
 	
 	- add "About" window
@@ -20,6 +17,4 @@ EXPERIMENTAL:
 	- allow filling buffers with defaultvalue when tileset source
 	  has expanded horizontally
 	- add gif and jpeg support through gdk (j4f)
-	
-	- Add some humble license to the top of every source file =)
 	
