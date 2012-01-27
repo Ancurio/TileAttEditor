@@ -60,7 +60,7 @@ static void draw_attr
 		          cairo_line_to(cr, 0.5, 0.7);
 		          cairo_line_to(cr, 0.3, 0.5);
 		          cairo_line_to(cr, 0.5, 0.3);
-		          cairo_line_to(cr, 0.7, 0.5);
+		          cairo_close_path(cr);
 		          cairo_set_line_width(cr, 0.08);
 	}
 
