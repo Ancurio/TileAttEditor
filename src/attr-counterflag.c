@@ -51,8 +51,7 @@ static void draw_attr
 	gint odd = attr_value % 2;
 	switch(odd)
 	{
-		case 0 :  cairo_arc(cr, 0.5, 0.5, 0.05, 0, G_TAU);
-		          cairo_set_line_width(cr, 0.06);
+		case 0 :  attr_draw_empty(cr, 0.5, 0.5, hovered);
 		          break;
 
 		default : cairo_move_to(cr, 0.5, 0.3);
@@ -62,13 +61,12 @@ static void draw_attr
 		          cairo_line_to(cr, 0.5, 0.3);
 		          cairo_close_path(cr);
 		          cairo_set_line_width(cr, 0.08);
+		          cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
+		          tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
+		          cairo_stroke_preserve(cr);
+		          tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
+		          cairo_fill(cr);
 	}
-
-	cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
-	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-	cairo_stroke_preserve(cr);
-	tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-	cairo_fill(cr);
 }
 
 struct TileAttribute* attr_counterflag_create

@@ -61,6 +61,17 @@ void tile_attr_set_color
 	}
 }
 
+void attr_draw_empty
+( cairo_t *cr, gdouble x, gdouble y, gboolean hovered )
+{
+	cairo_arc(cr, x, y, 0.05, 0, G_TAU);
+	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
+	cairo_set_line_width(cr, 0.06);
+	cairo_stroke_preserve(cr);
+	tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
+	cairo_fill(cr);
+}
+
 
 struct TileAttribute** tile_attr_create
 ( gpointer global_data )

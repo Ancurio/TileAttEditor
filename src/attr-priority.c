@@ -67,7 +67,7 @@ static void draw_attr
 
 	switch (attr_value)
 	{
-		case -1 :
+		case -1 :  /* This routine is solely for the button icon */
 			cairo_set_font_size(cr, FONT_SIZE*1.2);
 			cairo_text_extents(cr, STARC, &ext);
 
@@ -90,13 +90,7 @@ static void draw_attr
 			break;
 
 		case 0  :
-			cairo_move_to(cr, 0.5, 0.5);
-			cairo_arc(cr, 0.5, 0.5, 0.05, 0, G_TAU);
-			tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-			cairo_set_line_width(cr, 0.06);
-			cairo_stroke_preserve(cr);
-			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-			cairo_fill(cr);
+			attr_draw_empty(cr, 0.5, 0.5, hovered);
 			break;
 
 		default :

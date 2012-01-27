@@ -72,6 +72,8 @@ void tile_attr_set_secondary_color
 ( cairo_t *cr );
 void tile_attr_set_color
 ( cairo_t *cr, gboolean hovered, enum AttrColor color );
+void attr_draw_empty
+( cairo_t *cr, gdouble x, gdouble y, gboolean hovered );
 
 //gint* tile_attr_create_value_buffer (gint buffer_size);
 

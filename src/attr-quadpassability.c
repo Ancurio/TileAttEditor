@@ -47,9 +47,6 @@
 static enum QuadDirection get_direction
 ( gdouble x, gdouble y );
 
-static void draw_empty
-( cairo_t *cr, gdouble x, gdouble y, gboolean hovered );
-
 static void quaddir_draw
 ( cairo_t *cr, gboolean hovered );
 /* ----------------- */
@@ -78,17 +75,6 @@ static gint tile_clicked
 ( gint old_value, gdouble x, gdouble y )
 {
 	return old_value ^ get_direction(x, y);
-}
-
-static void draw_empty
-( cairo_t *cr, gdouble x, gdouble y, gboolean hovered )
-{
-	cairo_arc(cr, x, y, 0.05, 0, G_TAU);
-	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-	cairo_set_line_width(cr, 0.06);
-	cairo_stroke_preserve(cr);
-	tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-	cairo_fill(cr);
 }
 
 static void quaddir_draw
@@ -123,7 +109,7 @@ static void draw_attr
 			quaddir_draw(cr, hovered&&(hover_dir&QDIR_LEFT));
 		}
 	else
-		{ draw_empty(cr, 0.25, 0.5, hovered&&(hover_dir&QDIR_LEFT)); }
+		{ attr_draw_empty(cr, 0.25, 0.5, hovered&&(hover_dir&QDIR_LEFT)); }
 
 	if (attr_value & QDIR_RIGHT)
 		{
@@ -138,7 +124,7 @@ static void draw_attr
 			quaddir_draw(cr, hovered&&(hover_dir&QDIR_RIGHT));
 		}
 	else
-		{ draw_empty(cr, 0.75, 0.5, hovered&&(hover_dir&QDIR_RIGHT)); }
+		{ attr_draw_empty(cr, 0.75, 0.5, hovered&&(hover_dir&QDIR_RIGHT)); }
 
 	if (attr_value & QDIR_UP)
 		{
@@ -153,7 +139,7 @@ static void draw_attr
 			quaddir_draw(cr, hovered&&(hover_dir&QDIR_UP));
 		}
 	else
-		{ draw_empty(cr, 0.5, 0.25, hovered&&(hover_dir&QDIR_UP)); }
+		{ attr_draw_empty(cr, 0.5, 0.25, hovered&&(hover_dir&QDIR_UP)); }
 
 	if (attr_value & QDIR_DOWN)
 		{
@@ -168,7 +154,7 @@ static void draw_attr
 			quaddir_draw(cr, hovered&&(hover_dir&QDIR_DOWN));
 		}
 	else
-		{ draw_empty(cr, 0.5, 0.75, hovered&&(hover_dir&QDIR_DOWN)); }
+		{ attr_draw_empty(cr, 0.5, 0.75, hovered&&(hover_dir&QDIR_DOWN)); }
 
 }
 
