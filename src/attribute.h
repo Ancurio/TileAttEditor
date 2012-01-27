@@ -75,7 +75,6 @@ void tile_attr_set_color
 void attr_draw_empty
 ( cairo_t *cr, gdouble x, gdouble y, gboolean hovered );
 
-//gint* tile_attr_create_value_buffer (gint buffer_size);
 
 struct TileAttribute** tile_attr_create
 ( gpointer global_data );
