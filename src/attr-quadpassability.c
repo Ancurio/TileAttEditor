@@ -51,6 +51,7 @@ static void quaddir_draw
 ( cairo_t *cr, gboolean hovered );
 /* ----------------- */
 
+static cairo_path_t **arrow_paths;
 
 enum QuadDirection
 {
@@ -80,7 +81,7 @@ static gint tile_clicked
 static void quaddir_draw
 ( cairo_t *cr, gboolean hovered )
 {
-	cairo_close_path(cr);
+//	cairo_close_path(cr);
 	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
 	cairo_set_line_width(cr, OUTLW);
 	cairo_stroke_preserve(cr);
@@ -161,6 +162,67 @@ static void draw_attr
 struct TileAttribute* attr_quadpassability_create
 ()
 {
+	arrow_paths = g_malloc(sizeof(cairo_path_t*) * 4);
+
+	cairo_surface_t *dummy_surf =
+		cairo_image_surface_create(CAIRO_FORMAT_A1, 1, 1);
+	cairo_t *cr = cairo_create(dummy_surf);
+
+	cairo_move_to(cr, 0.5-DISCR, 0.5+LINEW/2);
+	cairo_rel_line_to(cr, 0, -LINEW);
+	cairo_rel_line_to(cr, -LINEH, 0);
+	cairo_rel_line_to(cr, 0, -HEADW);
+	cairo_rel_line_to(cr, -HEADH, HEADW+LINEW/2);
+	cairo_rel_line_to(cr, +HEADH, HEADW+LINEW/2);
+	cairo_rel_line_to(cr, 0, -HEADW);
+	cairo_rel_line_to(cr, LINEH, 0);
+	cairo_close_path(cr);
+
+	arrow_paths[0] = cairo_copy_path(cr);
+	cairo_new_path(cr);
+
+	cairo_move_to(cr, 0.5+DISCR, 0.5+LINEW/2);
+	cairo_rel_line_to(cr, 0, -LINEW);
+	cairo_rel_line_to(cr, +LINEH, 0);
+	cairo_rel_line_to(cr, 0, -HEADW);
+	cairo_rel_line_to(cr, +HEADH, HEADW+LINEW/2);
+	cairo_rel_line_to(cr, -HEADH, HEADW+LINEW/2);
+	cairo_rel_line_to(cr, 0, -HEADW);
+	cairo_rel_line_to(cr, -LINEH, 0);
+	cairo_close_path(cr);
+
+	arrow_paths[1] = cairo_copy_path(cr);
+	cairo_new_path(cr);
+
+	cairo_move_to(cr, 0.5+LINEW/2, 0.5-DISCR);
+	cairo_rel_line_to(cr, -LINEW, 0);
+	cairo_rel_line_to(cr, 0, -LINEH);
+	cairo_rel_line_to(cr, -HEADW, 0);
+	cairo_rel_line_to(cr, HEADW+LINEW/2, -HEADH);
+	cairo_rel_line_to(cr, HEADW+LINEW/2, +HEADH);
+	cairo_rel_line_to(cr, -HEADW, 0);
+	cairo_rel_line_to(cr, 0, +LINEH);
+	cairo_close_path(cr);
+
+	arrow_paths[2] = cairo_copy_path(cr);
+	cairo_new_path(cr);
+
+	cairo_move_to(cr, 0.5+LINEW/2, 0.5+DISCR);
+	cairo_rel_line_to(cr, -LINEW, 0);
+	cairo_rel_line_to(cr, 0, +LINEH);
+	cairo_rel_line_to(cr, -HEADW, 0);
+	cairo_rel_line_to(cr, HEADW+LINEW/2, +HEADH);
+	cairo_rel_line_to(cr, HEADW+LINEW/2, -HEADH);
+	cairo_rel_line_to(cr, -HEADW, 0);
+	cairo_rel_line_to(cr, 0, -LINEH);
+	cairo_close_path(cr);
+
+	arrow_paths[3] = cairo_copy_path(cr);
+
+	cairo_surface_destroy(dummy_surf);
+	cairo_destroy(cr);
+
+
 	struct TileAttribute *attr =
 		g_malloc(sizeof(struct TileAttribute));
 
