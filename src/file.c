@@ -589,7 +589,11 @@ gboolean file_parse
 	for (i=0; i<ATTRIBUTE_COUNT; i++)
 	{
 		if (!tile_attr[i]->enabled)
-			{ file->attr_nodes[i] = NULL; continue; }
+		{
+			file->attr_nodes[i] = NULL;
+			tile_attr[i]->value_buffer = NULL;  /* FIXME: this should be done in the attr constructor */
+			continue;
+		}
 
 		file->attr_nodes[i] =
 			file_attribute_parse_node
@@ -672,6 +676,7 @@ gboolean file_close
 	for (tile_attr = global_data->tile_attributes;
 	     *tile_attr; tile_attr++)
 	{
+		if (!(*tile_attr)->value_buffer) { continue; }
 		g_free((*tile_attr)->value_buffer);
 	}
 
