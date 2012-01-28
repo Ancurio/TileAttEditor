@@ -81,7 +81,6 @@ static gint tile_clicked
 static void quaddir_draw
 ( cairo_t *cr, gboolean hovered )
 {
-//	cairo_close_path(cr);
 	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
 	cairo_set_line_width(cr, OUTLW);
 	cairo_stroke_preserve(cr);
@@ -99,14 +98,7 @@ static void draw_attr
 		hovered ? get_direction(offset_x, offset_y) : 0;
 	if (attr_value & QDIR_LEFT)
 		{
-			cairo_move_to(cr, 0.5-DISCR, 0.5+LINEW/2);
-			cairo_rel_line_to(cr, 0, -LINEW);
-			cairo_rel_line_to(cr, -LINEH, 0);
-			cairo_rel_line_to(cr, 0, -HEADW);
-			cairo_rel_line_to(cr, -HEADH, HEADW+LINEW/2);
-			cairo_rel_line_to(cr, +HEADH, HEADW+LINEW/2);
-			cairo_rel_line_to(cr, 0, -HEADW);
-			cairo_rel_line_to(cr, LINEH, 0);
+			cairo_append_path(cr, arrow_paths[0]);
 			quaddir_draw(cr, hovered&&(hover_dir&QDIR_LEFT));
 		}
 	else
@@ -114,14 +106,7 @@ static void draw_attr
 
 	if (attr_value & QDIR_RIGHT)
 		{
-			cairo_move_to(cr, 0.5+DISCR, 0.5+LINEW/2);
-			cairo_rel_line_to(cr, 0, -LINEW);
-			cairo_rel_line_to(cr, +LINEH, 0);
-			cairo_rel_line_to(cr, 0, -HEADW);
-			cairo_rel_line_to(cr, +HEADH, HEADW+LINEW/2);
-			cairo_rel_line_to(cr, -HEADH, HEADW+LINEW/2);
-			cairo_rel_line_to(cr, 0, -HEADW);
-			cairo_rel_line_to(cr, -LINEH, 0);
+			cairo_append_path(cr, arrow_paths[1]);
 			quaddir_draw(cr, hovered&&(hover_dir&QDIR_RIGHT));
 		}
 	else
@@ -129,14 +114,7 @@ static void draw_attr
 
 	if (attr_value & QDIR_UP)
 		{
-			cairo_move_to(cr, 0.5+LINEW/2, 0.5-DISCR);
-			cairo_rel_line_to(cr, -LINEW, 0);
-			cairo_rel_line_to(cr, 0, -LINEH);
-			cairo_rel_line_to(cr, -HEADW, 0);
-			cairo_rel_line_to(cr, HEADW+LINEW/2, -HEADH);
-			cairo_rel_line_to(cr, HEADW+LINEW/2, +HEADH);
-			cairo_rel_line_to(cr, -HEADW, 0);
-			cairo_rel_line_to(cr, 0, +LINEH);
+			cairo_append_path(cr, arrow_paths[2]);
 			quaddir_draw(cr, hovered&&(hover_dir&QDIR_UP));
 		}
 	else
@@ -144,19 +122,20 @@ static void draw_attr
 
 	if (attr_value & QDIR_DOWN)
 		{
-			cairo_move_to(cr, 0.5+LINEW/2, 0.5+DISCR);
-			cairo_rel_line_to(cr, -LINEW, 0);
-			cairo_rel_line_to(cr, 0, +LINEH);
-			cairo_rel_line_to(cr, -HEADW, 0);
-			cairo_rel_line_to(cr, HEADW+LINEW/2, +HEADH);
-			cairo_rel_line_to(cr, HEADW+LINEW/2, -HEADH);
-			cairo_rel_line_to(cr, -HEADW, 0);
-			cairo_rel_line_to(cr, 0, -LINEH);
+			cairo_append_path(cr, arrow_paths[3]);
 			quaddir_draw(cr, hovered&&(hover_dir&QDIR_DOWN));
 		}
 	else
 		{ attr_draw_empty(cr, 0.5, 0.75, hovered&&(hover_dir&QDIR_DOWN)); }
 
+}
+
+static void destroy
+( )
+{
+	gint i;
+	for (i=0;i<4;i++)
+		{ cairo_path_destroy(arrow_paths[i]); }
 }
 
 struct TileAttribute* attr_quadpassability_create
@@ -232,6 +211,7 @@ struct TileAttribute* attr_quadpassability_create
 	attr->hover_precision = TRUE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;
+	attr->destroy = &destroy;
 
 	return attr;
 }

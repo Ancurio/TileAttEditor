@@ -79,8 +79,6 @@ static void draw_attr
 		         tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
 		         cairo_stroke(cr);
 	}
-
-
 }
 
 struct TileAttribute* attr_bushflag_create
@@ -95,6 +93,7 @@ struct TileAttribute* attr_bushflag_create
 	attr->hover_precision = FALSE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;
+	attr->destroy = NULL;
 
 	return attr;
 }

@@ -64,7 +64,7 @@ static void global_data_destroy
 {
 	file_close(global_data);
 	settings_destroy(global_data->settings);
-	tile_attr_destroy(global_data->tile_attributes);
+	tile_attrs_destroy(global_data->tile_attributes);
 	ui_main_window_destroy(global_data->main_window);
 
 	g_free(global_data->open_file_path);
@@ -79,7 +79,7 @@ gint main
 	struct GlobalData *global_data = global_data_create();
 
 	global_data->tile_attributes =
-		tile_attr_create(global_data);
+		tile_attrs_create(global_data);
 
 	settings_read(global_data);
 

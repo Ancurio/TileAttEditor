@@ -38,7 +38,7 @@
 struct TileAttribute
 {
 	/* defined by attribute constructor */
-	gchar *name;
+	const gchar *name;
 	gint default_value;
 	gint icon_value;
 	gboolean hover_precision;
@@ -49,6 +49,9 @@ struct TileAttribute
 	void (*draw_attr)
 	( gint attr_value, cairo_t *cr, gboolean hovered,
 	  gdouble offset_x, gdouble offset_y );
+
+	void (*destroy)
+	( );
 
 	/* defined by program */
 	gboolean enabled;
@@ -66,6 +69,8 @@ enum AttrColor
 	ATTR_COLOR_SEC,
 };
 
+struct TileAttribute* tile_attr_create
+( );
 void tile_attr_set_primary_color
 ( cairo_t *cr );
 void tile_attr_set_secondary_color
@@ -76,10 +81,10 @@ void attr_draw_empty
 ( cairo_t *cr, gdouble x, gdouble y, gboolean hovered );
 
 
-struct TileAttribute** tile_attr_create
+struct TileAttribute** tile_attrs_create
 ( gpointer global_data );
 
-void tile_attr_destroy
+void tile_attrs_destroy
 ( struct TileAttribute **tile_attr );
 
 /* Individual attribute constructors */

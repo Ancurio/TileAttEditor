@@ -84,6 +84,7 @@ struct TileAttribute* attr_passability_create
 	attr->hover_precision = FALSE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;
+	attr->destroy = NULL;
 
 	return attr;
 }

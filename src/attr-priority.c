@@ -146,6 +146,7 @@ struct TileAttribute* attr_priority_create
 	attr->hover_precision = FALSE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;
+	attr->destroy = NULL;
 
 	return attr;
 }

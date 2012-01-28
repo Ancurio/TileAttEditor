@@ -34,6 +34,28 @@
 
 #include "tileatteditor.h"
 
+
+struct TileAttribute* tile_attr_create
+( const gchar *name, gint default_value,
+  gint icon_value, gboolean hover_precision,
+  gint (*tile_clicked)(gint, gdouble, gdouble),
+  void (*draw_attr)(gint, cairo_t*, gboolean, gdouble, gdouble),
+  void (*destroy) )
+{
+	struct TileAttribute *attr =
+		g_malloc(sizeof(struct TileAttribute));
+
+	attr->name = name;
+	attr->default_value = default_value;
+	attr->icon_value = icon_value;
+	attr->hover_precision = hover_precision;
+	attr->tile_clicked = tile_clicked;
+	attr->draw_attr = draw_attr;
+	attr->destroy = destroy;
+
+	return attr;
+}
+
 void tile_attr_set_primary_color
 ( cairo_t *cr )
 {
@@ -73,7 +95,7 @@ void attr_draw_empty
 }
 
 
-struct TileAttribute** tile_attr_create
+struct TileAttribute** tile_attrs_create
 ( gpointer global_data )
 {
 	struct TileAttribute **tile_attr;
@@ -89,17 +111,24 @@ struct TileAttribute** tile_attr_create
 	tile_attr[ATTRIBUTE_COUNT] = NULL;
 
 	gint i; for (i=0;tile_attr[i];i++)
-		{ tile_attr[i]->global_data = global_data; }
+	{
+		tile_attr[i]->value_buffer = NULL;
+		tile_attr[i]->global_data = global_data;
+	}
 
 	return tile_attr;
 }
 
-void tile_attr_destroy
+void tile_attrs_destroy
 ( struct TileAttribute **tile_attr )
 {
 	struct TileAttribute **_tile_attr;
 	for (_tile_attr = tile_attr; *_tile_attr; _tile_attr++)
-		{ g_free(*_tile_attr); }
+	{
+		if ((*_tile_attr)->destroy)
+			{ (*(*_tile_attr)->destroy)(); }
+		g_free(*_tile_attr);
+	}
 
 	g_free(tile_attr);
 }
