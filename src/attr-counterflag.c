@@ -34,8 +34,13 @@
 
 #include "attribute.h"
 
+/* Style-Parameters: These define the visual look */
+#define OUTLW 0.04
+
 
 static struct TileAttribute tile_attribute;
+
+static cairo_path_t *path;
 
 static gint tile_clicked
 (gint old_value, gdouble x, gdouble y)
@@ -53,27 +58,38 @@ static void draw_attr
 	gint odd = attr_value % 2;
 	switch(odd)
 	{
-		case 0 :  attr_draw_empty(cr, 0.5, 0.5, hovered);
-		          break;
+		case 0 :
+			attr_draw_empty(cr, 0.5, 0.5, hovered);
+			break;
 
-		default : cairo_move_to(cr, 0.5, 0.3);
-		          cairo_line_to(cr, 0.7, 0.5);
-		          cairo_line_to(cr, 0.5, 0.7);
-		          cairo_line_to(cr, 0.3, 0.5);
-		          cairo_line_to(cr, 0.5, 0.3);
-		          cairo_close_path(cr);
-		          cairo_set_line_width(cr, 0.08);
-		          cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
-		          tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-		          cairo_stroke_preserve(cr);
-		          tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-		          cairo_fill(cr);
+		default :
+			cairo_append_path(cr, path);
+			cairo_fill_with_outline(cr, OUTLW, hovered);
+
 	}
+}
+
+static void cleanup
+( )
+{
+	cairo_path_destroy(path);
 }
 
 struct TileAttribute* attr_counterflag_create
 ()
 {
+	cairo_t *cr = cairo_dummy_create();
+	cairo_move_to(cr, 0.5, 0.3);
+	cairo_line_to(cr, 0.7, 0.5);
+	cairo_line_to(cr, 0.5, 0.7);
+	cairo_line_to(cr, 0.3, 0.5);
+	cairo_line_to(cr, 0.5, 0.3);
+	cairo_close_path(cr);
+
+	path = cairo_copy_path(cr);
+	cairo_dummy_destroy(cr);
+
+
 	struct TileAttribute *attr = &tile_attribute;
 
 	attr->name = "CounterFlag";
@@ -82,7 +98,7 @@ struct TileAttribute* attr_counterflag_create
 	attr->hover_precision = FALSE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;
-	attr->cleanup = NULL;
+	attr->cleanup = &cleanup;
 
 	return attr;
 }

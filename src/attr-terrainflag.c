@@ -38,7 +38,7 @@
 
 /* Style-Parameters: These define the visual look */
 #define FONT_SIZE 0.5
-#define OUTL_SIZE 0.08
+#define OUTL_SIZE 0.04
 
 
 static struct TileAttribute tile_attribute;
@@ -70,17 +70,7 @@ static void draw_attr
 		(cr, 0.5-ext.width/2-ext.x_bearing,
 		     0.5-ext.height/2-ext.y_bearing);
 	cairo_text_path(cr, value_str);
-	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-	cairo_set_line_width(cr, OUTL_SIZE);
-	cairo_stroke(cr);
-
-	cairo_move_to
-		(cr, 0.5-ext.width/2-ext.x_bearing,
-		     0.5-ext.height/2-ext.y_bearing);
-	tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-//	cairo_show_text(cr, value_str);
-	cairo_text_path(cr, value_str);
-	cairo_fill(cr);
+	cairo_fill_with_outline(cr, OUTL_SIZE, hovered);
 }
 
 struct TileAttribute* attr_terrainflag_create

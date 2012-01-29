@@ -86,12 +86,38 @@ void tile_attr_set_color
 void attr_draw_empty
 ( cairo_t *cr, gdouble x, gdouble y, gboolean hovered )
 {
+	cairo_save(cr);
 	cairo_arc(cr, x, y, 0.05, 0, G_TAU);
+	cairo_fill_with_outline(cr, 0.03, hovered);
+	cairo_restore(cr);
+}
+
+void cairo_fill_with_outline
+( cairo_t *cr, gdouble outline_width, gboolean hovered )
+{
+	cairo_save(cr);
 	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-	cairo_set_line_width(cr, 0.06);
+	cairo_set_line_width(cr, outline_width*2);
+	cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
 	cairo_stroke_preserve(cr);
+
 	tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
 	cairo_fill(cr);
+	cairo_restore(cr);
+}
+
+cairo_t *cairo_dummy_create
+( )
+{
+	return cairo_create
+		(cairo_image_surface_create(CAIRO_FORMAT_A1, 1, 1));
+}
+
+void cairo_dummy_destroy
+( cairo_t *cr )
+{
+	cairo_surface_destroy(cairo_get_target(cr));
+	cairo_destroy(cr);
 }
 
 

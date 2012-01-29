@@ -41,6 +41,8 @@
 
 static struct TileAttribute tile_attribute;
 
+static cairo_path_t *path_x;
+
 static gint tile_clicked
 ( gint old_value, gdouble x, gdouble y )
 {
@@ -57,14 +59,13 @@ static void draw_attr
 	gint odd = attr_value % 2;
 	switch(odd)
 	{
-		case 0 : cairo_arc(cr, 0.5, 0.5, SIZE, 0, G_TAU);
-		         break;
+		case 0 :
+			cairo_arc(cr, 0.5, 0.5, SIZE, 0, G_TAU);
+			break;
 
-		case 1 : cairo_move_to(cr, 0.5-SIZE, 0.5-SIZE);
-		         cairo_line_to(cr, 0.5+SIZE, 0.5+SIZE);
-		         cairo_move_to(cr, 0.5+SIZE, 0.5-SIZE);
-		         cairo_line_to(cr, 0.5-SIZE, 0.5+SIZE);
-		         cairo_set_line_cap(cr, CAIRO_LINE_CAP_SQUARE);
+		case 1 :
+			cairo_append_path(cr, path_x);
+			cairo_set_line_cap(cr, CAIRO_LINE_CAP_SQUARE);
 	}
 
 	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
@@ -75,9 +76,25 @@ static void draw_attr
 	cairo_stroke(cr);
 }
 
+static void cleanup
+( )
+{
+	cairo_path_destroy(path_x);
+}
+
 struct TileAttribute* attr_passability_create
 ()
 {
+	cairo_t *cr = cairo_dummy_create();
+	cairo_move_to(cr, 0.5-SIZE, 0.5-SIZE);
+	cairo_line_to(cr, 0.5+SIZE, 0.5+SIZE);
+	cairo_move_to(cr, 0.5+SIZE, 0.5-SIZE);
+	cairo_line_to(cr, 0.5-SIZE, 0.5+SIZE);
+
+	path_x = cairo_copy_path(cr);
+	cairo_dummy_destroy(cr);
+
+
 	struct TileAttribute *attr = &tile_attribute;
 
 	attr->name = "Passability";

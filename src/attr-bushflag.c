@@ -44,6 +44,8 @@
 
 static struct TileAttribute tile_attribute;
 
+static cairo_path_t *path;
+
 static gint tile_clicked
 (gint old_value, gdouble x, gdouble y)
 {
@@ -59,33 +61,47 @@ static void draw_attr
 {
 	switch(attr_value)
 	{
-		case 0 : attr_draw_empty(cr, 0.5, 0.5, hovered);
-		         break;
+		case 0 :
+			attr_draw_empty(cr, 0.5, 0.5, hovered);
+			break;
 
-		case 1 : cairo_move_to(cr, 0.5-SPANW, 0.5-CURVD+AMPL);
-		         cairo_curve_to
-		             (cr, 0.5, 0.5-CURVD-SPANH,
-		                  0.5, 0.5-CURVD+SPANH,
-		                  0.5+SPANW, 0.5-CURVD-AMPL);
-		         cairo_move_to(cr, 0.5-SPANW, 0.5+CURVD+AMPL);
-		         cairo_curve_to
-		             (cr, 0.5, 0.5+CURVD-SPANH,
-		                  0.5, 0.5+CURVD+SPANH,
-		                  0.5+SPANW, 0.5+CURVD-AMPL);
-
-		         cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
-		         tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-		         cairo_set_line_width(cr, LINEW);
-		         cairo_stroke_preserve(cr);
-		         cairo_set_line_width(cr, LINEW/2);
-		         tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-		         cairo_stroke(cr);
+		case 1 :
+			cairo_append_path(cr, path);
+			cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
+			tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
+			cairo_set_line_width(cr, LINEW);
+			cairo_stroke_preserve(cr);
+			cairo_set_line_width(cr, LINEW/2);
+			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
+			cairo_stroke(cr);
 	}
+}
+
+static void cleanup
+( )
+{
+	cairo_path_destroy(path);
 }
 
 struct TileAttribute* attr_bushflag_create
 ()
 {
+	cairo_t *cr = cairo_dummy_create();
+	cairo_move_to(cr, 0.5-SPANW, 0.5-CURVD+AMPL);
+	cairo_curve_to
+	 (cr, 0.5, 0.5-CURVD-SPANH,
+		  0.5, 0.5-CURVD+SPANH,
+		  0.5+SPANW, 0.5-CURVD-AMPL);
+	cairo_move_to(cr, 0.5-SPANW, 0.5+CURVD+AMPL);
+	cairo_curve_to
+	 (cr, 0.5, 0.5+CURVD-SPANH,
+		  0.5, 0.5+CURVD+SPANH,
+		  0.5+SPANW, 0.5+CURVD-AMPL);
+
+	path = cairo_copy_path(cr);
+	cairo_dummy_destroy(cr);
+
+
 	struct TileAttribute *attr = &tile_attribute;
 
 	attr->name = "BushFlag";
@@ -94,7 +110,7 @@ struct TileAttribute* attr_bushflag_create
 	attr->hover_precision = FALSE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;
-	attr->cleanup = NULL;
+	attr->cleanup = &cleanup;
 
 	return attr;
 }

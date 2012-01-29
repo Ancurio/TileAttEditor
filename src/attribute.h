@@ -79,6 +79,12 @@ void tile_attr_set_color
 ( cairo_t *cr, gboolean hovered, enum AttrColor color );
 void attr_draw_empty
 ( cairo_t *cr, gdouble x, gdouble y, gboolean hovered );
+cairo_t *cairo_dummy_create
+( );
+void cairo_dummy_destroy
+( cairo_t *cr );
+void cairo_fill_with_outline
+( cairo_t *cr, gdouble outline_width, gboolean hovered );
 
 
 struct TileAttribute** tile_attrs_create

@@ -34,13 +34,29 @@
 
 #include "attribute.h"
 
+
+#define QDIR_DRAW(qdir, path, empty_x, empty_y)                     \
+{                                                                   \
+	if (attr_value & qdir)                                          \
+	{                                                               \
+		cairo_append_path(cr, arrow_paths[path]);                   \
+		cairo_fill_with_outline                                     \
+			(cr, OUTLW, hovered && (hover_dir & qdir));             \
+	}                                                               \
+	else                                                            \
+	{                                                               \
+		attr_draw_empty                                             \
+			(cr, empty_x, empty_y, hovered && (hover_dir & qdir));  \
+	}                                                               \
+}
+
 /* Style-Parameters: These define the visual look */
 #define LINEW 0.125
 #define LINEH 0.1
 #define HEADW 0.07
 #define HEADH 0.22
 #define DISCR 0.12
-#define OUTLW 0.06
+#define OUTLW 0.03
 
 
 static struct TileAttribute tile_attribute;
@@ -50,9 +66,6 @@ static cairo_path_t *arrow_paths[4];
 /* private functions */
 static enum QuadDirection get_direction
 ( gdouble x, gdouble y );
-
-static void quaddir_draw
-( cairo_t *cr, gboolean hovered );
 /* ----------------- */
 
 enum QuadDirection
@@ -80,55 +93,20 @@ static gint tile_clicked
 	return old_value ^ get_direction(x, y);
 }
 
-static void quaddir_draw
-( cairo_t *cr, gboolean hovered )
-{
-	tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-	cairo_set_line_width(cr, OUTLW);
-	cairo_stroke_preserve(cr);
-	tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-	cairo_fill(cr);
-}
-
 static void draw_attr
 ( gint attr_value, cairo_t *cr, gboolean hovered,
   gdouble offset_x, gdouble offset_y )
 {
-	cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
-
 	enum QuadDirection hover_dir =
 		hovered ? get_direction(offset_x, offset_y) : 0;
-	if (attr_value & QDIR_LEFT)
-		{
-			cairo_append_path(cr, arrow_paths[0]);
-			quaddir_draw(cr, hovered&&(hover_dir&QDIR_LEFT));
-		}
-	else
-		{ attr_draw_empty(cr, 0.25, 0.5, hovered&&(hover_dir&QDIR_LEFT)); }
 
-	if (attr_value & QDIR_RIGHT)
-		{
-			cairo_append_path(cr, arrow_paths[1]);
-			quaddir_draw(cr, hovered&&(hover_dir&QDIR_RIGHT));
-		}
-	else
-		{ attr_draw_empty(cr, 0.75, 0.5, hovered&&(hover_dir&QDIR_RIGHT)); }
+	QDIR_DRAW(QDIR_LEFT, 0, 0.25, 0.5);
 
-	if (attr_value & QDIR_UP)
-		{
-			cairo_append_path(cr, arrow_paths[2]);
-			quaddir_draw(cr, hovered&&(hover_dir&QDIR_UP));
-		}
-	else
-		{ attr_draw_empty(cr, 0.5, 0.25, hovered&&(hover_dir&QDIR_UP)); }
+	QDIR_DRAW(QDIR_RIGHT, 1, 0.75, 0.5);
 
-	if (attr_value & QDIR_DOWN)
-		{
-			cairo_append_path(cr, arrow_paths[3]);
-			quaddir_draw(cr, hovered&&(hover_dir&QDIR_DOWN));
-		}
-	else
-		{ attr_draw_empty(cr, 0.5, 0.75, hovered&&(hover_dir&QDIR_DOWN)); }
+	QDIR_DRAW(QDIR_UP, 2, 0.5, 0.25);
+
+	QDIR_DRAW(QDIR_DOWN, 3, 0.5, 0.75);
 
 }
 

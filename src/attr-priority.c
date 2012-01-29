@@ -31,6 +31,7 @@
 
 #include <gtk/gtk.h>
 #include <cairo.h>
+#include <math.h>
 
 #include "attribute.h"
 
@@ -38,15 +39,41 @@
 
 /* Style-Parameters: These define the visual look */
 #define FONT_SIZE 0.5
-#define STAR_SIZE 0.45
-#define OUTL_SIZE 0.07
+#define OUTL_SIZE 0.035
 #define STARD     0.2
 #define STAR_OFFY 0.02
-
-#define STARC     "★"
+#define STAR_INR  0.08
+#define STAR_OUTR 0.18
+#define STAR_ARMS 5
+#define STAR_BSZ  1.4
 
 
 static struct TileAttribute tile_attribute;
+
+static cairo_path_t *star_attr;
+static cairo_path_t *star_button;
+
+static cairo_path_t* create_star
+( gdouble x, gdouble y, gint arms, gdouble r_inner, gdouble r_outer )
+{
+	cairo_t *cr = cairo_dummy_create();
+	gdouble delta = G_TAU/arms+G_PI_2;
+	gint i;
+	for (i=0; i<arms*2; i++)
+	{
+		gdouble px, py;
+		gdouble r = (i % 2 == 0) ? r_outer : r_inner;
+		px = r*cos(i*(G_PI/arms)-delta)+x;
+		py = r*sin(i*(G_PI/arms)-delta)+y;
+		if (i == 0) { cairo_move_to(cr, px, py); }
+		else        { cairo_line_to(cr, px, py); }
+	}
+	cairo_close_path(cr);
+	cairo_path_t *path = cairo_copy_path(cr);
+	cairo_dummy_destroy(cr);
+	return path;
+}
+
 
 static gint tile_clicked
 (gint old_value, gdouble x, gdouble y)
@@ -70,25 +97,8 @@ static void draw_attr
 	switch (attr_value)
 	{
 		case -1 :  /* This routine is solely for the button icon */
-			cairo_set_font_size(cr, FONT_SIZE*1.2);
-			cairo_text_extents(cr, STARC, &ext);
-
-			cairo_move_to
-				(cr, 0.5-ext.width/2-ext.x_bearing,
-					 0.5-ext.height/2-ext.y_bearing);
-			cairo_text_path(cr, STARC);
-			tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-			cairo_set_line_width(cr, OUTL_SIZE*1.2);
-			cairo_stroke(cr);
-
-			cairo_move_to
-				(cr, 0.5-ext.width/2-ext.x_bearing,
-					 0.5-ext.height/2-ext.y_bearing);
-			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-//			cairo_show_text(cr, STARC);
-			cairo_text_path(cr, STARC);
-			cairo_fill(cr);
-
+			cairo_append_path(cr, star_button);
+			cairo_fill_with_outline(cr, OUTL_SIZE*1.2, FALSE);
 			break;
 
 		case 0  :
@@ -96,24 +106,8 @@ static void draw_attr
 			break;
 
 		default :
-			cairo_set_font_size(cr, STAR_SIZE);
-			cairo_text_extents(cr, STARC, &ext);
-
-			cairo_move_to
-				(cr, 0.5-STARD-ext.width/2-ext.x_bearing,
-					 0.5-STAR_OFFY-ext.height/2-ext.y_bearing);
-			cairo_text_path(cr, STARC);
-			tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-			cairo_set_line_width(cr, OUTL_SIZE);
-			cairo_stroke(cr);
-
-			cairo_move_to
-				(cr, 0.5-STARD-ext.width/2-ext.x_bearing,
-					 0.5-STAR_OFFY-ext.height/2-ext.y_bearing);
-			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-//			cairo_show_text(cr, STARC);
-			cairo_text_path(cr, STARC);
-			cairo_fill(cr);
+			cairo_append_path(cr, star_attr);
+			cairo_fill_with_outline(cr, OUTL_SIZE, hovered);
 
 			g_snprintf(value_str, 4, "%d", attr_value);
 			cairo_set_font_size(cr, FONT_SIZE);
@@ -123,22 +117,27 @@ static void draw_attr
 				(cr, 0.5+STARD-ext.width/2-ext.x_bearing,
 					 0.5-ext.height/2-ext.y_bearing);
 			cairo_text_path(cr, value_str);
-			tile_attr_set_color(cr, hovered, ATTR_COLOR_SEC);
-			cairo_stroke(cr);
-
-			cairo_move_to
-				(cr, 0.5+STARD-ext.width/2-ext.x_bearing,
-					 0.5-ext.height/2-ext.y_bearing);
-			tile_attr_set_color(cr, hovered, ATTR_COLOR_PRI);
-//			cairo_show_text(cr, value_str);
-			cairo_text_path(cr, value_str);
-			cairo_fill(cr);
+			cairo_fill_with_outline(cr, OUTL_SIZE, hovered);
 	}
+}
+
+static void cleanup
+( )
+{
+	cairo_path_destroy(star_attr);
+	cairo_path_destroy(star_button);
 }
 
 struct TileAttribute* attr_priority_create
 ()
 {
+	star_attr = create_star
+		(0.5-STARD, 0.5, STAR_ARMS, STAR_INR, STAR_OUTR);
+
+	star_button = create_star
+		(0.5, 0.5, STAR_ARMS, STAR_INR*STAR_BSZ, STAR_OUTR*STAR_BSZ);
+
+
 	struct TileAttribute *attr = &tile_attribute;
 
 	attr->name = "Priority";
@@ -147,7 +146,7 @@ struct TileAttribute* attr_priority_create
 	attr->hover_precision = FALSE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;
-	attr->cleanup = NULL;
+	attr->cleanup = &cleanup;
 
 	return attr;
 }
