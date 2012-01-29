@@ -244,12 +244,13 @@ static GtkWidget* ui_attribute_buttons_create
 		g_signal_connect
 			(attr_icon, "expose-event",
 			 G_CALLBACK( cb_attr_icon_expose ), tile_attr[i]);
-
 		gtk_box_pack_start
 			(GTK_BOX(attr_center_box), attr_icon, FALSE, FALSE, 4);
+
+		GtkWidget *attr_label = gtk_label_new(tile_attr[i]->name);
 		gtk_box_pack_start
 			(GTK_BOX(attr_center_box),
-			 gtk_label_new(tile_attr[i]->name), FALSE, FALSE, 4);
+			 attr_label, FALSE, FALSE, 4);
 		gtk_size_group_add_widget(sgroup, attr_center_box);
 
 		gtk_box_pack_start
@@ -268,6 +269,7 @@ static GtkWidget* ui_attribute_buttons_create
 		gtk_box_pack_start(GTK_BOX( attr_box ), attr_button,
 			FALSE, FALSE, 8);
 		tile_attr[i]->button = attr_button;
+		tile_attr[i]->label = attr_label;
 		if (tile_attr[i]->enabled)
 			{ gtk_widget_show(attr_button); }
 	}
@@ -402,8 +404,7 @@ void ui_main_window_destroy
 void attr_button_box_set_expand
 ( gpointer _global_data, gboolean expand )
 {
-	struct GlobalData *global_data =
-		(struct GlobalData*)_global_data;
+	CAST_GLOBAL_DATA_PTR(_global_data);
 	struct TileAttribute **tile_attr;
 	for (tile_attr=global_data->tile_attributes;
 	     *tile_attr; tile_attr++)
@@ -411,6 +412,19 @@ void attr_button_box_set_expand
 		gtk_box_set_child_packing
 			(GTK_BOX(global_data->main_window->attr_button_box),
 			 (*tile_attr)->button, expand, expand, 8, GTK_PACK_START);
+	}
+}
+
+void attr_button_set_show_text
+( gpointer _global_data, gboolean show )
+{
+	CAST_GLOBAL_DATA_PTR(_global_data);
+	struct TileAttribute **tile_attr;
+	for (tile_attr=global_data->tile_attributes;
+	     *tile_attr; tile_attr++)
+	{
+		if (show) { gtk_widget_show((*tile_attr)->label); }
+		else      { gtk_widget_hide((*tile_attr)->label); }
 	}
 }
 

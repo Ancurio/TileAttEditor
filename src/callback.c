@@ -348,6 +348,7 @@ void cb_editmenu_flip
 
 	workspace_box_flip_packing
 		(global_data->main_window->workspace_box);
+	attr_button_set_show_text(global_data, !state);
 
 	gtk_orientable_set_orientation
 		(GTK_ORIENTABLE(global_data->main_window->workspace_box),

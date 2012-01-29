@@ -60,6 +60,7 @@ struct TileAttribute
 	gulong signal_handler_id;
 	gpointer global_data;
 	GtkWidget *button;
+	GtkWidget *label;
 
 };
 
