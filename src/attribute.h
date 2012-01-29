@@ -69,8 +69,6 @@ enum AttrColor
 	ATTR_COLOR_SEC,
 };
 
-struct TileAttribute* tile_attr_create
-( );
 void tile_attr_set_primary_color
 ( cairo_t *cr );
 void tile_attr_set_secondary_color

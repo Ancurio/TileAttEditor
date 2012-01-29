@@ -35,27 +35,6 @@
 #include "tileatteditor.h"
 
 
-struct TileAttribute* tile_attr_create
-( const gchar *name, gint default_value,
-  gint icon_value, gboolean hover_precision,
-  gint (*tile_clicked)(gint, gdouble, gdouble),
-  void (*draw_attr)(gint, cairo_t*, gboolean, gdouble, gdouble),
-  void (*cleanup) )
-{
-	struct TileAttribute *attr =
-		g_malloc(sizeof(struct TileAttribute));
-
-	attr->name = name;
-	attr->default_value = default_value;
-	attr->icon_value = icon_value;
-	attr->hover_precision = hover_precision;
-	attr->tile_clicked = tile_clicked;
-	attr->draw_attr = draw_attr;
-	attr->cleanup = cleanup;
-
-	return attr;
-}
-
 void tile_attr_set_primary_color
 ( cairo_t *cr )
 {
