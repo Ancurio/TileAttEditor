@@ -35,6 +35,8 @@
 #include "tileatteditor.h"
 
 
+static struct TileAttribute *tile_attr[ATTRIBUTE_COUNT+1];
+
 void tile_attr_set_primary_color
 ( cairo_t *cr )
 {
@@ -103,10 +105,6 @@ void cairo_dummy_destroy
 struct TileAttribute** tile_attrs_create
 ( gpointer global_data )
 {
-	struct TileAttribute **tile_attr;
-	tile_attr =
-		g_malloc(sizeof(struct TileAttribute*) * ATTRIBUTE_COUNT+1);
-
 	tile_attr[0] = attr_passability_create();
 	tile_attr[1] = attr_quadpassability_create();
 	tile_attr[2] = attr_priority_create();
@@ -133,7 +131,5 @@ void tile_attrs_destroy
 		if ((*_tile_attr)->cleanup)
 			{ (*(*_tile_attr)->cleanup)(); }
 	}
-
-	g_free(tile_attr);
 }
 
