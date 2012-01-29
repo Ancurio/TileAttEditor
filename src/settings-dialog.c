@@ -86,7 +86,7 @@ static void apply_settings
 	settings->show_button_labels =
 		gtk_toggle_button_get_active
 			(GTK_TOGGLE_BUTTON(dialog->checkb_show_labels));
-	attr_button_set_show_label
+	ui_attr_button_set_show_label
 		(global_data, settings->show_button_labels);
 
 	gboolean active_attr_disabled = FALSE;

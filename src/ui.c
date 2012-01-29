@@ -274,7 +274,7 @@ static GtkWidget* ui_attribute_buttons_create
 			{ gtk_widget_show(attr_button); }
 	}
 
-	attr_button_set_show_label
+	ui_attr_button_set_show_label
 		(global_data, global_data->settings->show_button_labels);
 	return attr_box;
 }
@@ -403,7 +403,7 @@ void ui_main_window_destroy
 }
 
 
-void attr_button_box_set_expand
+void ui_attr_button_box_set_expand
 ( gpointer _global_data, gboolean expand )
 {
 	CAST_GLOBAL_DATA_PTR(_global_data);
@@ -417,7 +417,7 @@ void attr_button_box_set_expand
 	}
 }
 
-void attr_button_set_show_label
+void ui_attr_button_set_show_label
 ( gpointer _global_data, gboolean show )
 {
 	CAST_GLOBAL_DATA_PTR(_global_data);
@@ -430,7 +430,7 @@ void attr_button_set_show_label
 	}
 }
 
-void workspace_box_flip_packing
+void ui_workspace_box_flip_packing
 ( GtkWidget *workspace_box )
 {
 	GList *children =

@@ -346,9 +346,9 @@ void cb_editmenu_flip
 		state = FALSE;
 	}
 
-	workspace_box_flip_packing
+	ui_workspace_box_flip_packing
 		(global_data->main_window->workspace_box);
-//	attr_button_set_show_label(global_data, !state);
+//	ui_attr_button_set_show_label(global_data, !state);
 
 	gtk_orientable_set_orientation
 		(GTK_ORIENTABLE(global_data->main_window->workspace_box),
@@ -359,7 +359,7 @@ void cb_editmenu_flip
 	gtk_orientable_set_orientation
 		(GTK_ORIENTABLE(global_data->main_window->attr_button_box),
 		 children_orent);
-	attr_button_box_set_expand(global_data, state);
+	ui_attr_button_box_set_expand(global_data, state);
 	global_data->settings->workspace_flipped = state;
 
 

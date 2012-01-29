@@ -55,13 +55,13 @@ void ui_main_window_create
 void ui_main_window_destroy
 ( struct MainWindow *main_window );
 
-void attr_button_box_set_expand
+void ui_attr_button_box_set_expand
 ( gpointer _global_data, gboolean expand );
 
-void attr_button_set_show_label
+void ui_attr_button_set_show_label
 ( gpointer _global_data, gboolean show );
 
-void workspace_box_flip_packing
+void ui_workspace_box_flip_packing
 ( GtkWidget *workspace_box );
 
 gchar *find_image_file_attempt
