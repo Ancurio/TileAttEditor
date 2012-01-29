@@ -43,6 +43,10 @@
 #define OUTLW 0.06
 
 
+static struct TileAttribute tile_attribute;
+
+static cairo_path_t *arrow_paths[4];
+
 /* private functions */
 static enum QuadDirection get_direction
 ( gdouble x, gdouble y );
@@ -50,8 +54,6 @@ static enum QuadDirection get_direction
 static void quaddir_draw
 ( cairo_t *cr, gboolean hovered );
 /* ----------------- */
-
-static cairo_path_t **arrow_paths;
 
 enum QuadDirection
 {
@@ -130,7 +132,7 @@ static void draw_attr
 
 }
 
-static void destroy
+static void cleanup
 ( )
 {
 	gint i;
@@ -141,8 +143,6 @@ static void destroy
 struct TileAttribute* attr_quadpassability_create
 ()
 {
-	arrow_paths = g_malloc(sizeof(cairo_path_t*) * 4);
-
 	cairo_surface_t *dummy_surf =
 		cairo_image_surface_create(CAIRO_FORMAT_A1, 1, 1);
 	cairo_t *cr = cairo_create(dummy_surf);
@@ -202,8 +202,7 @@ struct TileAttribute* attr_quadpassability_create
 	cairo_destroy(cr);
 
 
-	struct TileAttribute *attr =
-		g_malloc(sizeof(struct TileAttribute));
+	struct TileAttribute *attr = &tile_attribute;
 
 	attr->name = "QuadPassability";
 	attr->default_value = 0;
@@ -211,7 +210,7 @@ struct TileAttribute* attr_quadpassability_create
 	attr->hover_precision = TRUE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;
-	attr->destroy = &destroy;
+	attr->cleanup = &cleanup;
 
 	return attr;
 }

@@ -50,7 +50,7 @@ struct TileAttribute
 	( gint attr_value, cairo_t *cr, gboolean hovered,
 	  gdouble offset_x, gdouble offset_y );
 
-	void (*destroy)
+	void (*cleanup)
 	( );
 
 	/* defined by program */

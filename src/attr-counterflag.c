@@ -35,6 +35,8 @@
 #include "attribute.h"
 
 
+static struct TileAttribute tile_attribute;
+
 static gint tile_clicked
 (gint old_value, gdouble x, gdouble y)
 {
@@ -72,8 +74,7 @@ static void draw_attr
 struct TileAttribute* attr_counterflag_create
 ()
 {
-	struct TileAttribute *attr =
-		g_malloc(sizeof(struct TileAttribute));
+	struct TileAttribute *attr = &tile_attribute;
 
 	attr->name = "CounterFlag";
 	attr->default_value = 0;
@@ -81,7 +82,7 @@ struct TileAttribute* attr_counterflag_create
 	attr->hover_precision = FALSE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;
-	attr->destroy = NULL;
+	attr->cleanup = NULL;
 
 	return attr;
 }

@@ -40,7 +40,7 @@ struct TileAttribute* tile_attr_create
   gint icon_value, gboolean hover_precision,
   gint (*tile_clicked)(gint, gdouble, gdouble),
   void (*draw_attr)(gint, cairo_t*, gboolean, gdouble, gdouble),
-  void (*destroy) )
+  void (*cleanup) )
 {
 	struct TileAttribute *attr =
 		g_malloc(sizeof(struct TileAttribute));
@@ -51,7 +51,7 @@ struct TileAttribute* tile_attr_create
 	attr->hover_precision = hover_precision;
 	attr->tile_clicked = tile_clicked;
 	attr->draw_attr = draw_attr;
-	attr->destroy = destroy;
+	attr->cleanup = cleanup;
 
 	return attr;
 }
@@ -125,9 +125,9 @@ void tile_attrs_destroy
 	struct TileAttribute **_tile_attr;
 	for (_tile_attr = tile_attr; *_tile_attr; _tile_attr++)
 	{
-		if ((*_tile_attr)->destroy)
-			{ (*(*_tile_attr)->destroy)(); }
-		g_free(*_tile_attr);
+		if ((*_tile_attr)->cleanup)
+			{ (*(*_tile_attr)->cleanup)(); }
+//		g_free(*_tile_attr);
 	}
 
 	g_free(tile_attr);
