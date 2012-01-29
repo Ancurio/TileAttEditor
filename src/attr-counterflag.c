@@ -45,10 +45,7 @@ static cairo_path_t *path;
 static gint tile_clicked
 (gint old_value, gdouble x, gdouble y)
 {
-	if (old_value)
-		{ return 0; }
-	else
-		{ return 1; }
+	return !old_value;
 }
 
 static void draw_attr

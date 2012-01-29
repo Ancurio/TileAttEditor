@@ -153,7 +153,6 @@ void tile_attrs_destroy
 	{
 		if ((*_tile_attr)->cleanup)
 			{ (*(*_tile_attr)->cleanup)(); }
-//		g_free(*_tile_attr);
 	}
 
 	g_free(tile_attr);

@@ -46,10 +46,7 @@ static struct TileAttribute tile_attribute;
 static gint tile_clicked
 (gint old_value, gdouble x, gdouble y)
 {
-	if (old_value < FLAG_MAX_VAL)
-		{ return old_value+1; }
-	else
-		{ return 0; }
+	return (old_value < FLAG_MAX_VAL) ? old_value+1 : 0;
 }
 
 static void draw_attr
