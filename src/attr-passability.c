@@ -29,7 +29,6 @@
  */
 
 
-#include <stdio.h>
 #include <cairo.h>
 
 #include "attribute.h"
@@ -53,8 +52,7 @@ static void draw_attr
 ( gint attr_value, cairo_t *cr, gboolean hovered,
   gdouble offset_x, gdouble offset_y )
 {
-	gint odd = attr_value % 2;
-	switch(odd)
+	switch(attr_value)
 	{
 		case 0 :
 			cairo_arc(cr, 0.5, 0.5, SIZE, 0, G_TAU);

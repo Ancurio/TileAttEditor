@@ -29,7 +29,6 @@
  */
 
 
-#include <stdio.h>
 #include <cairo.h>
 
 #include "attribute.h"

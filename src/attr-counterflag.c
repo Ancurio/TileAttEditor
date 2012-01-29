@@ -29,7 +29,6 @@
  */
 
 
-#include <gtk/gtk.h>
 #include <cairo.h>
 
 #include "attribute.h"
@@ -52,14 +51,13 @@ static void draw_attr
 ( gint attr_value, cairo_t *cr, gboolean hovered,
   gdouble offset_x, gdouble offset_y )
 {
-	gint odd = attr_value % 2;
-	switch(odd)
+	switch(attr_value)
 	{
 		case 0 :
 			attr_draw_empty(cr, 0.5, 0.5, hovered);
 			break;
 
-		default :
+		case 1 :
 			cairo_append_path(cr, path);
 			cairo_fill_with_outline(cr, OUTLW, hovered);
 
