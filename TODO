@@ -4,7 +4,6 @@ CRITICAL:
 
 MINOR:
 	
-	- replace unicode star in attr_priority with pure cairo code
 	- add "About" window
 	- write detailed error messages for file opening
 	- outsource parts of "Tileset" to "TilesetArea"
