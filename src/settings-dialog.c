@@ -59,6 +59,8 @@ struct SettingsDialog
 
 	GtkWidget **checkb_attributes;
 
+	GtkWidget *checkb_show_labels;
+
 //	struct Settings *local_settings;
 
 };
@@ -80,6 +82,12 @@ static void apply_settings
 			(GTK_TOGGLE_BUTTON(dialog->checkb_smooth));
 	color_set_from_button(settings->bg_color, dialog->colorb_bg);
 	color_set_from_button(settings->grid_color, dialog->colorb_grid);
+
+	settings->show_button_labels =
+		gtk_toggle_button_get_active
+			(GTK_TOGGLE_BUTTON(dialog->checkb_show_labels));
+	attr_button_set_show_label
+		(global_data, settings->show_button_labels);
 
 	gboolean active_attr_disabled = FALSE;
 	gint i; for (i=0;i<ATTRIBUTE_COUNT;i++)
@@ -324,6 +332,25 @@ void settings_dialog_run
 
 	gtk_box_pack_start(GTK_BOX(page2), vbox, TRUE, TRUE, 8);
 
+	/* Create third page */
+	GtkWidget *checkb_show_labels =
+		gtk_check_button_new_with_label(" Show button labels");
+	gtk_toggle_button_set_active
+		(GTK_TOGGLE_BUTTON(checkb_show_labels),
+		 settings->show_button_labels);
+
+	g_signal_connect
+		(checkb_show_labels, "toggled",
+		 G_CALLBACK( cb_check_button_attr_toggled ),
+		 settings_dialog);
+
+	settings_dialog->checkb_show_labels = checkb_show_labels;
+
+	GtkWidget *page3 = gtk_vbox_new(FALSE, 8);
+	gtk_container_set_border_width(GTK_CONTAINER(page3), 8);
+	gtk_box_pack_start
+		(GTK_BOX(page3), checkb_show_labels, FALSE, FALSE, 8);
+
 	/* Create notebook and dialog */
 	GtkWidget *content_area = gtk_vbox_new(TRUE, 4),
 	          *action_area = gtk_hbox_new(FALSE, 4),
@@ -335,6 +362,8 @@ void settings_dialog_run
 		(GTK_NOTEBOOK(notebook), page1, gtk_label_new("Display"));
 	gtk_notebook_append_page
 		(GTK_NOTEBOOK(notebook), page2, gtk_label_new("Attributes"));
+	gtk_notebook_append_page
+		(GTK_NOTEBOOK(notebook), page3, gtk_label_new("Misc"));
 
 	gtk_box_pack_start_defaults(GTK_BOX(content_area), notebook);
 

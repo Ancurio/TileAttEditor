@@ -181,6 +181,7 @@ void settings_write
 	VALUE_TO_KEY(settings->tileset_scale_ratio, double);
 	VALUE_TO_KEY(settings->attribute_alpha, double);
 	VALUE_TO_KEY(settings->smooth_zoom, boolean);
+	VALUE_TO_KEY(settings->show_button_labels, boolean);
 	VALUE_TO_KEY(settings->workspace_flipped, boolean);
 
 	COLOR_TO_KEY(settings->bg_color);
@@ -241,6 +242,7 @@ void settings_read
 		{ settings->attribute_alpha = 0.8; }
 
 	KEY_TO_VALUE(settings->smooth_zoom, boolean, FALSE);
+	KEY_TO_VALUE(settings->show_button_labels, boolean, TRUE);
 	KEY_TO_VALUE(settings->workspace_flipped, boolean, FALSE);
 
 	KEY_TO_COLOR(settings->bg_color, 0.04, 0.65, 0.72, 1);

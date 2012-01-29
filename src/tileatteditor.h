@@ -44,6 +44,7 @@ struct Settings
 	gdouble tileset_scale_ratio;
 	gdouble attribute_alpha;
 	gboolean smooth_zoom;
+	gboolean show_button_labels;
 	gboolean workspace_flipped;
 
 	struct Color *bg_color;

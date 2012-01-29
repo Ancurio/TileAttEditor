@@ -58,7 +58,7 @@ void ui_main_window_destroy
 void attr_button_box_set_expand
 ( gpointer _global_data, gboolean expand );
 
-void attr_button_set_show_text
+void attr_button_set_show_label
 ( gpointer _global_data, gboolean show );
 
 void workspace_box_flip_packing
