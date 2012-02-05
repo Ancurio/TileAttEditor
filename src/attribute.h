@@ -66,8 +66,8 @@ struct TileAttribute
 
 enum AttrColor
 {
-	ATTR_COLOR_PRI,
-	ATTR_COLOR_SEC,
+	ATTR_COLOR_PRI = 0,
+	ATTR_COLOR_SEC = 1,
 };
 
 void tile_attr_set_primary_color
