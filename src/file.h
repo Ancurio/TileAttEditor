@@ -41,40 +41,40 @@
 
 
 
-struct File						/* member set by:   */
+struct File                     /* member set by:   */
 {
-	xmlDoc *doc;				/* file_create/open */
+	xmlDoc *doc;                /* file_create/open */
 
-	xmlNode *root_node;			/* file_create/open */
-	xmlNode *image_node;		/* file_create/open */
+	xmlNode *root_node;         /* file_create/open */
+	xmlNode *image_node;        /* file_create/open */
 
-	xmlNode **attr_nodes;		/* file_parse       */
+	xmlNode **attr_nodes;       /* file_parse       */
 
-	gint min_buffer_size;		/* file_parse       */
-	gchar *tileset_name;		/* file_parse       */
+	gint min_buffer_size;       /* file_parse       */
+	gchar *tileset_name;        /* file_parse       */
 
-//	xmlSaveCtxt *save_context;	/* (placeholder)    */
+//	xmlSaveCtxt *save_context;  /* (placeholder)    */
 
-	gchar *image_filename_abs;	/* file_create/open */
-	gboolean image_path_found;	/* file_check       */
+	gchar *image_filename_abs;  /* file_create/open */
+	gboolean image_path_found;  /* file_check       */
 };
 
 enum ErrorFileOpen
 {
-	NONEXISTANT_FILE,	/* Error: document doesn't exist */
-	DOCUMENT_MALFORMED,	/* Error: malformed document */
-	DOCUMENT_EMPTY,		/* Error: empty document(?) */
-	NOT_TILESET_FILE,	/* Error: not a tileset file */
-	NO_TILE_SIZE_PROPS,	/* Error: no props tile* */
-	NO_IMAGE_NODE,		/* Error: no image child node */
-	NO_IMAGE_SOURCE		/* Error: no image source attribute */
+	NONEXISTANT_FILE,   /* Error: document doesn't exist */
+	DOCUMENT_MALFORMED, /* Error: malformed document */
+	DOCUMENT_EMPTY,     /* Error: empty document(?) */
+	NOT_TILESET_FILE,   /* Error: not a tileset file */
+	NO_TILE_SIZE_PROPS, /* Error: no props tile* */
+	NO_IMAGE_NODE,      /* Error: no image child node */
+	NO_IMAGE_SOURCE     /* Error: no image source attribute */
 };
 
 enum ErrorFileParse
 {
 	NO_FILE,
-	BAD_TILE_SIZES,		/* Error: bad tile* values */
-	BAD_IMAGE_FILE		/* Error: could not create cairo surface from file */
+	BAD_TILE_SIZES,     /* Error: bad tile* values */
+	BAD_IMAGE_FILE      /* Error: could not create cairo surface from file */
 };
 
 
