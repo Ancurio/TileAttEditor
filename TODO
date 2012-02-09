@@ -5,7 +5,6 @@ CRITICAL:
 MINOR:
 	
 	- add "About" window
-	- write detailed error messages for file opening
 	- outsource parts of "Tileset" to "TilesetArea"
 	- fine tune gcc include dirs for each .c file (to speed up compilation)
 	- make many parts of the app independent of GlobalData header
