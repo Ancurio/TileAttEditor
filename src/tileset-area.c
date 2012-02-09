@@ -212,7 +212,7 @@ void tileset_area_redraw_cache
 	if (!tileset) { return; }
 
 	cairo_t *cr = cairo_create(tileset->cached_composition);
-	if (!cr) {return;}
+	if (!cr) { return; }
 	clear_surface(cr);
 
 	/* paint background color */
@@ -250,7 +250,7 @@ void tileset_area_redraw_cache
 	cairo_stroke(cr);
 
 	/* paint attribute symbols */
-	if (!global_data->active_attribute) {goto skip_attr;}
+	if (!global_data->active_attribute) { goto skip_attr; }
 	cairo_surface_t *tile_surf = cairo_image_surface_create
 		(CAIRO_FORMAT_ARGB32,
 		 (gint)tileset->tile_disp_width,
@@ -324,7 +324,7 @@ void tileset_area_redraw_cache_tile
 		grid_offset_y+tileset->tile_disp_height);
 	cairo_stroke(cr);
 
-	if (!global_data->active_attribute) {goto skip_attr;}
+	if (!global_data->active_attribute) { goto skip_attr; }
 
 	cairo_surface_t *attr_surf =
 		cairo_image_surface_create
@@ -346,6 +346,7 @@ void tileset_area_redraw_cache_tile
 	cairo_paint_with_alpha
 		(cr, global_data->settings->attribute_alpha);
 	cairo_surface_destroy(attr_surf);
+
 skip_attr:
 	cairo_destroy(cr);
 	cr = cairo_create(tileset->cached_composition);
@@ -373,7 +374,7 @@ void tileset_area_queue_tile_redraw
 	for (i=0;i<n_tiles;i++)
 	{
 		tile_id = va_arg(tile_ids, gint);
-		if (tile_id < 0) {continue;}
+		if (tile_id < 0) { continue; }
 		//g_message("Invalidating tile %d", tile_id);
 		gint tile_x =
 			tile_id % (tileset->width/tileset->tile_width);
