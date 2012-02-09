@@ -723,17 +723,16 @@ gboolean cb_tileset_area_drag_data_received
 
 	if (!path) { return; }
 
-	if (g_str_has_suffix(path, ".tsx"))
-	{
-		if (!save_changes(global_data)) { goto clean_up; }
-		file_open_attempt(global_data, path);
-		goto clean_up;
-	}
-
 	if (g_str_has_suffix(path, ".png"))
 	{
 		if (!save_changes(global_data)) { goto clean_up; }
 		new_file_dialog_run(global_data, path);
+	}
+	else
+	{
+		if (!save_changes(global_data)) { goto clean_up; }
+		file_open_attempt(global_data, path);
+		goto clean_up;
 	}
 
 clean_up:
