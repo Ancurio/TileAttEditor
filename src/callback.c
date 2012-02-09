@@ -112,16 +112,16 @@ static void show_file_open_error_message
 	switch (error)
 	{
 		case NONEXISTANT_FILE:
-			msg = "The selected document file does not exist.";
+			msg = "The selected file does not exist.";
 			break;
 		case DOCUMENT_MALFORMED:
-			msg = "The selected document is malformed.";
+			msg = "The selected file is malformed.";
 			break;
 		case DOCUMENT_EMPTY:
-			msg = "The selected document is empty.";
+			msg = "The selected file is empty.";
 			break;
 		case NOT_TILESET_FILE:
-			msg = "The selected document is not a tileset xml file.";
+			msg = "The selected file is not a tileset xml file.";
 			break;
 		case NO_TILE_SIZE_PROPS:
 			msg = "The selected file does not contain tile size data.";
