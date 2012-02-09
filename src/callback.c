@@ -46,7 +46,13 @@ static void statusbar_update_message
 ( struct GlobalData *global_data, const gchar *message );
 
 static void show_error_message
-( GtkWidget *parent, gchar *message );
+( GtkWidget *parent, const gchar *title, const gchar *message );
+
+static void show_file_open_error_message
+( GtkWidget *parent, enum ErrorFileOpen error );
+
+static void show_file_parse_error_message
+( GtkWidget *parent, enum ErrorFileParse error );
 
 static void file_open_attempt
 ( struct GlobalData *global_data, const gchar *filename );
@@ -84,18 +90,74 @@ static void statusbar_update_message
 }
 
 static void show_error_message
-( GtkWidget *parent, gchar *message )
+( GtkWidget *parent, const gchar *title, const gchar *message )
 {
 	GtkWidget *error_dialog =
 		gtk_message_dialog_new_with_markup
 			(GTK_WINDOW(parent),
 			 0, GTK_MESSAGE_ERROR,
 			 GTK_BUTTONS_CLOSE,
-			 "<b>File Loading Error</b>");
+			 "<b>%s</b>", title);
 	gtk_message_dialog_format_secondary_text
 		(GTK_MESSAGE_DIALOG(error_dialog), message);
 	gtk_dialog_run(GTK_DIALOG(error_dialog));
 	gtk_widget_destroy(error_dialog);
+}
+
+static void show_file_open_error_message
+( GtkWidget *parent, enum ErrorFileOpen error )
+{
+	static gchar *msg;
+
+	switch (error)
+	{
+		case NONEXISTANT_FILE:
+			msg = "The selected document file does not exist.";
+			break;
+		case DOCUMENT_MALFORMED:
+			msg = "The selected document is malformed.";
+			break;
+		case DOCUMENT_EMPTY:
+			msg = "The selected document is empty.";
+			break;
+		case NOT_TILESET_FILE:
+			msg = "The selected document is not a tileset xml file.";
+			break;
+		case NO_TILE_SIZE_PROPS:
+			msg = "The selected file does not contain tile size data.";
+			break;
+		case NO_IMAGE_NODE:
+		case NO_IMAGE_SOURCE:
+			msg = "The tileset image file path could not\n"
+			      "be found inside selected file.";
+			break;
+
+		default:
+			msg = "The selected file could not be loaded.";
+	}
+
+	show_error_message(parent, "File Loading Error", msg);
+}
+
+static void show_file_parse_error_message
+( GtkWidget *parent, enum ErrorFileParse error )
+{
+	const gchar *msg;
+
+	switch (error)
+	{
+		case BAD_TILE_SIZES:
+			msg = "The containing tile size data is invalid.";
+			break;
+		case BAD_IMAGE_FILE:
+			msg = "The tileset image file could not be loaded.";
+			break;
+
+		default:
+			msg = "The selected file could not be loaded.";
+	}
+
+	show_error_message(parent, "File Parsing Error", msg);
 }
 
 /* should always be used after 'save_changes' */
@@ -103,24 +165,24 @@ static void file_open_attempt
 ( struct GlobalData *global_data, const gchar *filename )
 {
 	gchar *_filename = g_strdup(filename);
+	enum ErrorFileOpen error_open;
+	enum ErrorFileParse error_parse;
 
-	struct File *file = file_open(_filename, NULL);
+	struct File *file = file_open(_filename, &error_open);
 	if (!file)
 	{
-		show_error_message
-			(global_data->main_window->window,
-			 "The selected file could not be loaded");
+		show_file_open_error_message
+			(global_data->main_window->window, error_open);
 		g_free(_filename);
 		return;
 	}
 	else
 	{
-		if (!file_check(global_data, file, NULL))
+		if (!file_check(global_data, file, &error_parse))
 		{
 			file_destroy(file);
-			show_error_message
-				(global_data->main_window->window,
-				 "The selected file could not be parsed");
+			show_file_parse_error_message
+				(global_data->main_window->window, error_parse);
 			g_free(_filename);
 			return;
 		}
