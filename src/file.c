@@ -53,6 +53,12 @@ static xmlNode* xml_get_child_node_with_prop
 static gint str_len
 ( const gchar *string );
 
+static void str_clear
+( gchar *str, gint len );
+
+static void str_append_c
+( gchar *str, gchar c );
+
 
 static gchar* make_relative_path
 ( const gchar *base, const gchar *dest, gchar dlm );
@@ -61,12 +67,15 @@ static gchar* make_absolute_path
 ( const gchar *base, const gchar *rel_path, gchar dlm );
 
 
+static guint csv_count_values
+( const gchar *str );
+
 static gchar* csv_create_string
 ( const gint *value_buffer, guint buffer_size, gint row_length );
 
 static gint* csv_parse_string
-(const gchar *str, guint *buffer_size,
- gint default_value, gint min_buffer_size);
+( const gchar *str, guint *buffer_size,
+ gint default_value, gint min_buffer_size );
 
 
 static xmlNode* file_attribute_parse_node
@@ -111,16 +120,30 @@ static xmlNode* xml_get_child_node_with_prop
 			{ return node; }
 	}
 	return NULL;
-
 }
 
 
 static gint str_len
 ( const gchar *string )
 {
-	gint i; for (i=0;string[i] != '\0';i++) {}
+	gint i; for (i=0;string[i] != '\0';i++) { }
 	return i;
 }
+
+static void str_clear
+( gchar *str, gint len )
+{
+	gint i; for (i=0;i<len;i++) { str[i] = '\0'; }
+}
+
+static void str_append_c
+( gchar *str, gchar c )
+{
+	gint i = 0;
+	while (str[i]) {i++;}
+	str[i] = c;
+}
+
 
 static gchar* make_relative_path
 ( const gchar *base, const gchar *dest, gchar dlm )
@@ -170,7 +193,6 @@ static gchar* make_relative_path
 	relative_path[relative_path_pos+i] = '\0';
 
 	return relative_path;
-
 }
 
 static gchar* make_absolute_path
@@ -225,22 +247,8 @@ static gchar* make_absolute_path
 }
 
 
-void str_clear
-(gchar *str, gint len)
-{
-	gint i; for (i=0;i<len;i++) {str[i] = '\0';}
-}
-
-void str_append_c
-(gchar *str, gchar c)
-{
-	gint i = 0;
-	while (str[i]) {i++;}
-	str[i] = c;
-}
-
-guint csv_count_values
-(const gchar *str)
+static guint csv_count_values
+( const gchar *str )
 {
 	gint i = 0;
 	guint count = 0;
@@ -249,8 +257,8 @@ guint csv_count_values
 }
 
 static gint* csv_parse_string
-(const gchar *str, guint *buffer_size,
- gint default_value, gint min_buffer_size)
+( const gchar *str, guint *buffer_size,
+  gint default_value, gint min_buffer_size )
 {
 	*buffer_size = csv_count_values(str);
 	if (*buffer_size < min_buffer_size)
