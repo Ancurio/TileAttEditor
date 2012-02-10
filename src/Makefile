@@ -4,7 +4,7 @@ objects   = main.o settings.o ui.o callback.o tileset-area.o \
             color.o file.o attribute.o util.o  \
             attr-passability.o attr-quadpassability.o attr-priority.o  \
             attr-bushflag.o attr-counterflag.o attr-terrainflag.o
-include   = `pkg-config --libs --cflags gtk+-2.0 cairo` \
+include   = `pkg-config --libs --cflags gtk+-3.0 cairo` \
             `xml2-config --libs --cflags`
 gcc-flags = -g
 
