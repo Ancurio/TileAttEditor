@@ -209,7 +209,7 @@ static gchar* make_absolute_path
 	int base_cp_count = i + 1;
 
 	gchar *absolute_path =
-		g_malloc(sizeof(gchar)*(base_cp_count+rel_path_cp_count));
+		g_malloc(sizeof(gchar)*(base_cp_count+rel_path_cp_count+1));
 
 	for (i=0; i<base_cp_count; i++)
 		{ absolute_path[i] = base[i]; }
