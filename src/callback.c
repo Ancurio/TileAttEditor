@@ -453,12 +453,10 @@ gboolean cb_window_configure
 
 
 void cb_attr_icon_expose
-( GtkWidget *icon, GdkEventExpose *event, gpointer data )
+( GtkWidget *icon, cairo_t *cr, gpointer data )
 {
 	struct TileAttribute *tile_attr =
 		(struct TileAttribute*)data;
-
-	cairo_t *cr = gdk_cairo_create(icon->window);
 
 	cairo_save(cr);
 	cairo_rectangle(cr, 0.5, 0.5, 31, 31);
@@ -470,7 +468,6 @@ void cb_attr_icon_expose
 
 	cairo_scale(cr, 32, 32);
 	(*tile_attr->draw_attr)(tile_attr->icon_value, cr, FALSE, 0, 0);
-	cairo_destroy(cr);
 }
 
 
@@ -511,16 +508,19 @@ void cb_attr_button_toggled
 
 
 gboolean cb_tileset_area_expose
-( GtkWidget *widget, GdkEventExpose *event, gpointer data )
+( GtkWidget *widget, cairo_t *cr, gpointer data )
 {
 	CAST_GLOBAL_DATA
 
 	struct Tileset *tileset = global_data->tileset;
 
+	gint alloc_w = gtk_widget_get_allocated_width(widget) ,
+	     alloc_h = gtk_widget_get_allocated_height(widget);
+
 	if (tileset)
 	{
-		if (widget->allocation.width != tileset->disp_width ||
-			widget->allocation.height != tileset->disp_height)
+		if (alloc_w != tileset->disp_width ||
+			alloc_h != tileset->disp_height)
 		{
 			gtk_widget_set_size_request(widget,
 				tileset->disp_width, tileset->disp_height);
@@ -528,22 +528,17 @@ gboolean cb_tileset_area_expose
 	}
 	else
 	{
-		if (widget->allocation.width != 128 ||
-			widget->allocation.height != 256)
+		if (alloc_w != 128 || alloc_h != 256)
 		{
 			gtk_widget_set_size_request(widget, 128, 256);
 		}
 		return;
 	}
 
-	cairo_t *cr = gdk_cairo_create(widget->window);
 	cairo_set_operator(cr, CAIRO_OPERATOR_SOURCE);
-	gdk_cairo_region(cr, event->region);
-	cairo_clip(cr);
 	cairo_set_source_surface
 		(cr, tileset->cached_composition, 0, 0);
 	cairo_paint(cr);
-	cairo_destroy(cr);
 
 	return FALSE;
 }
@@ -708,6 +703,7 @@ gboolean cb_tileset_area_leave_notify
 	return FALSE;
 }
 
+/*
 gboolean cb_tileset_area_drag_data_received
 ( GtkWidget *widget, GdkDragContext *context,
   gint x, gint y, GtkSelectionData *sdata,
@@ -738,4 +734,5 @@ gboolean cb_tileset_area_drag_data_received
 clean_up:
 	g_free(path);
 }
+*/
 

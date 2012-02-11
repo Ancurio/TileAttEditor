@@ -392,11 +392,9 @@ void tileset_area_queue_tile_redraw
 
 	va_end(tile_ids);
 
-	GdkRegion *region = gdk_region_rectangle(&master_rect);
-	gdk_window_invalidate_region
+	gdk_window_invalidate_rect
 		(gtk_widget_get_window(global_data->main_window->tileset_area),
-		 region, FALSE);
+		 &master_rect, FALSE);
 
-	gdk_region_destroy(region);
 }
 

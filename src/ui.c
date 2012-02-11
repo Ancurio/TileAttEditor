@@ -170,7 +170,7 @@ static GtkWidget* ui_tilesetarea_create
 		GDK_BUTTON_PRESS_MASK | GDK_POINTER_MOTION_MASK |
 		GDK_LEAVE_NOTIFY_MASK | GDK_POINTER_MOTION_HINT_MASK);
 
-	g_signal_connect( G_OBJECT (tileset_area), "expose_event",
+	g_signal_connect( G_OBJECT (tileset_area), "draw",
 					  G_CALLBACK (cb_tileset_area_expose),
 					  global_data );
 	g_signal_connect( G_OBJECT (tileset_area), "button-press-event",
@@ -198,9 +198,9 @@ static GtkWidget* ui_tilesetarea_create
 	gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrollarea),
 		GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
 
-	g_signal_connect( G_OBJECT (scrollarea), "drag_data_received",
-					  G_CALLBACK (cb_tileset_area_drag_data_received),
-					  global_data );
+	//g_signal_connect( G_OBJECT (scrollarea), "drag_data_received",
+					  //G_CALLBACK (cb_tileset_area_drag_data_received),
+					  //global_data );
 
 	gtk_drag_dest_set
 		(scrollarea, GTK_DEST_DEFAULT_ALL,
@@ -242,7 +242,7 @@ static GtkWidget* ui_attribute_buttons_create
 		GtkWidget *attr_icon = gtk_drawing_area_new();
 		gtk_widget_set_size_request(attr_icon, 32, 32);
 		g_signal_connect
-			(attr_icon, "expose-event",
+			(attr_icon, "draw",
 			 G_CALLBACK( cb_attr_icon_expose ), tile_attr[i]);
 		gtk_box_pack_start
 			(GTK_BOX(attr_center_box), attr_icon, FALSE, FALSE, 4);

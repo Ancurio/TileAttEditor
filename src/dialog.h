@@ -30,6 +30,10 @@
 
 
 
+#define gtk_box_pack_start_defaults(box, widget)    \
+	gtk_box_pack_start(box, widget, TRUE, TRUE, 0);
+
+
 void settings_dialog_run
 ( struct GlobalData *global_data );
 
