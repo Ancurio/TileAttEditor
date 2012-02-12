@@ -36,17 +36,17 @@
 
 #define QDIR_DRAW(qdir, path, empty_x, empty_y)                     \
 {                                                                   \
-	if (attr_value & qdir)                                          \
-	{                                                               \
-		cairo_append_path(cr, arrow_paths[path]);                   \
-		cairo_fill_with_outline                                     \
-			(cr, OUTLW, hovered && (hover_dir & qdir));             \
-	}                                                               \
-	else                                                            \
-	{                                                               \
-		attr_draw_empty                                             \
-			(cr, empty_x, empty_y, hovered && (hover_dir & qdir));  \
-	}                                                               \
+    if (attr_value & qdir)                                          \
+    {                                                               \
+        cairo_append_path(cr, arrow_paths[path]);                   \
+        cairo_fill_with_outline                                     \
+            (cr, OUTLW, hovered && (hover_dir & qdir));             \
+    }                                                               \
+    else                                                            \
+    {                                                               \
+        attr_draw_empty                                             \
+            (cr, empty_x, empty_y, hovered && (hover_dir & qdir));  \
+    }                                                               \
 }
 
 /* Style-Parameters: These define the visual look */
