@@ -54,6 +54,9 @@ gboolean cb_window_delete
 ( GtkWidget *widget, GdkEvent *event, gpointer data );
 gboolean cb_window_configure
 ( GtkWidget *widget, GdkEventConfigure *event, gpointer data );
+gboolean cb_window_key_press
+( GtkWidget *widget, GdkEventKey *kevent, gpointer data );
+
 gboolean cb_tileset_area_expose
 ( GtkWidget *widget, GdkEventExpose *event, gpointer data );
 gboolean cb_tileset_area_button_press

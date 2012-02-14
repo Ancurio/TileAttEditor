@@ -67,6 +67,22 @@ void gtk_size_group_add_widgets
 	va_end(widgets);
 }
 
+void activate_zero_attribute
+( struct GlobalData *global_data )
+{
+	if (!global_data->active_attribute) { return; }
+	toggle_button_disable_signal(global_data->active_attribute);
+	gtk_toggle_button_set_active
+		(GTK_TOGGLE_BUTTON(global_data->active_attribute->button),
+		 FALSE);
+	toggle_button_enable_signal(global_data->active_attribute);
+	global_data->active_attribute = NULL;
+	/* A normal switch of active attribute would trigger a redraw,
+	 * but if we set it to 0 this has to be done manually */
+	tileset_area_redraw_cache(global_data);
+	gtk_widget_queue_draw(global_data->main_window->tileset_area);
+}
+
 void activate_other_attribute
 ( struct GlobalData *global_data )
 {
@@ -84,16 +100,7 @@ void activate_other_attribute
 		}
 	}
 	/* no enabled attribute left */
-	toggle_button_disable_signal(global_data->active_attribute);
-	gtk_toggle_button_set_active
-		(GTK_TOGGLE_BUTTON(global_data->active_attribute->button),
-		 FALSE);
-	toggle_button_enable_signal(global_data->active_attribute);
-	global_data->active_attribute = 0;
-	/* A normal switch of active attribute would trigger a redraw,
-	 * but if we set it to 0 this has to be done manually */
-	tileset_area_redraw_cache(global_data);
-	gtk_widget_queue_draw(global_data->main_window->tileset_area);
+	activate_zero_attribute(global_data);
 }
 
 gint tile_attr_find_id

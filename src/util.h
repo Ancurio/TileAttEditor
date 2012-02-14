@@ -48,6 +48,9 @@ void toggle_button_enable_signal
 void gtk_size_group_add_widgets
 ( GtkSizeGroup *size_group, ... );
 
+void activate_zero_attribute
+( struct GlobalData *global_data );
+
 void activate_other_attribute
 ( struct GlobalData *global_data );
 

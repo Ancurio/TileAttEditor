@@ -30,6 +30,7 @@
 
 
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "tileatteditor.h"
 #include "tileset-area.h"
@@ -449,6 +450,41 @@ gboolean cb_window_configure
 		 &global_data->settings->window_width,
 		 &global_data->settings->window_height);
 	return FALSE;
+}
+
+gboolean cb_window_key_press
+( GtkWidget *widget, GdkEventKey *kevent, gpointer data )
+{
+	CAST_GLOBAL_DATA
+
+	guint keyval = kevent->keyval - GDK_KEY_0;
+	if (keyval < 0 || keyval > 9 || keyval > ATTRIBUTE_COUNT)
+		{ return FALSE; }
+
+	if (keyval == 0)
+		{ activate_zero_attribute(global_data); return FALSE; }
+
+	/* collect all enabled attributes and map to keypress */
+	struct TileAttribute *enabled_attr[ATTRIBUTE_COUNT];
+	gint i, j = 0;
+	for (i=0; i<ATTRIBUTE_COUNT; i++)
+	{
+		if (global_data->tile_attributes[i]->enabled)
+		{
+			enabled_attr[j] = global_data->tile_attributes[i];
+			j++;
+		}
+	}
+
+	if (keyval > j) { return FALSE; }
+
+	struct TileAttribute *selected_attr = enabled_attr[keyval-1];
+
+	if (selected_attr->enabled)
+	{
+		gtk_toggle_button_set_active
+			(GTK_TOGGLE_BUTTON(selected_attr->button), TRUE);
+	}
 }
 
 

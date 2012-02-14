@@ -340,6 +340,8 @@ void ui_main_window_create
 			G_CALLBACK (cb_window_delete), global_data);
 	g_signal_connect (window, "configure-event",
 			G_CALLBACK (cb_window_configure), global_data);
+	g_signal_connect (window, "key-press-event",
+			G_CALLBACK (cb_window_key_press), global_data);
 
 	struct MainWindow *main_window =
 		g_malloc( sizeof( struct MainWindow ) );
