@@ -35,7 +35,6 @@
 
 #include "tileatteditor.h"
 #include "tileset-area.h"
-#include "settings.h"
 #include "file.h"
 
 
@@ -81,7 +80,8 @@ gint main
 	global_data->tile_attributes =
 		tile_attrs_create(global_data);
 
-	settings_read(global_data);
+	global_data->settings =
+		settings_read(global_data->tile_attributes);
 
 	gtk_init(&argc, &argv);
 

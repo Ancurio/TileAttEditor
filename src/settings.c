@@ -32,7 +32,8 @@
 #include <stdlib.h>
 #include <glib.h>
 
-#include "tileatteditor.h"
+#include "attribute.h"
+#include "color.h"
 #include "settings.h"
 
 #define SETTINGS_FILE_NAME "TileAttEditor.conf"
@@ -212,8 +213,8 @@ void settings_write
 	g_free(keyfile_filename);
 }
 
-void settings_read
-( struct GlobalData *global_data )
+struct Settings* settings_read
+( struct TileAttribute **tile_attr )
 {
 	gchar *keyfile_filename = settings_get_keyfile_path(FALSE);
 	GKeyFile *keyfile = g_key_file_new();
@@ -263,10 +264,9 @@ void settings_read
 
 	KEY_TO_VALUE(settings->last_opened, string, g_strdup(""));
 
-	global_data->settings = settings;
 
 	struct TileAttribute **_tile_attr;
-	for (_tile_attr = global_data->tile_attributes;
+	for (_tile_attr = tile_attr;
 	     *_tile_attr; _tile_attr++)
 	{
 		GError *error = NULL;
@@ -283,6 +283,8 @@ void settings_read
 	}
 
 	g_free(keyfile_filename);
+
+	return settings;
 }
 
 void settings_destroy

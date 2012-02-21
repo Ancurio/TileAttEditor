@@ -34,28 +34,11 @@
 #include "color.h"
 #include "tileset.h"
 #include "attribute.h"
+#include "settings.h"
 #include "ui.h"
 
 #define DELIMITER '/'
 
-struct Settings
-{
-	gint active_attr_id;
-	gdouble tileset_scale_ratio;
-	gdouble attribute_alpha;
-	gboolean smooth_zoom;
-	gboolean show_button_labels;
-	gboolean workspace_flipped;
-
-	struct Color *bg_color;
-	struct Color *grid_color;
-
-	gint preferred_tile_width;
-	gint preferred_tile_height;
-	gint window_width;
-	gint window_height;
-	gchar *last_opened;
-};
 
 struct GlobalData
 {

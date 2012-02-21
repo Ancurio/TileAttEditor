@@ -29,10 +29,28 @@
  */
 
 
+struct Settings
+{
+	gint active_attr_id;
+	gdouble tileset_scale_ratio;
+	gdouble attribute_alpha;
+	gboolean smooth_zoom;
+	gboolean show_button_labels;
+	gboolean workspace_flipped;
+
+	struct Color *bg_color;
+	struct Color *grid_color;
+
+	gint preferred_tile_width;
+	gint preferred_tile_height;
+	gint window_width;
+	gint window_height;
+	gchar *last_opened;
+};
 
 
-void settings_read
-( struct GlobalData *global_data );
+struct Settings* settings_read
+( struct TileAttribute **tile_attr );
 
 void settings_write
 ( struct Settings *settings, struct TileAttribute **tile_attr );
