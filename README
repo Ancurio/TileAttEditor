@@ -6,7 +6,7 @@ TileAttEditor - "Tile Attribute Editor"
 About
 -----
 
-This is a small, standalone program for GNU/Linux
+This is a small, standalone program for GNU/Linux and Windows
 which I wrote during my winter holidays
 to emulate the way so called 'Tileset Flags'
 (my program calls them 'Tile Attributes')
