@@ -29,7 +29,6 @@
  */
 
 
-#include <stdlib.h>
 #include <glib.h>
 
 #include "attribute.h"
@@ -155,8 +154,12 @@ static gchar* settings_get_keyfile_path
 {
 	GString *keyfile_path = g_string_new('\0');
 
-	g_string_append(keyfile_path, getenv("HOME"));
-	g_string_append(keyfile_path, "/.local/share/TileAttEditor/");
+	gchar *config_dir = g_get_user_config_dir();
+	g_string_append(keyfile_path, config_dir);
+	g_free(config_dir);
+
+	g_string_append(keyfile_path, "/TileAttEditor/");
+
 	if (mkdir)
 	{
 		if (!g_file_test(keyfile_path->str, G_FILE_TEST_IS_DIR))
