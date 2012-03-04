@@ -29,8 +29,6 @@
  */
 
 
-#include <stdlib.h>
-#include <limits.h>
 #include <glib.h>
 
 #include "tileatteditor.h"
@@ -88,7 +86,7 @@ gint main
 	if (argc > 1)
 	{
 		gchar filepath[1024];
-		realpath(argv[1], filepath);
+		g_realpath(argv[1], filepath);
 
 		file_open_attempt_quiet(global_data, filepath);
 	}
