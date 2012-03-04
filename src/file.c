@@ -148,7 +148,7 @@ static void str_append_c
 static gchar* make_relative_path
 ( const gchar *base, const gchar *dest, gchar dlm )
 {
-	if (!(base&&dest)) {return NULL;}	/* check if empty strings */
+	if (!(base&&dest)) { return NULL; }	/* check if empty strings */
 
 	const gchar *p;
 	for (p=base;*(p+1);p++)				/* check for two consecutive dlms */
@@ -188,7 +188,8 @@ static gchar* make_relative_path
 	relative_path_pos = i*3;
 	for (i=0; dest[i+last_dlm+1]; i++)
 	{
-		relative_path[relative_path_pos+i] = dest[i+last_dlm+1];
+		relative_path[relative_path_pos+i] =
+			dest[i+last_dlm+1] == dlm ? '/' : dest[i+last_dlm+1];
 	}
 	relative_path[relative_path_pos+i] = '\0';
 
@@ -244,6 +245,22 @@ static gchar* make_absolute_path
 	absolute_path[i] = '\0';
 
 	return absolute_path;
+}
+
+void g_realpath
+( const gchar *name, gchar *resolved )
+{
+	gchar *current_dir = g_get_current_dir();
+	gchar *dummy_base =
+		g_strconcat(current_dir, G_DIR_SEPARATOR_S, "base", NULL);
+	gchar *abs_filepath =
+		make_absolute_path(dummy_base, name, G_DIR_SEPARATOR);
+
+	g_stpcpy(resolved, abs_filepath);
+
+	g_free(current_dir);
+	g_free(dummy_base);
+	g_free(abs_filepath);
 }
 
 
