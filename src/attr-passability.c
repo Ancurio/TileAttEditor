@@ -81,10 +81,10 @@ struct TileAttribute* attr_passability_create
 ()
 {
 	cairo_t *cr = cairo_dummy_create();
-	cairo_move_to(cr, 0.5-SIZE, 0.5-SIZE);
-	cairo_line_to(cr, 0.5+SIZE, 0.5+SIZE);
-	cairo_move_to(cr, 0.5+SIZE, 0.5-SIZE);
-	cairo_line_to(cr, 0.5-SIZE, 0.5+SIZE);
+	cairo_move_to(cr, 0.5-SIZE*0.75, 0.5-SIZE*0.75);
+	cairo_line_to(cr, 0.5+SIZE*0.75, 0.5+SIZE*0.75);
+	cairo_move_to(cr, 0.5+SIZE*0.75, 0.5-SIZE*0.75);
+	cairo_line_to(cr, 0.5-SIZE*0.75, 0.5+SIZE*0.75);
 
 	path_x = cairo_copy_path(cr);
 	cairo_dummy_destroy(cr);
@@ -98,7 +98,7 @@ struct TileAttribute* attr_passability_create
 	attr->hover_precision = FALSE;
 	attr->tile_clicked = &tile_clicked;
 	attr->draw_attr = &draw_attr;
-	attr->cleanup = NULL;
+	attr->cleanup = cleanup;
 
 	return attr;
 }
