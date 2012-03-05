@@ -237,7 +237,7 @@ static gchar* make_absolute_path
 	for (i=0; i<base_cp_count; i++)
 		{ absolute_path[i] = base[i]; }
 
-	for (0; rel_path[rel_path_rdhd]; i++)
+	for (; rel_path[rel_path_rdhd]; i++)
 	{
 		absolute_path[i] = rel_path[rel_path_rdhd];
 		rel_path_rdhd++;
@@ -312,7 +312,7 @@ static gint* csv_parse_string
 		}
 	}
 
-	for (0; val_count<*buffer_size; val_count++)
+	for (; val_count<*buffer_size; val_count++)
 	{
 		val_buffer[val_count] = default_value;
 	}

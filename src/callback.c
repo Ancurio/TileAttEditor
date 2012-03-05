@@ -280,6 +280,7 @@ static gboolean save_changes
 		case GTK_RESPONSE_DELETE_EVENT : return FALSE;
 	}
 
+	return FALSE;
 }
 
 
@@ -485,6 +486,8 @@ gboolean cb_window_key_press
 		gtk_toggle_button_set_active
 			(GTK_TOGGLE_BUTTON(selected_attr->button), TRUE);
 	}
+
+	return TRUE;
 }
 
 
@@ -569,7 +572,7 @@ gboolean cb_tileset_area_expose
 		{
 			gtk_widget_set_size_request(widget, 128, 256);
 		}
-		return;
+		return FALSE;
 	}
 
 	cairo_t *cr = gdk_cairo_create(widget->window);
@@ -751,13 +754,13 @@ gboolean cb_tileset_area_drag_data_received
 {
 	CAST_GLOBAL_DATA
 
-	if (!sdata->data) { return; }
+	if (!sdata->data) { return FALSE; }
 
-	gchar **uris = g_uri_list_extract_uris(sdata->data);
+	gchar **uris = g_uri_list_extract_uris((gchar*)sdata->data);
 	gchar *path = g_filename_from_uri(uris[0], NULL, NULL);
 	g_strfreev(uris);
 
-	if (!path) { return; }
+	if (!path) { return FALSE; }
 
 	if (g_str_has_suffix(path, ".png"))
 	{
@@ -773,5 +776,7 @@ gboolean cb_tileset_area_drag_data_received
 
 clean_up:
 	g_free(path);
+
+	return FALSE;
 }
 

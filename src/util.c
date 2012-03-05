@@ -30,6 +30,7 @@
 
 
 #include "tileatteditor.h"
+#include "tileset-area.h"
 #include "callback.h"
 #include "util.h"
 
@@ -86,7 +87,6 @@ void activate_zero_attribute
 void activate_other_attribute
 ( struct GlobalData *global_data )
 {
-	gint i = 0;
 	struct TileAttribute **attr;
 	for (attr=global_data->tile_attributes; *attr; attr++)
 	{
@@ -122,7 +122,7 @@ gint tile_attr_find_id
 gchar* get_filename_from_path
 ( const gchar *path, gchar dlm )
 {
-	if (!path) { return; }
+	if (!path) { return NULL; }
 
 	gint read_head, last_dlm, cp_count;
 

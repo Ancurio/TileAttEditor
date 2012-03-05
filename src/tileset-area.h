@@ -46,5 +46,8 @@ void tileset_area_update_viewport
 void tileset_area_redraw_cache
 ( struct GlobalData *global_data );
 
+void tileset_area_redraw_cache_tile
+( struct GlobalData *global_data, gint tile_id );
+
 void tileset_area_queue_tile_redraw
 ( struct GlobalData *global_data, gint n_tiles, ... );
