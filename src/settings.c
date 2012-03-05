@@ -152,24 +152,22 @@ static gchar* settings_chomp_identifier
 static gchar* settings_get_keyfile_path
 ( gboolean mkdir )
 {
-	GString *keyfile_path = g_string_new('\0');
-
-	gchar *config_dir = g_get_user_config_dir();
-	g_string_append(keyfile_path, config_dir);
-	g_free(config_dir);
-
-	g_string_append(keyfile_path, "/TileAttEditor/");
+	const gchar *config_dir = g_get_user_config_dir();
+	gchar *keyfile_dirpath = g_strconcat
+		(config_dir, G_DIR_SEPARATOR_S,
+		 "TileAttEditor", G_DIR_SEPARATOR_S, NULL);
 
 	if (mkdir)
 	{
-		if (!g_file_test(keyfile_path->str, G_FILE_TEST_IS_DIR))
-			{ g_mkdir_with_parents(keyfile_path->str, 0x1ED); }
+		if (!g_file_test(keyfile_dirpath, G_FILE_TEST_IS_DIR))
+			{ g_mkdir_with_parents(keyfile_dirpath, 0x1ED); }
 	}
 
-	g_string_append(keyfile_path, SETTINGS_FILE_NAME);
-	gchar *return_string = keyfile_path->str;
-	g_string_free(keyfile_path, FALSE);
-	return return_string;
+	gchar *keyfile_path =
+		g_strconcat(keyfile_dirpath, SETTINGS_FILE_NAME, NULL);
+	g_free(keyfile_dirpath);
+
+	return keyfile_path;
 }
 
 
