@@ -1,4 +1,4 @@
-app       = TileAttEditor
+app       = TileAttEditor$(APP_EXT)
 objects   = main.o settings.o ui.o callback.o tileset-area.o \
             new-file-dialog.o settings-dialog.o save-changes-dialog.o \
             color.o file.o attribute.o util.o  \
