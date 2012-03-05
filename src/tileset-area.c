@@ -81,9 +81,12 @@ void tileset_update_scale
 
 	if (!tileset) { return; }
 
-	if (tileset->cairo_scaled_surface)
+	if (tileset->cairo_scaled_surface &&
+	    tileset->cairo_scaled_surface != tileset->cairo_surface)
 		{ cairo_surface_destroy(tileset->cairo_scaled_surface); }
+
 	tileset->cairo_scaled_surface =
+		scale_ratio == 1.0 ? tileset->cairo_surface :
 		scale_surface(tileset->cairo_surface,
 			scale_ratio, scale_ratio,
 			global_data->settings->smooth_zoom);
@@ -160,7 +163,8 @@ void tileset_destroy
 	if (tileset->cairo_surface)
 		{ cairo_surface_destroy(tileset->cairo_surface); }
 
-	if (tileset->cairo_scaled_surface)
+	if (tileset->cairo_scaled_surface &&
+	    tileset->cairo_scaled_surface != tileset->cairo_surface)
 		{ cairo_surface_destroy(tileset->cairo_scaled_surface); }
 
 	if (tileset->cached_composition)
