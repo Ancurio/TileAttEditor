@@ -43,10 +43,41 @@
 	(struct SettingsDialog*)data;
 
 
+/* private functions */
+static void apply_settings
+( struct GlobalData *global_data );
+
+static void cb_button_cancel_clicked
+( GtkWidget *button, gpointer data );
+
+static void cb_window_deleted
+( GtkWidget *window, GdkEvent *event, gpointer data );
+
+static void cb_button_ok_clicked
+( GtkWidget *button, gpointer data );
+
+static void cb_button_apply_clicked
+( GtkWidget *button, gpointer data );
+
+static void cb_resize_required
+( GtkWidget *button, gpointer data );
+
+static void cb_redraw_required
+( GtkWidget *button, gpointer data );
+
+static void cb_check_button_attr_toggled
+( GtkWidget *button, gpointer data );
+
+static void cb_mark_settings_dirty
+( GtkWidget *widget, gpointer data );
+/* ----------------- */
+
+
 struct SettingsDialog
 {
 	gboolean resize_required;
 	gboolean redraw_required;
+	gboolean settings_dirty;
 
 	GtkWidget *window;
 
@@ -140,6 +171,7 @@ static void apply_settings
 	dialog->resize_required = FALSE;
 	dialog->redraw_required = FALSE;
 
+	global_data->settings_dirty = dialog->settings_dirty;
 }
 
 static void cb_button_cancel_clicked
@@ -184,6 +216,8 @@ static void cb_resize_required
 	settings_dialog->resize_required = TRUE;
 	settings_dialog->redraw_required = TRUE;
 	gtk_widget_set_sensitive(settings_dialog->applyb, TRUE);
+
+	cb_mark_settings_dirty(NULL, settings_dialog);
 }
 
 static void cb_redraw_required
@@ -192,6 +226,8 @@ static void cb_redraw_required
 	CAST_SETTINGS_DIALOG
 	settings_dialog->redraw_required = TRUE;
 	gtk_widget_set_sensitive(settings_dialog->applyb, TRUE);
+
+	cb_mark_settings_dirty(NULL, settings_dialog);
 }
 
 static void cb_check_button_attr_toggled
@@ -199,6 +235,15 @@ static void cb_check_button_attr_toggled
 {
 	CAST_SETTINGS_DIALOG
 	gtk_widget_set_sensitive(settings_dialog->applyb, TRUE);
+
+	cb_mark_settings_dirty(NULL, settings_dialog);
+}
+
+static void cb_mark_settings_dirty
+( GtkWidget *widget, gpointer data )
+{
+	CAST_SETTINGS_DIALOG
+	settings_dialog->settings_dirty = TRUE;
 }
 
 
@@ -207,10 +252,7 @@ void settings_dialog_run
 {
 	struct Settings *settings = global_data->settings;
 	struct SettingsDialog *settings_dialog =
-		g_malloc( sizeof( *settings_dialog ) );
-
-	settings_dialog->resize_required = FALSE;
-	settings_dialog->redraw_required = FALSE;
+		g_malloc0( sizeof( *settings_dialog ) );
 
 	/* Create first page */
 	GtkWidget *spinb_scale =

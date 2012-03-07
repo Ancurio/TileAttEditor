@@ -50,7 +50,7 @@ struct Settings
 
 
 struct Settings* settings_read
-( struct TileAttribute **tile_attr );
+( struct TileAttribute **tile_attr, gboolean *dirty_flag );
 
 void settings_write
 ( struct Settings *settings, struct TileAttribute **tile_attr );

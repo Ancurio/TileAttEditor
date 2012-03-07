@@ -47,9 +47,10 @@ static gchar* settings_get_keyfile_path
 /* ----------------- */
 
 
-#define VALUE_TO_KEY_INIT(keyfile, groupname)                  \
+#define VALUE_TO_KEY_INIT(keyfile, groupname, default_flag)    \
     GKeyFile *VALUE_TO_KEY_KEYFILE = keyfile;                  \
-    const gchar *VALUE_TO_KEY_GROUPNAME = groupname;
+    const gchar *VALUE_TO_KEY_GROUPNAME = groupname;           \
+    gboolean *VALUE_TO_KEY_DEFAULT_FLAG = default_flag;
 
 
 #define VALUE_TO_KEY(val, type)                                \
@@ -91,6 +92,7 @@ static gchar* settings_get_keyfile_path
          &error);                                              \
     if (error)                                                 \
     {                                                          \
+        *VALUE_TO_KEY_DEFAULT_FLAG = TRUE;                     \
         val = (default_val);                                   \
         g_error_free(error);                                   \
     }                                                          \
@@ -113,6 +115,7 @@ static gchar* settings_get_keyfile_path
              &error);                                          \
     if (error || array_size != 4)                              \
     {                                                          \
+        *VALUE_TO_KEY_DEFAULT_FLAG = TRUE;                     \
         color = color_new                                      \
             (def_r, def_g, def_b, def_a);                      \
         if (error) { g_error_free(error); }                    \
@@ -177,7 +180,7 @@ void settings_write
 	gchar *keyfile_filename = settings_get_keyfile_path(TRUE);
 	GKeyFile *keyfile = g_key_file_new();
 
-	VALUE_TO_KEY_INIT(keyfile, "Settings")
+	VALUE_TO_KEY_INIT(keyfile, "Settings", NULL)
 
 	VALUE_TO_KEY(settings->active_attr_id, integer);
 	VALUE_TO_KEY(settings->tileset_scale_ratio, double);
@@ -215,7 +218,7 @@ void settings_write
 }
 
 struct Settings* settings_read
-( struct TileAttribute **tile_attr )
+( struct TileAttribute **tile_attr, gboolean *dirty_flag )
 {
 	gchar *keyfile_filename = settings_get_keyfile_path(FALSE);
 	GKeyFile *keyfile = g_key_file_new();
@@ -227,21 +230,21 @@ struct Settings* settings_read
 	struct Settings *settings =
 		g_malloc( sizeof *settings );
 
-	VALUE_TO_KEY_INIT(keyfile, "Settings")
+	VALUE_TO_KEY_INIT(keyfile, "Settings", dirty_flag)
 
 	KEY_TO_VALUE(settings->active_attr_id, integer, 0);
 	if (settings->active_attr_id > ATTRIBUTE_COUNT-1 ||
 	    settings->active_attr_id < 0                   )
-		{ settings->active_attr_id = 0;}
+		{ settings->active_attr_id = 0; *dirty_flag = TRUE; }
 
 	KEY_TO_VALUE(settings->tileset_scale_ratio, double, 1.5);
 	if (settings->tileset_scale_ratio < 0.1)
-		{ settings->tileset_scale_ratio = 1.5; }
+		{ settings->tileset_scale_ratio = 1.5; *dirty_flag = TRUE; }
 
 	KEY_TO_VALUE(settings->attribute_alpha, double, 0.8);
 	if (settings->attribute_alpha < 0 ||
 	    settings->attribute_alpha > 1)
-		{ settings->attribute_alpha = 0.8; }
+		{ settings->attribute_alpha = 0.8; *dirty_flag = TRUE; }
 
 	KEY_TO_VALUE(settings->smooth_zoom, boolean, FALSE);
 	KEY_TO_VALUE(settings->show_button_labels, boolean, TRUE);
@@ -254,11 +257,11 @@ struct Settings* settings_read
 
 	KEY_TO_VALUE(settings->preferred_tile_width, integer, 32);
 	if (settings->preferred_tile_width < 1)
-		{ settings->preferred_tile_width = 32; }
+		{ settings->preferred_tile_width = 32; *dirty_flag = TRUE; }
 
 	KEY_TO_VALUE(settings->preferred_tile_height, integer, 32);
 	if (settings->preferred_tile_height < 1)
-		{ settings->preferred_tile_height = 32; }
+		{ settings->preferred_tile_height = 32; *dirty_flag = TRUE; }
 
 	KEY_TO_VALUE(settings->window_width, integer, 128);
 	KEY_TO_VALUE(settings->window_height, integer, 128);
@@ -277,6 +280,7 @@ struct Settings* settings_read
 			(keyfile, "TileAttributes", key, &error);
 		if (error)
 		{
+			*dirty_flag = TRUE;
 			(*_tile_attr)->enabled = TRUE;
 			g_error_free(error);
 		}
