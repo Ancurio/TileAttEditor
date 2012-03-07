@@ -65,11 +65,21 @@ static gboolean save_changes
 ( struct GlobalData *global_data );
 
 static gint tileset_area_determine_tile_id
-( struct Tileset *tileset, GdkEventButton *b_event,
-  gdouble *tile_offset_x, gdouble *tile_offset_y );
+( struct Tileset *tileset, gdouble pointer_x, gdouble pointer_y,
+  gdouble *tile_offset_x, gdouble *tile_offset_y                 );
 
 static void tileset_area_update_statusbar_hover
 ( struct GlobalData *global_data );
+
+static gboolean tileset_are_update_pointer_status
+( struct GlobalData *global_data,
+  gdouble pointer_x, gdouble pointer_y );
+
+static void tile_attr_toggle_buffer_value
+( struct GlobalData *global_data, gint *copy_value );
+
+static void tile_attr_set_buffer_value
+( struct GlobalData *global_data, gint value );
 /* ----------------- */
 
 
@@ -588,20 +598,29 @@ gboolean cb_tileset_area_expose
 }
 
 static gint tileset_area_determine_tile_id
-( struct Tileset *tileset, GdkEventButton *b_event,
-  gdouble *tile_offset_x, gdouble *tile_offset_y )
+( struct Tileset *tileset, gdouble pointer_x, gdouble pointer_y,
+  gdouble *tile_offset_x, gdouble *tile_offset_y                 )
 {
-	gint tile_count_x = tileset->width/tileset->tile_width,
-	     tile_x = (gint)(b_event->x / tileset->tile_disp_width),
-	     tile_y = (gint)(b_event->y / tileset->tile_disp_height);
+	if (pointer_x < 0 || pointer_y < 0     ||
+	    pointer_x > tileset->disp_width -1 ||
+	    pointer_y > tileset->disp_height-1    ) { return -1; }
+
+	gint tile_id,
+	     tile_count_x = tileset->width/tileset->tile_width,
+	     tile_x = (gint)(pointer_x / tileset->tile_disp_width),
+	     tile_y = (gint)(pointer_y / tileset->tile_disp_height);
 
 	if (!(tile_offset_x && tile_offset_y)) { goto skipped_offsets; }
 	*tile_offset_x =
-		(b_event->x / tileset->tile_disp_width) - tile_x;
+		(pointer_x / tileset->tile_disp_width) - tile_x;
 	*tile_offset_y =
-		(b_event->y / tileset->tile_disp_height) - tile_y;
+		(pointer_y / tileset->tile_disp_height) - tile_y;
 
-	skipped_offsets: return tile_y * tile_count_x + tile_x;
+skipped_offsets:
+	 tile_id = tile_y * tile_count_x + tile_x;
+
+	return (tile_id < 0 || tile_id > tileset->tile_count - 1)
+	? -1 : tile_id;
 }
 
 static void tileset_area_update_statusbar_hover
@@ -638,6 +657,51 @@ static void tileset_area_update_statusbar_hover
 	g_string_free(buffer, TRUE);
 }
 
+static gboolean tileset_are_update_pointer_status
+( struct GlobalData *global_data,
+  gdouble pointer_x, gdouble pointer_y )
+{
+	gint hovered_tile =
+		tileset_area_determine_tile_id
+			(global_data->tileset, pointer_x, pointer_y,
+			 &global_data->hovered_offset_x,
+			 &global_data->hovered_offset_y);
+
+	if (hovered_tile == -1)
+		{ return FALSE; }
+
+	global_data->hovered_tile = hovered_tile;
+	return TRUE;
+}
+
+static void tile_attr_toggle_buffer_value
+( struct GlobalData *global_data, gint *copy_value )
+{
+	gint tile_id = global_data->hovered_tile;
+	struct TileAttribute *active_attr =
+		global_data->active_attribute;
+
+	gint new_value =
+		(*active_attr->tile_clicked)
+			(active_attr->value_buffer[tile_id],
+			 global_data->hovered_offset_x,
+			 global_data->hovered_offset_y);
+
+	active_attr->value_buffer[tile_id] = new_value;
+
+	if (copy_value) { *copy_value = new_value; }
+}
+
+static void tile_attr_set_buffer_value
+( struct GlobalData *global_data, gint value )
+{
+	gint tile_id = global_data->hovered_tile;
+	struct TileAttribute *active_attr =
+		global_data->active_attribute;
+
+	active_attr->value_buffer[tile_id] = value;
+}
+
 
 gboolean cb_tileset_area_button_press
 ( GtkWidget *widget, GdkEventButton *b_event, gpointer data )
@@ -646,32 +710,33 @@ gboolean cb_tileset_area_button_press
 
 	if (b_event->type == GDK_2BUTTON_PRESS ||
 	    b_event->type == GDK_3BUTTON_PRESS ||
-	    !global_data->active_attribute)          {return FALSE;}
+	    !global_data->active_attribute)          { return FALSE; }
 
 	struct Tileset *tileset = global_data->tileset;
-	struct TileAttribute *active_attr = global_data->active_attribute;
 
 	if (!tileset) { return FALSE; }
 
-	gdouble tile_offset_x, tile_offset_y;
-	gint tile_id = tileset_area_determine_tile_id
-		(tileset, b_event, &tile_offset_x, &tile_offset_y);
+	gboolean pointer_over_tileset =
+		tileset_are_update_pointer_status
+			(global_data, b_event->x, b_event->y);
 
-	active_attr->value_buffer[tile_id] =
-		(*active_attr->tile_clicked)
-			(active_attr->value_buffer[tile_id],
-			 tile_offset_x, tile_offset_y);
+	if (!pointer_over_tileset) { return FALSE; }
+
+	tile_attr_toggle_buffer_value
+		(global_data, &global_data->swipe_value);
 
 	tileset_area_update_statusbar_hover(global_data);
 	ui_set_buffer_changed(global_data, TRUE);
-	tileset_area_redraw_cache_tile(global_data, tile_id);
-	tileset_area_queue_tile_redraw(global_data, 1, tile_id);
+	tileset_area_redraw_cache_tile
+		(global_data, global_data->hovered_tile);
+	tileset_area_queue_tile_redraw
+		(global_data, 1, global_data->hovered_tile);
 
 	return FALSE;
 }
 
 gboolean cb_tileset_area_motion_notify
-( GtkWidget *widget, GdkEvent *b_event, gpointer data )
+( GtkWidget *widget, GdkEventMotion *m_event, gpointer data )
 {
 	CAST_GLOBAL_DATA
 
@@ -679,26 +744,48 @@ gboolean cb_tileset_area_motion_notify
 
 	if (!tileset) { return FALSE; }
 
-	if (b_event->type == GDK_SCROLL)
+	if (m_event->type == GDK_SCROLL)
 	{
 		gdk_window_get_pointer
 			(gtk_widget_get_window
 				(global_data->main_window->tileset_area),
-			 (gint*)&b_event->button.x, (gint*)&b_event->button.y, NULL);
+			 (gint*)&m_event->x, (gint*)&m_event->y, NULL);
 	}
 
 	gint hovered_tile_old = global_data->hovered_tile;
-	global_data->hovered_tile = tileset_area_determine_tile_id
-		(tileset, (GdkEventButton*)b_event,
-		&global_data->hovered_offset_x,
-		&global_data->hovered_offset_y);
+
+	if (!tileset_are_update_pointer_status
+		     (global_data, m_event->x, m_event->y)) { return FALSE; }
 
 	tileset_area_update_statusbar_hover(global_data);
 
-	if (!global_data->active_attribute) {return FALSE;}
+	struct TileAttribute *active_attr =
+				global_data->active_attribute;
+
+	if (!active_attr) { return FALSE; }
+
+	gboolean hover_precision = active_attr->hover_precision;
 
 	if (hovered_tile_old != global_data->hovered_tile)
 	{
+		// Mouse pointer entered new tile
+		// If mouse button is pressed, execute swipe
+
+		// Left mouse button: set-swipe
+		if      (m_event->state & GDK_BUTTON1_MASK)
+		{
+			tile_attr_set_buffer_value
+				(global_data, global_data->swipe_value);
+		}
+		// Right mouse button: toggle-swipe
+		else if (m_event->state & GDK_BUTTON3_MASK)
+		{
+			if (hover_precision) { goto skip_toggle_swipe; }
+
+			tile_attr_toggle_buffer_value(global_data, NULL);
+		}
+	skip_toggle_swipe:
+
 		tileset_area_redraw_cache_tile
 			(global_data, hovered_tile_old);
 		tileset_area_redraw_cache_tile
@@ -707,8 +794,9 @@ gboolean cb_tileset_area_motion_notify
 			(global_data, 2, hovered_tile_old,
 			 global_data->hovered_tile);
 	}
-	else if (global_data->active_attribute->hover_precision)
+	else if (hover_precision)
 	{
+		// TileAttr requires in-tile precision: redraw on each event
 		tileset_area_redraw_cache_tile
 			(global_data, global_data->hovered_tile);
 		tileset_area_queue_tile_redraw

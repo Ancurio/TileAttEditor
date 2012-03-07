@@ -48,6 +48,7 @@ struct GlobalData
 	gint hovered_tile;
 	gdouble hovered_offset_x;
 	gdouble hovered_offset_y;
+	gint swipe_value;
 	guint statusbar_context_id;
 	guint statusbar_message_id;
 	gpointer reusable_surface;

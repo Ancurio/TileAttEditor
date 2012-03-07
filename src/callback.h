@@ -62,7 +62,7 @@ gboolean cb_tileset_area_expose
 gboolean cb_tileset_area_button_press
 ( GtkWidget *widget, GdkEventButton *event, gpointer data );
 gboolean cb_tileset_area_motion_notify
-( GtkWidget *widget, GdkEvent *b_event, gpointer data );
+( GtkWidget *widget, GdkEventMotion *m_event, gpointer data );
 gboolean cb_tileset_area_leave_notify
 ( GtkWidget *widget, GdkEventButton *b_event, gpointer data );
 gboolean cb_tileset_area_drag_data_received

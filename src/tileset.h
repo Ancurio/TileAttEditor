@@ -39,7 +39,7 @@ struct Tileset
 
 	gint tile_width;
 	gint tile_height;
-	gint tile_count;
+	gint tile_count; // == attribute buffer size !
 
 	gdouble tile_disp_width;
 	gdouble tile_disp_height;
