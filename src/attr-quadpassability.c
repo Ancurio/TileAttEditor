@@ -182,7 +182,7 @@ struct TileAttribute* attr_quadpassability_create
 	struct TileAttribute *attr = &tile_attribute;
 
 	attr->name = "QuadPassability";
-	attr->default_value = 0;
+	attr->default_value = 0xF;
 	attr->icon_value = 0xF;
 	attr->hover_precision = TRUE;
 	attr->tile_clicked = &tile_clicked;
