@@ -245,6 +245,10 @@ void new_file_dialog_run
 
 	GtkWidget *name_entry = gtk_entry_new();
 
+	g_signal_connect
+		(name_entry, "activate",
+		 G_CALLBACK(cb_button_ok_clicked), global_data);
+
 	GtkWidget *file_button =
 		gtk_file_chooser_button_new_with_dialog(file_dialog);
 	if(image_path)
@@ -324,10 +328,6 @@ void new_file_dialog_run
 
 	gtk_box_pack_start(GTK_BOX(content_area), hbox, FALSE, FALSE, 2);
 
-	GtkWidget *content_area_adj = gtk_vbox_new(TRUE, 8);
-	gtk_box_pack_start
-		(GTK_BOX(content_area_adj), content_area, TRUE, TRUE, 8);
-
 	GtkWidget *cancelb = gtk_button_new_from_stock(GTK_STOCK_CANCEL),
 	          *okb     = gtk_button_new_from_stock(GTK_STOCK_OK);
 
@@ -339,15 +339,16 @@ void new_file_dialog_run
 	g_signal_connect(okb, "clicked",
 		G_CALLBACK( cb_button_ok_clicked ), global_data);
 
-	GtkWidget *action_area = gtk_hbox_new(FALSE, 8);
+	GtkWidget *action_area = gtk_hbox_new(FALSE, 0);
+	gtk_container_set_border_width(GTK_CONTAINER(action_area), 4);
 	gtk_box_pack_start
-		(GTK_BOX(action_area), cancelb, FALSE, FALSE, 8);
+		(GTK_BOX(action_area), cancelb, FALSE, FALSE, 0);
 	gtk_box_pack_end
-		(GTK_BOX(action_area), okb, FALSE, FALSE, 8);
+		(GTK_BOX(action_area), okb, FALSE, FALSE, 0);
 
 	GtkWidget *dialog_box = gtk_vbox_new(FALSE, 2);
 	gtk_box_pack_start
-		(GTK_BOX(dialog_box), content_area_adj, TRUE, TRUE, 2);
+		(GTK_BOX(dialog_box), content_area, TRUE, TRUE, 2);
 	gtk_box_pack_end
 		(GTK_BOX(dialog_box), action_area, FALSE, FALSE, 2);
 	gtk_box_pack_end
@@ -355,6 +356,7 @@ void new_file_dialog_run
 
 
 	GtkWidget *dialog_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_container_set_border_width(GTK_CONTAINER(dialog_window), 4);
 	gtk_window_set_title
 		(GTK_WINDOW(dialog_window), "New Tileset");
 	gtk_window_set_resizable

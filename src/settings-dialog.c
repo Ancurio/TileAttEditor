@@ -346,8 +346,8 @@ void settings_dialog_run
 	settings_dialog->colorb_grid = colorb_grid;
 
 	/* Create second page */
-	GtkWidget *page2 = gtk_vbox_new(FALSE, 8);
-	vbox = gtk_vbox_new(FALSE, 2);
+	GtkWidget *page2 = gtk_vbox_new(TRUE, 2);
+	gtk_container_set_border_width(GTK_CONTAINER(page2), 8);
 
 	settings_dialog->checkb_attributes =
 		g_malloc( sizeof( GtkWidget* ) * ATTRIBUTE_COUNT);
@@ -360,9 +360,7 @@ void settings_dialog_run
 			gtk_check_button_new_with_label((*attr)->name);
 		gtk_toggle_button_set_active
 			(GTK_TOGGLE_BUTTON(checkb), (*attr)->enabled);
-		GtkWidget *hbox = gtk_hbox_new(FALSE, 8);
-		gtk_box_pack_start(GTK_BOX(hbox), checkb, FALSE, FALSE, 8);
-		gtk_box_pack_start(GTK_BOX(vbox), hbox, FALSE, FALSE, 2);
+		gtk_box_pack_start(GTK_BOX(page2), checkb, TRUE, FALSE, 2);
 
 		g_signal_connect(checkb, "toggled",
 			G_CALLBACK( cb_check_button_attr_toggled ),
@@ -371,8 +369,6 @@ void settings_dialog_run
 		settings_dialog->checkb_attributes[i] = checkb;
 		i++;
 	}
-
-	gtk_box_pack_start(GTK_BOX(page2), vbox, TRUE, TRUE, 8);
 
 	/* Create third page */
 	GtkWidget *checkb_show_labels =
@@ -388,10 +384,10 @@ void settings_dialog_run
 
 	settings_dialog->checkb_show_labels = checkb_show_labels;
 
-	GtkWidget *page3 = gtk_vbox_new(FALSE, 8);
+	GtkWidget *page3 = gtk_vbox_new(FALSE, 2);
 	gtk_container_set_border_width(GTK_CONTAINER(page3), 8);
 	gtk_box_pack_start
-		(GTK_BOX(page3), checkb_show_labels, FALSE, FALSE, 8);
+		(GTK_BOX(page3), checkb_show_labels, FALSE, FALSE, 2);
 
 	/* Create notebook and dialog */
 	GtkWidget *content_area = gtk_vbox_new(TRUE, 4),
@@ -439,16 +435,13 @@ void settings_dialog_run
 		content_area, TRUE, TRUE, 4);
 	gtk_box_pack_end(GTK_BOX(dialog_box),
 		action_area, FALSE, FALSE, 4);
-//	gtk_box_pack_end(GTK_BOX(dialog_box),
-//		gtk_hseparator_new(), FALSE, FALSE, 0);
 
 	GtkWidget *dialog_window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
+	gtk_container_set_border_width(GTK_CONTAINER(dialog_window), 4);
 	gtk_window_set_title
 		(GTK_WINDOW(dialog_window), "Preferences");
 	gtk_window_set_resizable
 		(GTK_WINDOW(dialog_window), FALSE);
-//	gtk_window_set_modal
-//		(GTK_WINDOW(dialog_window), TRUE);
 	gtk_window_set_transient_for
 		(GTK_WINDOW(dialog_window),
 		 GTK_WINDOW(global_data->main_window->window));

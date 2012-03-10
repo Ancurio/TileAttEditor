@@ -71,6 +71,7 @@ GtkWidget* save_changes_dialog_new
 	GtkWidget *dialog = gtk_dialog_new();
 	gtk_window_set_transient_for
 		(GTK_WINDOW(dialog), GTK_WINDOW(parent));
+	gtk_window_set_resizable(GTK_WINDOW(dialog), FALSE);
 	gtk_window_set_title(GTK_WINDOW(dialog), "Unsaved Changes");
 
 	GtkWidget *action_area =
@@ -90,13 +91,11 @@ GtkWidget* save_changes_dialog_new
 	GtkWidget *label_box = gtk_vbox_new(FALSE, 4);
 
 	GtkWidget *text_label = gtk_label_new("");
-//	gtk_misc_set_alignment(GTK_MISC(text_label), 0.2, 0.5);
 	gtk_label_set_markup(GTK_LABEL(text_label), text[0]);
 	gtk_box_pack_start
 		(GTK_BOX(label_box), text_label, FALSE, FALSE, 4);
 
 	text_label = gtk_label_new(text[1]);
-//	gtk_misc_set_alignment(GTK_MISC(text_label), 0, 0.5);
 	gtk_box_pack_start
 		(GTK_BOX(label_box), text_label, FALSE, FALSE, 4);
 
@@ -105,7 +104,8 @@ GtkWidget* save_changes_dialog_new
 	GtkWidget *adjbox = gtk_vbox_new(FALSE, 8);
 	gtk_box_pack_start(GTK_BOX(adjbox), hbox, FALSE, FALSE, 8);
 
-	gtk_box_pack_start_defaults(GTK_BOX(content_area), adjbox);
+	gtk_box_pack_start
+		(GTK_BOX(content_area), adjbox, TRUE, FALSE, 0);
 
 	/* Button Area */
 	GtkWidget *cancelb, *discardb, *saveb;
@@ -140,20 +140,14 @@ GtkWidget* save_changes_dialog_new
 	gtk_box_pack_end
 		(GTK_BOX(hbox), discardb, FALSE, FALSE, 4);
 
-	//gtk_dialog_add_action_widget
-		//(GTK_DIALOG(dialog), cancelb, GTK_RESPONSE_CANCEL);
 
-	//gtk_dialog_add_action_widget
-		//(GTK_DIALOG(dialog), discardb, GTK_RESPONSE_REJECT);
-
-	//gtk_dialog_add_action_widget
-		//(GTK_DIALOG(dialog), saveb, GTK_RESPONSE_ACCEPT);
-
-	gtk_box_pack_start_defaults(GTK_BOX(action_area), hbox);
+	gtk_box_pack_start
+		(GTK_BOX(action_area), hbox, TRUE, FALSE, 0);
 
 	gtk_size_group_add_widgets
 		(gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL),
 		 discardb, saveb, NULL);
+
 
 	gtk_widget_show_all(content_area);
 	gtk_widget_show_all(action_area);
