@@ -44,7 +44,6 @@ struct GlobalData
 {
 	gchar *open_file_path;
 	gboolean buffer_changed;
-	gboolean settings_dirty;
 	gint hovered_tile;
 	gdouble hovered_offset_x;
 	gdouble hovered_offset_y;

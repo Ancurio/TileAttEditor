@@ -79,9 +79,7 @@ gint main
 		tile_attrs_create(global_data);
 
 	global_data->settings =
-		settings_read
-			(global_data->tile_attributes,
-			 &global_data->settings_dirty);
+		settings_read(global_data->tile_attributes);
 
 	gtk_init(&argc, &argv);
 
@@ -111,11 +109,8 @@ gint main
 	}
 	else { global_data->settings->last_opened = ""; }
 
-	if (global_data->settings_dirty)
-	{
-		settings_write
-			(global_data->settings, global_data->tile_attributes);
-	}
+	settings_write
+		(global_data->settings, global_data->tile_attributes);
 
 	global_data_destroy(global_data);
 
