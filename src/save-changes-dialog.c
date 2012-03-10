@@ -36,6 +36,17 @@
 #include "util.h"
 
 
+/* private functions */
+static void cb_button_cancel_clicked
+( GtkWidget *button, gpointer dialog );
+
+static void cb_button_discard_clicked
+( GtkWidget *button, gpointer dialog );
+
+static void cb_button_save_clicked
+( GtkWidget *button, gpointer dialog );
+/* ----------------- */
+
 
 static void cb_button_cancel_clicked
 ( GtkWidget *button, gpointer dialog )

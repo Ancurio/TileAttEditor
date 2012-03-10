@@ -37,8 +37,20 @@
 #define VIEWPORT_CORRECTION_H 0xC8
 #define VIEWPORT_CORRECTION_V 0x20
 
+
+/* private functions */
 static cairo_surface_t *scale_surface
-( cairo_surface_t *old_surface, gdouble scale_x, gdouble scale_y, gboolean smooth )
+( cairo_surface_t *old_surface,
+  gdouble scale_x, gdouble scale_y, gboolean smooth );
+
+static void clear_surface
+( cairo_t *cr );
+/* ----------------- */
+
+
+static cairo_surface_t *scale_surface
+( cairo_surface_t *old_surface,
+  gdouble scale_x, gdouble scale_y, gboolean smooth )
 {
 	gint old_width = cairo_image_surface_get_width(old_surface);
 	gint old_height = cairo_image_surface_get_height(old_surface);

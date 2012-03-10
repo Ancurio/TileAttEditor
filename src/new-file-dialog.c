@@ -39,6 +39,16 @@
 #include "file.h"
 #include "util.h"
 
+
+/* private functions */
+static void cb_button_cancel_clicked
+( GtkWidget *button, gpointer data );
+
+static void cb_button_ok_clicked
+( GtkWidget *button, gpointer data );
+/* ----------------- */
+
+
 struct NewFileDialog
 {
 	GtkWidget *window;
@@ -48,6 +58,7 @@ struct NewFileDialog
 	GtkWidget *spinb_tilewidth;
 	GtkWidget *spinb_tileheight;
 };
+
 
 static void cb_button_cancel_clicked
 ( GtkWidget *button, gpointer data )
