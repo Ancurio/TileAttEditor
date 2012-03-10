@@ -250,17 +250,22 @@ static gchar* make_absolute_path
 void g_realpath
 ( const gchar *name, gchar *resolved )
 {
-	gchar *current_dir = g_get_current_dir();
-	gchar *dummy_base =
-		g_strconcat(current_dir, G_DIR_SEPARATOR_S, "base", NULL);
-	gchar *abs_filepath =
-		make_absolute_path(dummy_base, name, G_DIR_SEPARATOR);
+	if (g_path_is_absolute(name)) { g_stpcpy(resolved, name); }
+	else
+	{
+		gchar *current_dir = g_get_current_dir();
+		gchar *dummy_base =
+			g_strconcat
+				(current_dir, G_DIR_SEPARATOR_S, "base", NULL);
+		gchar *realpath =
+			make_absolute_path(dummy_base, name, G_DIR_SEPARATOR);
 
-	g_stpcpy(resolved, abs_filepath);
+		g_stpcpy(resolved, realpath);
 
-	g_free(current_dir);
-	g_free(dummy_base);
-	g_free(abs_filepath);
+		g_free(realpath);
+		g_free(current_dir);
+		g_free(dummy_base);
+	}
 }
 
 
