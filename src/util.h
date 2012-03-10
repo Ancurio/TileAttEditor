@@ -56,6 +56,3 @@ void activate_other_attribute
 
 gint tile_attr_find_id
 ( const struct TileAttribute *tile_attr );
-
-gchar* get_filename_from_path
-( const gchar *path, gchar dlm );

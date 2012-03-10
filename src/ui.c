@@ -485,7 +485,7 @@ gchar *find_image_file_attempt
 		"(<b>%s</b>) cannot be found. Do you want to search for it manually?";
 
 	gchar *image_filename =
-		get_filename_from_path(bad_path, DELIMITER);
+		g_path_get_basename(bad_path);
 
 	GtkWidget *question_dialog =
 		gtk_message_dialog_new_with_markup
@@ -546,8 +546,8 @@ static void ui_update_window_title
 	gchar *filename;
 	if (global_data->open_file_path)
 	{
-		filename = get_filename_from_path
-			(global_data->open_file_path, DELIMITER);
+		filename = g_path_get_basename
+			(global_data->open_file_path);
 	}
 	else { filename = g_strdup("untitled.tsx"); }
 

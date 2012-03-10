@@ -119,33 +119,3 @@ gint tile_attr_find_id
 
 }
 
-gchar* get_filename_from_path
-( const gchar *path, gchar dlm )
-{
-	if (!path) { return NULL; }
-
-	gint read_head, last_dlm, cp_count;
-
-	for (read_head=0; path[read_head]; read_head++)
-	{
-		cp_count++;
-		if (path[read_head] == dlm)
-		{
-			last_dlm = read_head;
-			cp_count = 0;
-		}
-	}
-
-	gchar *filename = g_malloc(sizeof(gchar)*cp_count);
-
-	gint write_head;
-
-	for (write_head=0; path[last_dlm+write_head+1]; write_head++)
-	{
-		filename[write_head] = path[last_dlm+write_head+1];
-	}
-	filename[write_head] = '\0';
-
-	return filename;
-}
-
