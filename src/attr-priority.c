@@ -75,7 +75,7 @@ static cairo_path_t* create_star
 
 
 static gint tile_clicked
-(gint old_value, gdouble x, gdouble y)
+( gint old_value, gdouble x, gdouble y )
 {
 	return (old_value < FLAG_MAX_VAL) ? old_value+1 : 0;
 }
@@ -118,14 +118,14 @@ static void draw_attr
 }
 
 static void cleanup
-( )
+( void )
 {
 	cairo_path_destroy(star_attr);
 	cairo_path_destroy(star_button);
 }
 
 struct TileAttribute* attr_priority_create
-()
+( void )
 {
 	star_attr = create_star
 		(0.5-STARD, 0.5, STAR_ARMS, STAR_INR, STAR_OUTR);

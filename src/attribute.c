@@ -80,7 +80,7 @@ void cairo_fill_with_outline
 }
 
 cairo_t *cairo_dummy_create
-( )
+( void )
 {
 	return cairo_create
 		(cairo_image_surface_create(CAIRO_FORMAT_A1, 1, 1));

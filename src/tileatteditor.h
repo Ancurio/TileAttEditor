@@ -37,8 +37,6 @@
 #include "settings.h"
 #include "ui.h"
 
-#define DELIMITER G_DIR_SEPARATOR
-
 
 struct GlobalData
 {

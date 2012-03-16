@@ -79,7 +79,7 @@ void tile_attr_set_color
 void attr_draw_empty
 ( cairo_t *cr, gdouble x, gdouble y, gboolean hovered );
 cairo_t *cairo_dummy_create
-( );
+( void );
 void cairo_dummy_destroy
 ( cairo_t *cr );
 void cairo_fill_with_outline
@@ -93,10 +93,10 @@ void tile_attrs_destroy
 ( struct TileAttribute **tile_attr );
 
 /* Individual attribute constructors */
-struct TileAttribute* attr_passability_create();
-struct TileAttribute* attr_quadpassability_create();
-struct TileAttribute* attr_priority_create();
-struct TileAttribute* attr_bushflag_create();
-struct TileAttribute* attr_counterflag_create();
-struct TileAttribute* attr_terrainflag_create();
+struct TileAttribute* attr_passability_create( void );
+struct TileAttribute* attr_quadpassability_create( void );
+struct TileAttribute* attr_priority_create( void );
+struct TileAttribute* attr_bushflag_create( void );
+struct TileAttribute* attr_counterflag_create( void );
+struct TileAttribute* attr_terrainflag_create( void );
 

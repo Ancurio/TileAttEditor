@@ -43,7 +43,7 @@
 static struct TileAttribute tile_attribute;
 
 static gint tile_clicked
-(gint old_value, gdouble x, gdouble y)
+( gint old_value, gdouble x, gdouble y )
 {
 	return (old_value < FLAG_MAX_VAL) ? old_value+1 : 0;
 }
@@ -70,7 +70,7 @@ static void draw_attr
 }
 
 struct TileAttribute* attr_terrainflag_create
-()
+( void )
 {
 	struct TileAttribute *attr = &tile_attribute;
 

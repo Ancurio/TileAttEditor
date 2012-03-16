@@ -110,7 +110,7 @@ static void draw_attr
 }
 
 static void cleanup
-( )
+( void )
 {
 	gint i;
 	for (i=0;i<4;i++)
@@ -118,7 +118,7 @@ static void cleanup
 }
 
 struct TileAttribute* attr_quadpassability_create
-()
+( void )
 {
 	cairo_surface_t *dummy_surf =
 		cairo_image_surface_create(CAIRO_FORMAT_A1, 1, 1);

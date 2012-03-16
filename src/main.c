@@ -38,7 +38,7 @@
 
 /* private functions */
 static struct GlobalData* global_data_create
-( );
+( void );
 
 static void global_data_destroy
 ( struct GlobalData *global_data );

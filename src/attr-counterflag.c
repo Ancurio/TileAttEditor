@@ -42,7 +42,7 @@ static struct TileAttribute tile_attribute;
 static cairo_path_t *path;
 
 static gint tile_clicked
-(gint old_value, gdouble x, gdouble y)
+( gint old_value, gdouble x, gdouble y )
 {
 	return !old_value;
 }
@@ -65,13 +65,13 @@ static void draw_attr
 }
 
 static void cleanup
-( )
+( void )
 {
 	cairo_path_destroy(path);
 }
 
 struct TileAttribute* attr_counterflag_create
-()
+( void )
 {
 	cairo_t *cr = cairo_dummy_create();
 	cairo_move_to(cr, 0.5, 0.3);

@@ -115,7 +115,5 @@ gint tile_attr_find_id
 
 	if (global_data->tile_attributes[i]) { return i;  }
 	else                                 { return -1; }
-
-
 }
 

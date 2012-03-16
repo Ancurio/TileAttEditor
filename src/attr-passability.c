@@ -72,13 +72,13 @@ static void draw_attr
 }
 
 static void cleanup
-( )
+( void )
 {
 	cairo_path_destroy(path_x);
 }
 
 struct TileAttribute* attr_passability_create
-()
+( void )
 {
 	cairo_t *cr = cairo_dummy_create();
 	cairo_move_to(cr, 0.5-SIZE*0.75, 0.5-SIZE*0.75);

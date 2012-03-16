@@ -492,7 +492,7 @@ struct File* file_open
 	if (!image_filename_rel) { ERROR(NO_IMAGE_SOURCE, NULL); }
 
 	gchar *image_filename_abs =
-		make_absolute_path(filename, image_filename_rel, DELIMITER);
+		make_absolute_path(filename, image_filename_rel, G_DIR_SEPARATOR);
 
 
 	struct File *file = g_malloc( sizeof *file );
@@ -663,7 +663,7 @@ gboolean file_save
 
 	gchar *image_rel_path =
 		make_relative_path
-			(filename, file->image_filename_abs, DELIMITER);
+			(filename, file->image_filename_abs, G_DIR_SEPARATOR);
 	xmlSetProp(file->image_node, "source", image_rel_path);
 	g_free(image_rel_path);
 
