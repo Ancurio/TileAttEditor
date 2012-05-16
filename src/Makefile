@@ -4,6 +4,7 @@ objects   = main.o settings.o ui.o callback.o tileset-area.o \
             color.o file.o attribute.o util.o  \
             attr-passability.o attr-quadpassability.o attr-priority.o  \
             attr-bushflag.o attr-counterflag.o attr-terrainflag.o
+generated = ui-menubar.c
 include   = `pkg-config --libs --cflags gtk+-2.0 cairo` \
             `xml2-config --libs --cflags`
 gcc-flags = -g
@@ -18,7 +19,7 @@ main.o : main.c tileatteditor.h tileset-area.h
 settings.o : settings.c tileatteditor.h settings.h
 	$(CC) -c settings.c -o settings.o $(include) $(gcc-flags)
 
-ui.o : ui.c tileatteditor.h callback.h ui-menubar.xml
+ui.o : ui.c tileatteditor.h callback.h ui-menubar.c
 	$(CC) -c ui.c -o ui.o $(include) $(gcc-flags)
 
 callback.o : callback.c tileatteditor.h callback.h dialog.h
@@ -48,6 +49,9 @@ attribute.o : attribute.c tileatteditor.h attribute.h
 util.o : util.c util.h
 	$(CC) -c util.c -o util.o $(include) $(gcc-flags)
 
+ui-menubar.c : ui-menubar.xml
+	xxd -i ui-menubar.xml > ui-menubar.c
+
 
 attr-passability.o : attr-passability.c attribute.h
 	$(CC) -c attr-passability.c -o attr-passability.o $(include) $(gcc-flags)
@@ -71,4 +75,4 @@ attr-terrainflag.o : attr-terrainflag.c attribute.h
 
 .PHONY : clean
 clean :
-	rm $(app) $(objects)
+	rm -f $(app) $(objects) $(generated)

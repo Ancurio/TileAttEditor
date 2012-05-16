@@ -34,9 +34,10 @@
 #include "tileatteditor.h"
 #include "tileset-area.h"
 #include "callback.h"
-#include "ui-menubar.xml"
 #include "util.h"
 #include "file.h"
+
+#include "ui-menubar.c"
 
 
 /* private functions */
@@ -132,7 +133,8 @@ static GtkWidget* ui_menubar_create
 	gtk_ui_manager_insert_action_group (ui, actions, 0);
 	g_object_unref (actions);
 
-	if (!gtk_ui_manager_add_ui_from_string(ui, ui_info, -1, &error))
+	if (!gtk_ui_manager_add_ui_from_string
+	         (ui, ui_menubar_xml, ui_menubar_xml_len, &error))
 	{
 		g_message ("building menus failed: %s", error->message);
 		g_error_free (error);
