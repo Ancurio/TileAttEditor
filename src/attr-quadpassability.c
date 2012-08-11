@@ -34,6 +34,11 @@
 #include "attribute.h"
 
 
+ATTR_STATIC_FUNCS
+
+ATTR_DEFINE(quadpassability, "QuadPassability", 0xF, 0xF, TRUE)
+
+
 #define QDIR_DRAW(qdir, path, empty_x, empty_y)                     \
 {                                                                   \
     if (attr_value & qdir)                                          \
@@ -57,8 +62,6 @@
 #define DISCR 0.12
 #define OUTLW 0.03
 
-
-static struct TileAttribute tile_attribute;
 
 static cairo_path_t *arrow_paths[4];
 
@@ -117,7 +120,7 @@ static void cleanup
 		{ cairo_path_destroy(arrow_paths[i]); }
 }
 
-struct TileAttribute* attr_quadpassability_create
+static void init
 ( void )
 {
 	cairo_surface_t *dummy_surf =
@@ -177,18 +180,5 @@ struct TileAttribute* attr_quadpassability_create
 
 	cairo_surface_destroy(dummy_surf);
 	cairo_destroy(cr);
-
-
-	struct TileAttribute *attr = &tile_attribute;
-
-	attr->name = "QuadPassability";
-	attr->default_value = 0xF;
-	attr->icon_value = 0xF;
-	attr->hover_precision = TRUE;
-	attr->tile_clicked = &tile_clicked;
-	attr->draw_attr = &draw_attr;
-	attr->cleanup = &cleanup;
-
-	return attr;
 }
 

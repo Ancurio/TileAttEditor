@@ -33,14 +33,17 @@
 
 #include "attribute.h"
 
+ATTR_STATIC_FUNCS
+
+ATTR_DEFINE(terrainflag, "TerrainFlag", 0, 1, FALSE)
+
+
 #define FLAG_MAX_VAL 7
 
 /* Style-Parameters: These define the visual look */
 #define FONT_SIZE 0.5
 #define OUTL_SIZE 0.04
 
-
-static struct TileAttribute tile_attribute;
 
 static gint tile_clicked
 ( gint old_value, gdouble x, gdouble y )
@@ -69,19 +72,11 @@ static void draw_attr
 	cairo_fill_with_outline(cr, OUTL_SIZE, hovered);
 }
 
-struct TileAttribute* attr_terrainflag_create
+static void cleanup
 ( void )
-{
-	struct TileAttribute *attr = &tile_attribute;
+{}
 
-	attr->name = "TerrainFlag";
-	attr->default_value = 0;
-	attr->icon_value = 1;
-	attr->hover_precision = FALSE;
-	attr->tile_clicked = &tile_clicked;
-	attr->draw_attr = &draw_attr;
-	attr->cleanup = NULL;
-
-	return attr;
-}
+static void init
+( void )
+{}
 

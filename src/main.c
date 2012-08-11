@@ -61,7 +61,7 @@ static void global_data_destroy
 {
 	file_close(global_data);
 	settings_destroy(global_data->settings);
-	tile_attrs_destroy(global_data->tile_attributes);
+	tile_attrs_cleanup();
 	ui_main_window_destroy(global_data->main_window);
 
 	g_free(global_data->open_file_path);
@@ -75,11 +75,9 @@ gint main
 {
 	struct GlobalData *global_data = global_data_create();
 
-	global_data->tile_attributes =
-		tile_attrs_create(global_data);
+	tile_attrs_init(global_data);
 
-	global_data->settings =
-		settings_read(global_data->tile_attributes);
+	global_data->settings = settings_read();
 
 	gtk_init(&argc, &argv);
 
@@ -110,7 +108,7 @@ gint main
 	else { global_data->settings->last_opened = ""; }
 
 	settings_write
-		(global_data->settings, global_data->tile_attributes);
+		(global_data->settings);
 
 	global_data_destroy(global_data);
 

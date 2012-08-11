@@ -52,7 +52,6 @@ struct GlobalData
 
 	struct Settings *settings;
 	struct Tileset *tileset;
-	struct TileAttribute **tile_attributes;
 	struct TileAttribute *active_attribute;
 	struct MainWindow *main_window;
 	struct SettingsDialog *settings_dialog;

@@ -34,6 +34,11 @@
 
 #include "attribute.h"
 
+ATTR_STATIC_FUNCS
+
+ATTR_DEFINE(priority, "Priority", 0, -1, FALSE)
+
+
 #define FLAG_MAX_VAL 5
 
 /* Style-Parameters: These define the visual look */
@@ -46,8 +51,6 @@
 #define STAR_ARMS 5
 #define STAR_BSZ  1.4
 
-
-static struct TileAttribute tile_attribute;
 
 static cairo_path_t *star_attr;
 static cairo_path_t *star_button;
@@ -124,7 +127,7 @@ static void cleanup
 	cairo_path_destroy(star_button);
 }
 
-struct TileAttribute* attr_priority_create
+static void init
 ( void )
 {
 	star_attr = create_star
@@ -132,18 +135,5 @@ struct TileAttribute* attr_priority_create
 
 	star_button = create_star
 		(0.5, 0.5, STAR_ARMS, STAR_INR*STAR_BSZ, STAR_OUTR*STAR_BSZ);
-
-
-	struct TileAttribute *attr = &tile_attribute;
-
-	attr->name = "Priority";
-	attr->default_value = 0;
-	attr->icon_value = -1;
-	attr->hover_precision = FALSE;
-	attr->tile_clicked = &tile_clicked;
-	attr->draw_attr = &draw_attr;
-	attr->cleanup = &cleanup;
-
-	return attr;
 }
 

@@ -87,14 +87,14 @@ void activate_zero_attribute
 void activate_other_attribute
 ( struct GlobalData *global_data )
 {
-	struct TileAttribute **attr;
-	for (attr=global_data->tile_attributes; *attr; attr++)
+	gint i;
+	for (i = 0; i < attr_store_n; i++)
 	{
-		if ((*attr)->enabled)
+		if (attr_store[i]->enabled)
 		{
 //			toggle_button_disable_signal(*attr);
 			gtk_toggle_button_set_active
-				(GTK_TOGGLE_BUTTON((*attr)->button), TRUE);
+				(GTK_TOGGLE_BUTTON(attr_store[i]->button), TRUE);
 //			toggle_button_enable_signal(*attr);
 			return;
 		}
@@ -108,12 +108,10 @@ gint tile_attr_find_id
 {
 	CAST_GLOBAL_DATA_PTR(tile_attr->global_data)
 	gint i;
-	for (i=0; global_data->tile_attributes[i] &&
-	          global_data->tile_attributes[i] != tile_attr;
-	     i++)
+	for (i=0; i < attr_store_n && attr_store[i] != tile_attr; i++)
 	{}
 
-	if (global_data->tile_attributes[i]) { return i;  }
-	else                                 { return -1; }
+	if (attr_store[i]) { return i;  }
+	else               { return -1; }
 }
 

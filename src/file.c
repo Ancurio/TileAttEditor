@@ -609,21 +609,18 @@ gboolean file_parse
 	}
 
 	file->attr_nodes =
-		g_malloc( sizeof(xmlNode*)*ATTRIBUTE_COUNT );
+		g_malloc( sizeof(xmlNode*)*attr_store_n );
 	xmlNode **attr_nodes = file->attr_nodes;
 
-	struct TileAttribute **tile_attr =
-		global_data->tile_attributes;
-
 	gint i;
-	for (i=0; i<ATTRIBUTE_COUNT; i++)
+	for (i = 0; i < attr_store_n; i++)
 	{
-		if (!tile_attr[i]->enabled)
+		if (!attr_store[i]->enabled)
 			{ file->attr_nodes[i] = NULL; continue; }
 
 		file->attr_nodes[i] =
 			file_attribute_parse_node
-				(tile_attr[i], root_node,
+				(attr_store[i], root_node,
 				 file->min_buffer_size);
 	}
 
@@ -637,8 +634,6 @@ gboolean file_save
 {
 	if (!global_data->open_file) { return FALSE; }
 
-	struct TileAttribute **tile_attr =
-		global_data->tile_attributes;
 	struct File *file =
 		(struct File*)global_data->open_file;
 	xmlNode **attr_nodes = file->attr_nodes;
@@ -646,16 +641,16 @@ gboolean file_save
 	                 (global_data->tileset->tile_width);
 
 	gint i;
-	for (i=0; i<ATTRIBUTE_COUNT; i++)
+	for (i = 0; i < attr_store_n; i++)
 	{
-		if (!tile_attr[i]->enabled) { continue; }
+		if (!attr_store[i]->enabled) { continue; }
 		xmlNode *data_node =
 			xml_get_child_node_with_prop
 				(attr_nodes[i], "data", "encoding", "csv");
 		gchar *csv_string =
 			csv_create_string
-				(tile_attr[i]->value_buffer,
-				 tile_attr[i]->buffer_size,
+				(attr_store[i]->value_buffer,
+				 attr_store[i]->buffer_size,
 				  row_width);
 		xmlNodeSetContent(data_node->children, csv_string);
 		g_free(csv_string);
@@ -698,11 +693,9 @@ gboolean file_close
 	tileset_destroy(global_data->tileset);
 	global_data->tileset = NULL;
 
-	struct TileAttribute **tile_attr;
-	for (tile_attr = global_data->tile_attributes;
-	     *tile_attr; tile_attr++)
+	gint i; for (i = 0; i < attr_store_n; i++)
 	{
-		g_free((*tile_attr)->value_buffer);
+		g_free(attr_store[i]->value_buffer);
 	}
 
 	global_data->open_file = NULL;

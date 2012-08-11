@@ -33,12 +33,15 @@
 
 #include "attribute.h"
 
+ATTR_STATIC_FUNCS
+
+ATTR_DEFINE(passability, "Passability", 0, 0, FALSE)
+
+
 /* Style-Parameters: These define the visual look */
 #define SIZE  0.175
 #define LINEW 0.12
 
-
-static struct TileAttribute tile_attribute;
 
 static cairo_path_t *path_x;
 
@@ -77,7 +80,7 @@ static void cleanup
 	cairo_path_destroy(path_x);
 }
 
-struct TileAttribute* attr_passability_create
+static void init
 ( void )
 {
 	cairo_t *cr = cairo_dummy_create();
@@ -88,18 +91,5 @@ struct TileAttribute* attr_passability_create
 
 	path_x = cairo_copy_path(cr);
 	cairo_dummy_destroy(cr);
-
-
-	struct TileAttribute *attr = &tile_attribute;
-
-	attr->name = "Passability";
-	attr->default_value = 0;
-	attr->icon_value = 0;
-	attr->hover_precision = FALSE;
-	attr->tile_clicked = &tile_clicked;
-	attr->draw_attr = &draw_attr;
-	attr->cleanup = cleanup;
-
-	return attr;
 }
 

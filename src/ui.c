@@ -229,14 +229,12 @@ static GtkWidget* ui_tilesetarea_create
 static GtkWidget* ui_attribute_buttons_create
 ( struct GlobalData *global_data )
 {
-	struct TileAttribute **tile_attr = global_data->tile_attributes;
-
 	GtkWidget *attr_box = gtk_vbox_new(FALSE, 8);
 	GtkSizeGroup *sgroup =
 		gtk_size_group_new(GTK_SIZE_GROUP_HORIZONTAL);
 
 	gint i;
-	for (i=0;tile_attr[i];i++)
+	for (i = 0; i < attr_store_n; i++)
 	{
 		GtkWidget *attr_button_box = gtk_hbox_new(FALSE, 0);
 		GtkWidget *attr_center_box = gtk_hbox_new(FALSE, 4);
@@ -245,11 +243,11 @@ static GtkWidget* ui_attribute_buttons_create
 		gtk_widget_set_size_request(attr_icon, 32, 32);
 		g_signal_connect
 			(attr_icon, "expose-event",
-			 G_CALLBACK( cb_attr_icon_expose ), tile_attr[i]);
+			 G_CALLBACK( cb_attr_icon_expose ), attr_store[i]);
 		gtk_box_pack_start
 			(GTK_BOX(attr_center_box), attr_icon, FALSE, FALSE, 4);
 
-		GtkWidget *attr_label = gtk_label_new(tile_attr[i]->name);
+		GtkWidget *attr_label = gtk_label_new(attr_store[i]->name);
 		gtk_box_pack_start
 			(GTK_BOX(attr_center_box),
 			 attr_label, FALSE, FALSE, 4);
@@ -265,14 +263,14 @@ static GtkWidget* ui_attribute_buttons_create
 		gtk_container_add
 			(GTK_CONTAINER(attr_button), attr_button_box);
 
-		tile_attr[i]->signal_handler_id =
+		attr_store[i]->signal_handler_id =
 			g_signal_connect(attr_button, "toggled",
-			G_CALLBACK( cb_attr_button_toggled ), tile_attr[i]);
+			G_CALLBACK( cb_attr_button_toggled ), attr_store[i]);
 		gtk_box_pack_start(GTK_BOX( attr_box ), attr_button,
 			FALSE, FALSE, 8);
-		tile_attr[i]->button = attr_button;
-		tile_attr[i]->label = attr_label;
-		if (tile_attr[i]->enabled)
+		attr_store[i]->button = attr_button;
+		attr_store[i]->label = attr_label;
+		if (attr_store[i]->enabled)
 			{ gtk_widget_show(attr_button); }
 	}
 
@@ -386,11 +384,9 @@ void ui_main_window_create
 	ui_update_window_title(global_data);
 
 	global_data->active_attribute =
-		global_data->tile_attributes
-			[global_data->settings->active_attr_id];
+		attr_store[global_data->settings->active_attr_id];
 
-	if (global_data->tile_attributes
-			[global_data->settings->active_attr_id]->enabled)
+	if (attr_store[global_data->settings->active_attr_id]->enabled)
 	{
 		gtk_toggle_button_set_active
 			(GTK_TOGGLE_BUTTON( global_data->active_attribute->button ),
@@ -413,13 +409,11 @@ void ui_attr_button_box_set_expand
 ( gpointer _global_data, gboolean expand )
 {
 	CAST_GLOBAL_DATA_PTR(_global_data);
-	struct TileAttribute **tile_attr;
-	for (tile_attr=global_data->tile_attributes;
-	     *tile_attr; tile_attr++)
+	gint i; for (i = 0; i < attr_store_n; i++)
 	{
 		gtk_box_set_child_packing
 			(GTK_BOX(global_data->main_window->attr_button_box),
-			 (*tile_attr)->button, expand, expand, 8, GTK_PACK_START);
+			 attr_store[i]->button, expand, expand, 8, GTK_PACK_START);
 	}
 }
 
@@ -427,12 +421,11 @@ void ui_attr_button_set_show_label
 ( gpointer _global_data, gboolean show )
 {
 	CAST_GLOBAL_DATA_PTR(_global_data);
-	struct TileAttribute **tile_attr;
-	for (tile_attr=global_data->tile_attributes;
-	     *tile_attr; tile_attr++)
+
+	gint i; for (i = 0; i < attr_store_n; i++)
 	{
-		if (show) { gtk_widget_show((*tile_attr)->label); }
-		else      { gtk_widget_hide((*tile_attr)->label); }
+		if (show) { gtk_widget_show(attr_store[i]->label); }
+		else      { gtk_widget_hide(attr_store[i]->label); }
 	}
 }
 

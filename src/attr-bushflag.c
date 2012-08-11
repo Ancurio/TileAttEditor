@@ -33,6 +33,11 @@
 
 #include "attribute.h"
 
+ATTR_STATIC_FUNCS
+
+ATTR_DEFINE(bushflag, "BushFlag", 0, 1, FALSE)
+
+
 /* Style-Parameters: These define the visual look */
 #define CURVD 0.11
 #define AMPL  0.02
@@ -40,8 +45,6 @@
 #define SPANH 0.16
 #define LINEW 0.14
 
-
-static struct TileAttribute tile_attribute;
 
 static cairo_path_t *path;
 
@@ -79,7 +82,7 @@ static void cleanup
 	cairo_path_destroy(path);
 }
 
-struct TileAttribute* attr_bushflag_create
+static void init
 ( void )
 {
 	cairo_t *cr = cairo_dummy_create();
@@ -96,18 +99,5 @@ struct TileAttribute* attr_bushflag_create
 
 	path = cairo_copy_path(cr);
 	cairo_dummy_destroy(cr);
-
-
-	struct TileAttribute *attr = &tile_attribute;
-
-	attr->name = "BushFlag";
-	attr->default_value = 0;
-	attr->icon_value = 1;
-	attr->hover_precision = FALSE;
-	attr->tile_clicked = &tile_clicked;
-	attr->draw_attr = &draw_attr;
-	attr->cleanup = &cleanup;
-
-	return attr;
 }
 

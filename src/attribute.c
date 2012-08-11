@@ -34,8 +34,25 @@
 
 #include "tileatteditor.h"
 
+extern struct TileAttribute attr_passability;
+extern struct TileAttribute attr_quadpassability;
+extern struct TileAttribute attr_priority;
+extern struct TileAttribute attr_bushflag;
+extern struct TileAttribute attr_counterflag;
+extern struct TileAttribute attr_terrainflag;
 
-static struct TileAttribute *tile_attr[ATTRIBUTE_COUNT+1];
+struct TileAttribute *attr_store[] =
+{
+	&attr_passability,
+	&attr_quadpassability,
+	&attr_priority,
+	&attr_bushflag,
+	&attr_counterflag,
+	&attr_terrainflag
+};
+
+gint attr_store_n = G_N_ELEMENTS(attr_store);
+
 
 void tile_attr_set_primary_color
 ( cairo_t *cr )
@@ -94,34 +111,23 @@ void cairo_dummy_destroy
 }
 
 
-struct TileAttribute** tile_attrs_create
+void tile_attrs_init
 ( gpointer global_data )
 {
-	tile_attr[0] = attr_passability_create();
-	tile_attr[1] = attr_quadpassability_create();
-	tile_attr[2] = attr_priority_create();
-	tile_attr[3] = attr_bushflag_create();
-	tile_attr[4] = attr_counterflag_create();
-	tile_attr[5] = attr_terrainflag_create();
-	tile_attr[ATTRIBUTE_COUNT] = NULL;
-
-	gint i; for (i=0;tile_attr[i];i++)
+	gint i;
+	for (i = 0; i < attr_store_n; i++)
 	{
-		tile_attr[i]->value_buffer = NULL;
-		tile_attr[i]->global_data = global_data;
+		attr_store[i]->init();
+		attr_store[i]->value_buffer = NULL;
+		attr_store[i]->global_data = global_data;
 	}
-
-	return tile_attr;
 }
 
-void tile_attrs_destroy
-( struct TileAttribute **tile_attr )
+void tile_attrs_cleanup
+( void )
 {
-	struct TileAttribute **_tile_attr;
-	for (_tile_attr = tile_attr; *_tile_attr; _tile_attr++)
-	{
-		if ((*_tile_attr)->cleanup)
-			{ (*(*_tile_attr)->cleanup)(); }
-	}
+	gint i;
+	for (i = 0; i < attr_store_n; i++)
+		{ attr_store[i]->cleanup(); }
 }
 

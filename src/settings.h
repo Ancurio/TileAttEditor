@@ -50,10 +50,10 @@ struct Settings
 
 
 struct Settings* settings_read
-( struct TileAttribute **tile_attr );
+( void );
 
 void settings_write
-( struct Settings *settings, struct TileAttribute **tile_attr );
+( struct Settings *settings );
 
 void settings_destroy
 ( struct Settings *settings );

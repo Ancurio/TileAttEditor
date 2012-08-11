@@ -469,20 +469,20 @@ gboolean cb_window_key_press
 	CAST_GLOBAL_DATA
 
 	guint keyval = kevent->keyval - GDK_KEY_0;
-	if (keyval < 0 || keyval > 9 || keyval > ATTRIBUTE_COUNT)
+	if (keyval < 0 || keyval > 9 || keyval > attr_store_n)
 		{ return FALSE; }
 
 	if (keyval == 0)
 		{ activate_zero_attribute(global_data); return FALSE; }
 
 	/* collect all enabled attributes and map to keypress */
-	struct TileAttribute *enabled_attr[ATTRIBUTE_COUNT];
+	struct TileAttribute *enabled_attr[attr_store_n];
 	gint i, j = 0;
-	for (i=0; i<ATTRIBUTE_COUNT; i++)
+	for (i = 0; i < attr_store_n; i++)
 	{
-		if (global_data->tile_attributes[i]->enabled)
+		if (attr_store[i]->enabled)
 		{
-			enabled_attr[j] = global_data->tile_attributes[i];
+			enabled_attr[j] = attr_store[i];
 			j++;
 		}
 	}

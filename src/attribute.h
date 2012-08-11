@@ -32,7 +32,24 @@
 #include <gtk/gtk.h>
 
 #define G_TAU 2*G_PI
-#define ATTRIBUTE_COUNT 6
+
+#define ATTR_STATIC_FUNCS                                 \
+    static void init                                      \
+        ( void );                                         \
+    static gint tile_clicked                              \
+        ( gint old_value, gdouble x, gdouble y );         \
+    static void draw_attr                                 \
+        ( gint attr_value, cairo_t *cr, gboolean hovered, \
+          gdouble offset_x, gdouble offset_y );           \
+    static void cleanup                                   \
+        ( void );
+
+#define ATTR_DEFINE(name, name_str, def_val, icon_val, hover_prec) \
+    struct TileAttribute attr_##name =                             \
+        {                                                          \
+            name_str, def_val, icon_val, hover_prec,               \
+            init, tile_clicked, draw_attr, cleanup,                \
+        };
 
 
 struct TileAttribute
@@ -42,6 +59,9 @@ struct TileAttribute
 	gint default_value;
 	gint icon_value;
 	gboolean hover_precision;
+
+	void (*init)
+	( );
 
 	gint (*tile_clicked)
 	( gint old_value, gdouble x, gdouble y );
@@ -63,6 +83,9 @@ struct TileAttribute
 	GtkWidget *label;
 
 };
+
+extern struct TileAttribute *attr_store[];
+extern gint attr_store_n;
 
 enum AttrColor
 {
@@ -86,17 +109,9 @@ void cairo_fill_with_outline
 ( cairo_t *cr, gdouble outline_width, gboolean hovered );
 
 
-struct TileAttribute** tile_attrs_create
+void tile_attrs_init
 ( gpointer global_data );
 
-void tile_attrs_destroy
-( struct TileAttribute **tile_attr );
-
-/* Individual attribute constructors */
-struct TileAttribute* attr_passability_create( void );
-struct TileAttribute* attr_quadpassability_create( void );
-struct TileAttribute* attr_priority_create( void );
-struct TileAttribute* attr_bushflag_create( void );
-struct TileAttribute* attr_counterflag_create( void );
-struct TileAttribute* attr_terrainflag_create( void );
+void tile_attrs_cleanup
+( void );
 

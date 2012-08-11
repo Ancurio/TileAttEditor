@@ -120,10 +120,9 @@ static void apply_settings
 		(global_data, settings->show_button_labels);
 
 	gboolean active_attr_disabled = FALSE;
-	gint i; for (i=0;i<ATTRIBUTE_COUNT;i++)
+	gint i; for (i = 0; i < attr_store_n; i++)
 	{
-		struct TileAttribute *tile_attr =
-			global_data->tile_attributes[i];
+		struct TileAttribute *tile_attr = attr_store[i];
 
 		if (!gtk_toggle_button_get_active
 				(GTK_TOGGLE_BUTTON(dialog->checkb_attributes[i])))
@@ -338,16 +337,15 @@ void settings_dialog_run
 	gtk_container_set_border_width(GTK_CONTAINER(page2), 8);
 
 	settings_dialog->checkb_attributes =
-		g_malloc( sizeof( GtkWidget* ) * ATTRIBUTE_COUNT);
+		g_malloc( sizeof( GtkWidget* ) * attr_store_n);
 
-	struct TileAttribute **attr; gint i = 0;
-	for (attr=global_data->tile_attributes;
-	     *attr; attr++)
+	gint i = 0;
+	for (i = 0; i < attr_store_n; i++)
 	{
 		GtkWidget *checkb =
-			gtk_check_button_new_with_label((*attr)->name);
+			gtk_check_button_new_with_label(attr_store[i]->name);
 		gtk_toggle_button_set_active
-			(GTK_TOGGLE_BUTTON(checkb), (*attr)->enabled);
+			(GTK_TOGGLE_BUTTON(checkb), attr_store[i]->enabled);
 		gtk_box_pack_start(GTK_BOX(page2), checkb, TRUE, FALSE, 2);
 
 		g_signal_connect(checkb, "toggled",
@@ -355,7 +353,6 @@ void settings_dialog_run
 			settings_dialog);
 
 		settings_dialog->checkb_attributes[i] = checkb;
-		i++;
 	}
 
 	/* Create third page */

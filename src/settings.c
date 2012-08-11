@@ -172,7 +172,7 @@ static gchar* settings_get_keyfile_path
 
 
 void settings_write
-( struct Settings *settings, struct TileAttribute **tile_attr )
+( struct Settings *settings )
 {
 	gchar *keyfile_filename = settings_get_keyfile_path(TRUE);
 	GKeyFile *keyfile = g_key_file_new();
@@ -195,13 +195,13 @@ void settings_write
 	VALUE_TO_KEY(settings->window_height, integer);
 	VALUE_TO_KEY(settings->last_opened, string);
 
-	struct TileAttribute **_tile_attr;
-	for (_tile_attr = tile_attr; *_tile_attr; _tile_attr++)
+	gint i;
+	for (i = 0; i < attr_store_n; i++)
 	{
 		gchar *key =
-			g_strconcat((*_tile_attr)->name, "_enabled", NULL);
+			g_strconcat(attr_store[i]->name, "_enabled", NULL);
 		g_key_file_set_boolean
-			(keyfile, "TileAttributes", key, (*_tile_attr)->enabled);
+			(keyfile, "TileAttributes", key, attr_store[i]->enabled);
 		g_free(key);
 	}
 
@@ -215,7 +215,7 @@ void settings_write
 }
 
 struct Settings* settings_read
-( struct TileAttribute **tile_attr )
+( void )
 {
 	gchar *keyfile_filename = settings_get_keyfile_path(FALSE);
 	GKeyFile *keyfile = g_key_file_new();
@@ -230,7 +230,7 @@ struct Settings* settings_read
 	VALUE_TO_KEY_INIT(keyfile, "Settings")
 
 	KEY_TO_VALUE(settings->active_attr_id, integer, 0);
-	if (settings->active_attr_id > ATTRIBUTE_COUNT-1 ||
+	if (settings->active_attr_id > attr_store_n-1 ||
 	    settings->active_attr_id < 0                   )
 		{ settings->active_attr_id = 0;}
 
@@ -266,18 +266,17 @@ struct Settings* settings_read
 	KEY_TO_VALUE(settings->last_opened, string, g_strdup(""));
 
 
-	struct TileAttribute **_tile_attr;
-	for (_tile_attr = tile_attr;
-	     *_tile_attr; _tile_attr++)
+	gint i;
+	for (i = 0; i < attr_store_n; i++)
 	{
 		GError *error = NULL;
 		gchar *key =
-			g_strconcat((*_tile_attr)->name, "_enabled", NULL);
-		(*_tile_attr)->enabled = g_key_file_get_boolean
+			g_strconcat(attr_store[i]->name, "_enabled", NULL);
+		attr_store[i]->enabled = g_key_file_get_boolean
 			(keyfile, "TileAttributes", key, &error);
 		if (error)
 		{
-			(*_tile_attr)->enabled = TRUE;
+			attr_store[i]->enabled = TRUE;
 			g_error_free(error);
 		}
 		g_free(key);
